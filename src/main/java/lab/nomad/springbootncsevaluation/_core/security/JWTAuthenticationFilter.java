@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lab.nomad.springbootncsevaluation._core.exception.Exception401;
 import lab.nomad.springbootncsevaluation.model.users.Users;
-import lab.nomad.springbootncsevaluation.model.users.enums.UserRole;
+import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

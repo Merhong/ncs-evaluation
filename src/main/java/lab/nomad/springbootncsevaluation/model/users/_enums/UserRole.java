@@ -1,4 +1,4 @@
-package lab.nomad.springbootncsevaluation.model.users.enums;
+package lab.nomad.springbootncsevaluation.model.users._enums;
 
 /**
  * 유저의 권한을 나타내는 enum 타입입니다.

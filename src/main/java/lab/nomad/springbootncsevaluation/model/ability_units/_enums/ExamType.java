@@ -1,4 +1,4 @@
-package lab.nomad.springbootncsevaluation.model.ability_units.enums;
+package lab.nomad.springbootncsevaluation.model.ability_units._enums;
 
 /**
  * 평가 방법을 나타내는 enum 타입입니다.

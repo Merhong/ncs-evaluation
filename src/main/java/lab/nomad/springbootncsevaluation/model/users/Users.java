@@ -1,7 +1,7 @@
 package lab.nomad.springbootncsevaluation.model.users;
 
 import jakarta.persistence.*;
-import lab.nomad.springbootncsevaluation.model.users.enums.UserRole;
+import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class Users {
 
     /**
-     * <p>user_tb 테이블의 primary key에 해당하는 필드입니다.</p>
+     * <p>users 테이블의 primary key에 해당하는 필드입니다.</p>
      * <p>해당 필드의 타입은 {@link Long} 타입입니다.</p>
      */
     @Id
@@ -27,35 +27,35 @@ public class Users {
     private Long id;
 
     /**
-     * <p>user_tb 테이블의 username 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 username 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 유저네임(아이디)을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
     private String username;
 
     /**
-     * <p>user_tb 테이블의 password 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 password 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 비밀번호를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
     private String password;
 
     /**
-     * <p>user_tb 테이블의 email 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 email 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 이메일 주소를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
     private String email;
 
     /**
-     * <p>user_tb 테이블의 tel 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 tel 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 연락처를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
     private String tel;
 
     /**
-     * <p>user_tb 테이블의 request_role 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 request_role 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 요청 역할을 저장합니다.
      * 해당 필드는 실제 역할과는 다를 수 있습니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
@@ -63,7 +63,7 @@ public class Users {
     private String requestRole;
 
     /**
-     * <p>user_tb 테이블의 role 컬럼에 매핑되는 필드입니다.</p>
+     * <p>users 테이블의 role 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 역할을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link UserRole} Enum 타입입니다.</p>
      */

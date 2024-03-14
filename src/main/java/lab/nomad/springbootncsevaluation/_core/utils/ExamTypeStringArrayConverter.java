@@ -2,7 +2,7 @@ package lab.nomad.springbootncsevaluation._core.utils;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import lab.nomad.springbootncsevaluation.model.ability_units.enums.ExamType;
+import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
 
 import java.util.Arrays;
 import java.util.Collections;
