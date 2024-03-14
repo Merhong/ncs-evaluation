@@ -27,6 +27,13 @@ public class Users {
     private Long id;
 
     /**
+     * <p>users 테이블의 name 칼럼에 매핑되는 필드입니다.</p>
+     * <p>사용자의 이름을 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
+     */
+    private String name;
+
+    /**
      * <p>users 테이블의 username 컬럼에 매핑되는 필드입니다.</p>
      * <p>사용자의 유저네임(아이디)을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
@@ -83,9 +90,10 @@ public class Users {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
-    public Users(Long id, String username, String password, String email, String tel, UserRole role,
+    public Users(Long id, String name, String username, String password, String email, String tel, UserRole role,
                 LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
+        this.name = name;
         this.username = username;
         this.password = password;
         this.email = email;

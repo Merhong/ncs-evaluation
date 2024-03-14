@@ -18,4 +18,10 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> forbidden(Exception403 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
+
+    // Exception400 예외 처리 등록
+    @ExceptionHandler(Exception400.class)
+    public ResponseEntity<?> badRequest(Exception400 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
 }
