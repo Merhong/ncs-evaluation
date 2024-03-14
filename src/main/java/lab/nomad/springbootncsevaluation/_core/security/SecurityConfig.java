@@ -100,6 +100,7 @@ public class SecurityConfig {
         // 인증, 권한 필터 설정
         http.authorizeRequests(
                 authorize -> authorize
+                        .requestMatchers("/test").permitAll()
                         .requestMatchers("/login", "/join").permitAll()
                         .requestMatchers("/courses/**", "/main", "/orders/**").authenticated()
                         .requestMatchers("/admin/**", "/api/admin/**").access("hasRole('ADMIN')")
