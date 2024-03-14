@@ -5,9 +5,13 @@ import lab.nomad.springbootncsevaluation.model.users.enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @Getter
 @Table(name = "users")
@@ -71,6 +75,7 @@ public class Users {
      * <p>해당 데이터의 생성일시를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link LocalDateTime} 타입입니다.</p>
      */
+    @CreatedDate
     private LocalDateTime createDate;
 
     /**
@@ -78,6 +83,7 @@ public class Users {
      * <p>해당 데이터의 가장 최근 수정일시를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link LocalDateTime} 타입입니다.</p>
      */
+    @LastModifiedDate
     private LocalDateTime updateDate;
 
     /**
@@ -97,10 +103,6 @@ public class Users {
         this.role = role;
         this.createDate = createDate;
         this.updateDate = updateDate;
-    }
-
-    public void updateRole(UserRole role) {
-        this.role = role;
     }
 
 }
