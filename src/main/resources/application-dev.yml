@@ -25,3 +25,9 @@ spring:
         format-sql: true
         use-sql-comments: true
         default-batch-fetch-size: 500
+  logging:
+    level:
+      '[lab.nomad.springbootncsevaluation]': DEBUG
+  output:
+    ansi:
+      enabled: always
