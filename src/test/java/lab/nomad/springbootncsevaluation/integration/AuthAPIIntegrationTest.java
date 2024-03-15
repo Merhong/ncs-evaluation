@@ -1,6 +1,7 @@
 package lab.nomad.springbootncsevaluation.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -70,6 +71,43 @@ public class AuthAPIIntegrationTest {
         resultActions.andExpect(jsonPath("$.response.user.tel").value(tel));
         resultActions.andExpect(jsonPath("$.response.user.role").value(requestRoleText));
         resultActions.andExpect(jsonPath("$.response.user.name").value(name));
+    }
+
+    @Test
+    public void join_fail_test_1() throws Exception {
+        // given
+        String name = "교강용";
+        String tel = "010-1111-2222";
+        String username = "tes";
+        String password = "test1234";
+        String email = "testTeacher@google.com";
+        String requestRole = "ROLE_TEACHER";
+
+        JoinRequestDTO requestDTO = new JoinRequestDTO();
+        requestDTO.setName(name);
+        requestDTO.setTel(tel);
+        requestDTO.setUsername(username);
+        requestDTO.setPassword(password);
+        requestDTO.setEmail(email);
+        requestDTO.setRole(requestRole);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/auth/join")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(status().is4xxClientError());
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.response").doesNotExist());
+        resultActions.andExpect(jsonPath("$.error.message").value(ValidExceptionMessage.Message.INVALID_USERNAME));
     }
 
     @Test

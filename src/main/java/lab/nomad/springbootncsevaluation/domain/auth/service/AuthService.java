@@ -37,8 +37,8 @@ public class AuthService {
         try {
             requestUserRole = UserRole.valueOf(requestDTO.getRole());
         } catch (Exception e) {
-            log.error("존재하지 않는 역할입니다. : " + requestDTO.getRole());
-            throw new Exception400("존재하지 않는 역할입니다. : Not Exist Role");
+            log.error(ExceptionMessage.INVALID_ROLE.getMessage() + requestDTO.getRole());
+            throw new Exception400(ExceptionMessage.INVALID_ROLE.getMessage() + requestDTO.getRole());
         }
 
         // 저장할 엔티티 생성

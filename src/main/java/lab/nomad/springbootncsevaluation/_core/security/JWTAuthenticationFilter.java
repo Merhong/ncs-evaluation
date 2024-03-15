@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lab.nomad.springbootncsevaluation._core.exception.Exception401;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -71,17 +72,17 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
             // 해당 토큰이 유효하지 않을 경우 발생하는 예외
         } catch (SignatureVerificationException sve) {
-            log.debug("디버그 : 토큰 검증 실패");
+            log.warn(ExceptionMessage.INVALID_TOKEN.getMessage());
 
             // 예외 throw
-            throw new Exception401("유효하지 않은 토큰입니다.");
+            throw new Exception401(ExceptionMessage.INVALID_TOKEN.getMessage());
 
             // 해당 토큰의 유효 기간이 만료될 경우 발생하는 예외
         } catch (TokenExpiredException tee) {
-            log.debug("디버그 : 토큰 만료됨");
+            log.debug(ExceptionMessage.EXPIRED_TOKEN.getMessage());
 
             // 예외 throw
-            throw new Exception401("토큰 유효 기간이 만료되었습니다.");
+            throw new Exception401(ExceptionMessage.EXPIRED_TOKEN.getMessage());
         } finally {
             chain.doFilter(request, response);
         }
