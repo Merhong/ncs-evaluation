@@ -26,9 +26,9 @@ public class JWTProvider {
 
         // 토큰 생성
         String jwt = JWT.create()
-                .withSubject(user.getEmail())
+                .withSubject(String.valueOf(user.getId()))
                 .withExpiresAt(makeExpiresAt(jwtType))
-                .withClaim("id", user.getId())
+                .withClaim("username", user.getUsername())
                 .withClaim("role", user.getRole().toString())
                 .withClaim("token-type", jwtType.name())
                 .sign(Algorithm.HMAC512(SECRET));
@@ -48,6 +48,11 @@ public class JWTProvider {
 
     // 토큰 유효성 확인 메서드
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {
+
+        if (jwt.startsWith(TOKEN_PREFIX)) {
+            jwt = jwt.substring(TOKEN_PREFIX.length());
+        }
+
         return JWT.require(Algorithm.HMAC512(SECRET))
                 .build().verify(jwt);
     }

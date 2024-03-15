@@ -1,9 +1,11 @@
 package lab.nomad.springbootncsevaluation.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.ReLoginRequestDTO;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,5 +139,63 @@ public class AuthAPIIntegrationTest {
         resultActions.andExpect(status().is2xxSuccessful());
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.user.username").value(username));
+    }
+
+    @Test
+    public void login_fail_test_1() throws Exception {
+        // given
+        String username = "ssar1";
+        String password = "test1234";
+
+        LoginRequestDTO requestDTO = new LoginRequestDTO();
+        requestDTO.setUsername(username);
+        requestDTO.setPassword(password);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/auth/login")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+
+        resultActions.andExpect(status().is4xxClientError());
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.response").doesNotExist());
+        resultActions.andExpect(jsonPath("$.error.message").value(ExceptionMessage.LOGIN_FAIL.getMessage()));
+    }
+
+    @Test
+    public void relogin_test() throws Exception {
+        // given
+        String refreshToken = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW4tdHlwZSI6IlJ" +
+                "FRlJFU0hfVE9LRU4iLCJyb2xlIjoiUk9MRV9URUFDSEVSIiwiZXhwIjoxNzEwNzI4Njg2LCJ1c2VybmFtZSI6InNzYXIi" +
+                "fQ.suG0xRBOVIV4i9ewkzkL9lUnjLnI1Lbk5EWD53ghBh9rm42UwgDULsEPh05C2v6DYm-3boK3WTkzSqmcUyB1SA";
+
+        ReLoginRequestDTO requestDTO = new ReLoginRequestDTO();
+        requestDTO.setRefreshToken(refreshToken);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/auth/re-login")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value("true"));
     }
 }

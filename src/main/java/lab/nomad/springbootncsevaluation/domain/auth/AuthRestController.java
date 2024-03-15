@@ -3,10 +3,7 @@ package lab.nomad.springbootncsevaluation.domain.auth;
 import jakarta.validation.Valid;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.*;
 import lab.nomad.springbootncsevaluation.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +43,19 @@ public class AuthRestController {
         }
 
         LoginResponseDTO responseDTO = authService.login(requestDTO);
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
+    @PostMapping("/re-login")
+    public ResponseEntity<?> reLogin(@RequestBody @Valid ReLoginRequestDTO requestDTO, Errors errors) {
+
+        if (errors.hasErrors()) {
+            log.warn(errors.getAllErrors().get(0).getDefaultMessage());
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        ReLoginResponseDTO responseDTO = authService.reLogin(requestDTO);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }

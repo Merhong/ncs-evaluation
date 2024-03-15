@@ -1,13 +1,11 @@
 package lab.nomad.springbootncsevaluation.domain.auth.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.JWTProvider;
 import lab.nomad.springbootncsevaluation._core.security.JWTType;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.*;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -76,6 +74,27 @@ public class AuthService {
 
         // 응답 DTO 리턴
         return new LoginResponseDTO(userPS, accessToken, refreshToken);
+    }
+
+    public ReLoginResponseDTO reLogin(ReLoginRequestDTO requestDTO) {
+
+        // 토큰 디코딩
+        DecodedJWT decodedJWT = jwtProvider.verify(requestDTO.getRefreshToken());
+
+        // 토큰 타입 확인
+        if (!decodedJWT.getClaim("token-type").asString().equals(JWTType.REFRESH_TOKEN.name())) {
+            throw new Exception400(ExceptionMessage.IS_NOT_REFRESH_TOKEN.getMessage());
+        }
+
+        // 유저 엔티티 객체 불러오기
+        Users userPS = usersRepository.findById(Long.parseLong(decodedJWT.getSubject()))
+                .orElseThrow(() -> new Exception400(ExceptionMessage.INVALID_TOKEN.getMessage()));
+
+        // 토큰 생성
+        String accessToken = jwtProvider.create(userPS, JWTType.ACCESS_TOKEN);
+        String refreshToken = jwtProvider.create(userPS, JWTType.REFRESH_TOKEN);
+
+        return new ReLoginResponseDTO(userPS, accessToken, refreshToken);
     }
 
 }
