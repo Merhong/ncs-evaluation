@@ -1,4 +1,4 @@
-package lab.nomad.springbootncsevaluation.integration;
+package lab.nomad.springbootncsevaluation.integration.ability_units;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("dev")
-public class AbilityUnitIntegrationTest {
+public class AbilityUnitsIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
