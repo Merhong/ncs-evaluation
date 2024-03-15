@@ -25,6 +25,9 @@ public class SpringBootNcsEvaluationApplication {
             // User 데이터 생성
             initData.initUser();
 
+            // 능력 단위(AbilityUnit) 데이터 생성
+            initData.initAbilityUnit();
+
         }); // return
     }
 }

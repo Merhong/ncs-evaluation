@@ -41,6 +41,13 @@ public class AbilityUnitElements {
     private String name;
 
     /**
+     * <p>ability_unit_elements 테이블의 code 컬럼에 매핑되는 필드입니다.</p>
+     * <p>능력단위요소코드를 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
+     */
+    private String code;
+
+    /**
      * AbilityUnitElement Entity와 ManyToOne 관계를 가지는 AbilityUnit Entity입니다.
      *
      * <p>각 AbilityUnitElement는 특정 AbilityUnit에 속합니다.
@@ -71,10 +78,11 @@ public class AbilityUnitElements {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
-    public AbilityUnitElements(Long id, String name, AbilityUnits abilityUnit,
+    public AbilityUnitElements(Long id, String name, String code, AbilityUnits abilityUnit,
                               LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.name = name;
+        this.code = code;
         this.abilityUnit = abilityUnit;
         this.createDate = createDate;
         this.updateDate = updateDate;
