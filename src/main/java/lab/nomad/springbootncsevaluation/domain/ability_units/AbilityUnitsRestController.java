@@ -5,6 +5,7 @@ import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
+import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.service.AbilityUnitsService;
@@ -32,11 +33,7 @@ public class AbilityUnitsRestController {
     ) {
 
         // 권한 체크
-        if (!customUserDetails.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.ROLE_ADMIN.name()))) {
-
-            throw new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage());
-        }
+        AuthorityCheckUtils.authorityCheck(customUserDetails, UserRole.ROLE_ADMIN.name());
 
         // 입력값 유효성 체크
         if (errors.hasErrors()) {
