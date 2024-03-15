@@ -1,5 +1,6 @@
 package lab.nomad.springbootncsevaluation.domain.ability_units.service;
 
+import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
@@ -7,6 +8,8 @@ import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsReposit
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +35,12 @@ public class AbilityUnitsService {
         AbilityUnits abilityUnitPS = abilityUnitsRepository.save(abilityUnitForSave);
 
         return new AbilityUnitSaveResponseDTO(abilityUnitPS);
+    }
+
+    public AbilityUnitPageResponseDTO page(Pageable pageable) {
+
+        Page<AbilityUnits> pagedAbilityUnitPS = abilityUnitsRepository.findAll(pageable);
+
+        return new AbilityUnitPageResponseDTO(pagedAbilityUnitPS);
     }
 }

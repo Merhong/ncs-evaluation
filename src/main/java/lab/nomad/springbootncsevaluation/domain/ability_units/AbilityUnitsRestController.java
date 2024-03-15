@@ -2,23 +2,23 @@ package lab.nomad.springbootncsevaluation.domain.ability_units;
 
 import jakarta.validation.Valid;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
-import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
+import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.service.AbilityUnitsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +42,19 @@ public class AbilityUnitsRestController {
         }
 
         AbilityUnitSaveResponseDTO responseDTO = abilityUnitsService.save(requestDTO);
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
+
+        // 권한 체크
+        AuthorityCheckUtils.authorityCheck(
+                customUserDetails,
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
+
+        AbilityUnitPageResponseDTO responseDTO = abilityUnitsService.page(pageable);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
