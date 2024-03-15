@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lab.nomad.springbootncsevaluation._core.exception.Exception500;
 import lab.nomad.springbootncsevaluation.model.users.Users;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,25 +15,35 @@ import java.util.Date;
 // 토큰 발행 및 유효성 확인 유틸
 @Component
 public class JWTProvider {
-    private static final Long EXP = 1000L * 60 * 60 * 48; // 테스트용 시간
+    private static final Long ACCESS_EXP = 1000L * 60 * 60 * 3;
+    private static final Long REFRESH_EXP = 1000L * 60 * 60 * 72;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER = "Authorization";
     private static final String SECRET = "MySecretKey"; // TODO 시크릿키 환경변수로 등록 필수!!
 
     // 토큰 발행 메서드
-    public static String create(Users user) {
-        // Enum 타입 String 으로 변환
-        String role = user.getRole().toString();
+    public String create(Users user, JWTType jwtType) {
 
         // 토큰 생성
         String jwt = JWT.create()
                 .withSubject(user.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
+                .withExpiresAt(makeExpiresAt(jwtType))
                 .withClaim("id", user.getId())
-                .withClaim("role", role)
+                .withClaim("role", user.getRole().toString())
+                .withClaim("token-type", jwtType.name())
                 .sign(Algorithm.HMAC512(SECRET));
 
         return TOKEN_PREFIX + jwt;
+    }
+
+    private Date makeExpiresAt(JWTType jwtType) {
+        if (jwtType.equals(JWTType.ACCESS_TOKEN)) {
+            return new Date(System.currentTimeMillis() + ACCESS_EXP);
+        } else if (jwtType.equals(JWTType.REFRESH_TOKEN)) {
+            return new Date(System.currentTimeMillis() + REFRESH_EXP);
+        } else {
+            throw new Exception500("올바르지 않은 토큰 타입입니다.");
+        }
     }
 
     // 토큰 유효성 확인 메서드

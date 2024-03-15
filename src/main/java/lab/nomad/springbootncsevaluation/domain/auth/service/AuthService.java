@@ -1,8 +1,13 @@
 package lab.nomad.springbootncsevaluation.domain.auth.service;
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
+import lab.nomad.springbootncsevaluation._core.security.JWTProvider;
+import lab.nomad.springbootncsevaluation._core.security.JWTType;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginResponseDTO;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTProvider jwtProvider;
 
     @Transactional
     public JoinResponseDTO join(JoinRequestDTO requestDTO) {
@@ -50,6 +56,26 @@ public class AuthService {
 
         // 응답 DTO 리턴
         return new JoinResponseDTO(userPS);
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO requestDTO) {
+
+        // 유저명으로 유저 엔티티 불러오기
+        // 만약 존재하지 않는다면 로그인 실패 400 예외 처리
+        Users userPS = usersRepository.findByUsername(requestDTO.getUsername())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.LOGIN_FAIL.getMessage()));
+
+        // 비밀번호가 일치하지 않을 때 400 예외 처리
+        if (!passwordEncoder.matches(requestDTO.getPassword(), userPS.getPassword())) {
+            throw new Exception400(ExceptionMessage.LOGIN_FAIL.getMessage());
+        }
+
+        // 토큰 생성
+        String accessToken = jwtProvider.create(userPS, JWTType.ACCESS_TOKEN);
+        String refreshToken = jwtProvider.create(userPS, JWTType.REFRESH_TOKEN);
+
+        // 응답 DTO 리턴
+        return new LoginResponseDTO(userPS, accessToken, refreshToken);
     }
 
 }

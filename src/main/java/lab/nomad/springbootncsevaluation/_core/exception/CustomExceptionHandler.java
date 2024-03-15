@@ -24,4 +24,10 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> badRequest(Exception400 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
+
+    // Exception500 예외 처리 등록
+    @ExceptionHandler(Exception500.class)
+    public ResponseEntity<?> internalServerError(Exception500 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
 }

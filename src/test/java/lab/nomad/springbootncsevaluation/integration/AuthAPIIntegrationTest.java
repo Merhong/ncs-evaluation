@@ -2,6 +2,7 @@ package lab.nomad.springbootncsevaluation.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lab.nomad.springbootncsevaluation.domain.auth.dto.JoinRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.auth.dto.LoginRequestDTO;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,34 @@ public class AuthAPIIntegrationTest {
         resultActions.andExpect(jsonPath("$.response.user.tel").value(tel));
         resultActions.andExpect(jsonPath("$.response.user.role").value(requestRoleText));
         resultActions.andExpect(jsonPath("$.response.user.name").value(name));
+    }
+
+    @Test
+    public void login_test() throws Exception {
+        // given
+        String username = "ssar";
+        String password = "test1234";
+
+        LoginRequestDTO requestDTO = new LoginRequestDTO();
+        requestDTO.setUsername(username);
+        requestDTO.setPassword(password);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/auth/login")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.user.username").value(username));
     }
 }

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lab.nomad.springbootncsevaluation._core.exception.Exception401;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +47,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             log.debug("디버그 : 토큰 있음");
             // 토큰 유효성 검사 (만약 유효하지 않다면, 예외가 발생한다.)
-            DecodedJWT decodedJWT = JWTProvider.verify(jwt);
+            DecodedJWT decodedJWT = new JWTProvider().verify(jwt);
 
             // 토큰으로부터 Claim 부분을 변수에 저장
             Long id = decodedJWT.getClaim("id").asLong();

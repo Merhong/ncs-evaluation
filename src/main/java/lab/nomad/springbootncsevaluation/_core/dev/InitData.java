@@ -34,7 +34,7 @@ public class InitData {
         // 저장할 엔티티 객체 인스턴스
         user = Users.builder()
                 .username("ssar")
-                .password("$2a$10$RNErWLtui8GUyBRvnRDIvuxg6WPi2lXX.8S5J.HcC/2g3Jza8xzFu")
+                .password("$2a$10$/CtsnN1nV2qms0WIPP1s6.Ml0c09K0QGU/nEqkIuy1.WrENsLuQxK")
                 .email("ssar@naver.com")
                 .tel("010-1234-5789")
                 .name("김교사")
@@ -47,7 +47,7 @@ public class InitData {
         // 저장할 엔티티 객체 인스턴스
         user = Users.builder()
                 .username("cos")
-                .password("$2a$10$RNErWLtui8GUyBRvnRDIvuxg6WPi2lXX.8S5J.HcC/2g3Jza8xzFu")
+                .password("$2a$10$/CtsnN1nV2qms0WIPP1s6.Ml0c09K0QGU/nEqkIuy1.WrENsLuQxK")
                 .email("cos@naver.com")
                 .tel("010-4444-5789")
                 .name("한교사")
@@ -60,7 +60,7 @@ public class InitData {
         // 저장할 엔티티 객체 인스턴스
         user = Users.builder()
                 .username("love")
-                .password("$2a$10$RNErWLtui8GUyBRvnRDIvuxg6WPi2lXX.8S5J.HcC/2g3Jza8xzFu")
+                .password("$2a$10$/CtsnN1nV2qms0WIPP1s6.Ml0c09K0QGU/nEqkIuy1.WrENsLuQxK")
                 .email("love@naver.com")
                 .tel("010-4444-5789")
                 .name("냥직원")
