@@ -5,10 +5,7 @@ import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitOneResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitPageResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.ability_units.dto.*;
 import lab.nomad.springbootncsevaluation.domain.ability_units.service.AbilityUnitsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +46,7 @@ public class AbilityUnitsRestController {
 
     @GetMapping
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,
-                                  @RequestParam String searchValue) {
+                                  @RequestParam(required = false) String searchValue) {
 
         // 권한 체크
         AuthorityCheckUtils.authorityCheck(
@@ -71,6 +68,19 @@ public class AbilityUnitsRestController {
                 List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
 
         AbilityUnitOneResponseDTO responseDTO =  abilityUnitsService.one(id);
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @PathVariable Long id,
+                                    @RequestBody @Valid AbilityUnitUpdateRequestDTO requestDTO) {
+
+        // 권한 체크
+        AuthorityCheckUtils.authorityCheck(customUserDetails, UserRole.ROLE_ADMIN.name());
+
+        AbilityUnitUpdateResponseDTO responseDTO =  abilityUnitsService.update(id, requestDTO);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }

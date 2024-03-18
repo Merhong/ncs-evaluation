@@ -2,10 +2,7 @@ package lab.nomad.springbootncsevaluation.domain.ability_units.service;
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitOneResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitPageResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.ability_units.dto.*;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
@@ -51,7 +48,7 @@ public class AbilityUnitsService {
 
     public AbilityUnitPageResponseDTO page(Pageable pageable, String searchValue) {
 
-        if (!searchValue.isEmpty()) {
+        if (!(searchValue == null)) {
             return new AbilityUnitPageResponseDTO(abilityUnitsRepository.findAllByNameContains(pageable, searchValue));
         }
 
@@ -77,5 +74,17 @@ public class AbilityUnitsService {
 
         System.out.println("테스트 : " + abilityUnitElementItemPSList.size());
         return new AbilityUnitOneResponseDTO(abilityUnitPS, abilityUnitElementPSList, abilityUnitElementItemPSList);
+    }
+
+    @Transactional
+    public AbilityUnitUpdateResponseDTO update(Long id, AbilityUnitUpdateRequestDTO requestDTO) {
+
+        AbilityUnits abilityUnitPS = abilityUnitsRepository.findById(id)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_ABILITY_UNIT.getMessage()));
+
+        abilityUnitPS.update(requestDTO.getCode(), requestDTO.getName(), requestDTO.getPurpose(),
+                requestDTO.getGrade(), requestDTO.getTotalTime(), requestDTO.getExamTypeList());
+
+        return new AbilityUnitUpdateResponseDTO(abilityUnitsRepository.save(abilityUnitPS));
     }
 }

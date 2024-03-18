@@ -114,4 +114,16 @@ public class AbilityUnits {
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
+
+    public AbilityUnits update(String code, String name, String purpose,
+                  Integer grade, Integer totalTime, List<String> examTypeList) {
+        this.code = code;
+        this.name = name;
+        this.purpose = purpose;
+        this.grade = grade;
+        this.totalTime = totalTime;
+        this.examTypeList = examTypeList.stream().map(s -> ExamType.valueOf(s)).toList();
+
+        return this;
+    }
 }

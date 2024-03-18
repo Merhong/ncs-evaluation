@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -183,9 +182,58 @@ public class AbilityUnitsIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
         // then
         resultActions.andExpect(status().is2xxSuccessful());
         resultActions.andExpect(jsonPath("$.success").value(true));
+        resultActions.andExpect(jsonPath("$.error").doesNotExist());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void update_test() throws Exception {
+
+        // given
+        Long id = 1L;
+        String code = "test01234567";
+        String name = "테스트 능력 단위 - 수정";
+        String purpose = "능력단위정의 - 수정";
+        int grade = 10;
+        int totalTime = 600;
+        List<String> examTypeList = List.of("MULTIPLE_CHOICE");
+
+        AbilityUnitSaveRequestDTO requestDTO = new AbilityUnitSaveRequestDTO();
+
+        requestDTO.setCode(code);
+        requestDTO.setName(name);
+        requestDTO.setPurpose(purpose);
+        requestDTO.setGrade(grade);
+        requestDTO.setTotalTime(totalTime);
+        requestDTO.setExamTypeList(examTypeList);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                put("/api/v1/ability-units/"+id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.code").value(code));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.name").value(name));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.purpose").value(purpose));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.grade").value(grade));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.totalTime").value(totalTime));
+        resultActions.andExpect(jsonPath("$.response.abilityUnit.examTypeList[0]").value(examTypeList.get(0)));
         resultActions.andExpect(jsonPath("$.error").doesNotExist());
     }
 }
