@@ -170,4 +170,22 @@ public class AbilityUnitsIntegrationTest {
         resultActions.andExpect(jsonPath("$.response.pageable.empty").value(false));
         resultActions.andExpect(jsonPath("$.error").doesNotExist());
     }
+
+    @Test
+    @WithUserDetails(value = "admin", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void one_test() throws Exception {
+        // given
+        long id = 1L;
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/ability-units/"+id)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value(true));
+        resultActions.andExpect(jsonPath("$.error").doesNotExist());
+    }
 }

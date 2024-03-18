@@ -3,6 +3,10 @@ package lab.nomad.springbootncsevaluation._core.dev;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUnitElements;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUnitElementsRepository;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItems;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItemsRepository;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -11,12 +15,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class InitData {
     private final UsersRepository usersRepository;
     private final AbilityUnitsRepository abilityUnitsRepository;
+    private final AbilityUnitElementsRepository abilityUnitElementsRepository;
+    private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
 
     public void initAbilityUnit() {
         // 여러개의 AbilityUnit 객체를 담을 리스트 생성
@@ -238,4 +245,154 @@ public class InitData {
         // 리스트에 담긴 엔티티 객체 모두 DB에 저장
         usersRepository.saveAll(userList);
     }
+
+    public void initAbilityUnitElement() {
+        // 여러개의 AbilityUnitElement 객체를 담을 리스트 생성
+        List<AbilityUnitElements> abilityUnitElementList = new ArrayList<>();
+
+        // 할당할 AbilityUnit DB로 부터 조회
+        Optional<AbilityUnits> abilityUnitOP = abilityUnitsRepository.findById(1L);
+
+        // 해당 아이디 값의 AbilityUnit이 존재할 경우 실행
+        if (abilityUnitOP.isPresent()) {
+            AbilityUnits abilityUnitPS = abilityUnitOP.get();
+
+            // 저장할 AbilityUnitElement 엔티티 객체 인스턴스
+            AbilityUnitElements abilityUnitElement = AbilityUnitElements.builder()
+                    .abilityUnit(abilityUnitPS)
+                    .code("test1")
+                    .name("현행 시스템 분석하기")
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementList.add(abilityUnitElement);
+
+            // 저장할 AbilityUnitElement 엔티티 객체 인스턴스
+            abilityUnitElement = AbilityUnitElements.builder()
+                    .abilityUnit(abilityUnitPS)
+                    .code("test2")
+                    .name("요구 사항 확인하기")
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            abilityUnitElementList.add(abilityUnitElement);
+
+            // 저장할 AbilityUnitElement 엔티티 객체 인스턴스
+            abilityUnitElement = AbilityUnitElements.builder()
+                    .abilityUnit(abilityUnitPS)
+                    .code("test3")
+                    .name("분석모델 확인하기")
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            abilityUnitElementList.add(abilityUnitElement);
+        }
+
+        // 리스트에 담긴 엔티티 객체 모두 DB에 저장
+        abilityUnitElementsRepository.saveAll(abilityUnitElementList);
+    }
+
+    public void initAbilityUnitElementItem() {
+        // 여러개의 AbilityUnitElementItem 객체를 담을 리스트 생성
+        List<AbilityUnitElementItems> abilityUnitElementItemList = new ArrayList<>();
+
+        // 할당할 AbilityUnitElement DB로 부터 조회
+        Optional<AbilityUnitElements> abilityUnitElementOP = abilityUnitElementsRepository.findById(1L);
+
+        // 해당 아이디 값의 AbilityUnitElement이 존재할 경우 실행
+        if (abilityUnitElementOP.isPresent()) {
+            AbilityUnitElements abilityUnitElement = abilityUnitElementOP.get();
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            AbilityUnitElementItems abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("개발하고자 하는 응용소프트웨어에 대한 이해를 높이기 위해, 현행 시스템의 적용 현황을 파악함으로써 개발 범위와 향후 개발될 시스템으로의 이행 방향성을 분석할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("개발하고자 하는 응용소프트웨어와 관련된 운영체제, 데이터베이스 관리 시스템, 미들웨어 등의 요구사항을 식별할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("현행 시스템을 분석하여, 개발하고자 하는 응용소프트웨어가 이후 적용될 목표시스템을 명확하고 구체적으로 기술할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+        }
+
+        // 할당할 AbilityUnitElement DB로 부터 조회
+        abilityUnitElementOP = abilityUnitElementsRepository.findById(2L);
+
+        // 해당 아이디 값의 AbilityUnitElement이 존재할 경우 실행
+        if (abilityUnitElementOP.isPresent()) {
+            AbilityUnitElements abilityUnitElement = abilityUnitElementOP.get();
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            AbilityUnitElementItems abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("소프트웨어 공학기술의 요구사항 분석 기법을 활용하여 업무 분석가가 정의한 응용소프트웨어의 요구사항을 확인할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("업무 분석가가 분석한 요구사항에 대해 정의된 검증 기준과 절차에 따라서 요구사항을 확인할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("업무 분석가가 수집하고 분석한 요구사항이 개발하고자 하는 응용소프트웨어에 미칠 영향에 대해서 검토하고 확인할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+        }
+
+        // 할당할 AbilityUnitElement DB로 부터 조회
+        abilityUnitElementOP = abilityUnitElementsRepository.findById(3L);
+
+        // 해당 아이디 값의 AbilityUnitElement이 존재할 경우 실행
+        if (abilityUnitElementOP.isPresent()) {
+            AbilityUnitElements abilityUnitElement = abilityUnitElementOP.get();
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            AbilityUnitElementItems abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("소프트웨어 공학기술의 요구사항 분석 기법을 활용하여 업무 분석가가 제시한 분석모델에 대해서 확인할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("업무 분석가가 제시한 분석모델이 개발할 응용소프트웨어에 미칠 영향을 검토하여 기술적인 타당성 조사를 할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+
+            // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
+            abilityUnitElementItem = AbilityUnitElementItems.builder()
+                    .content("업무 분석가가 제시한 분석모델에 대해서 응용소프트웨어를 개발하기 위해 필요한 추가적인 의견을 제시할 수 있다.")
+                    .abilityUnitElement(abilityUnitElement)
+                    .build();
+            // 리스트에 해당 객체 저장
+            abilityUnitElementItemList.add(abilityUnitElementItem);
+        }
+
+        // 리스트에 담긴 엔티티 객체 모두 DB에 저장
+        abilityUnitElementItemsRepository.saveAll(abilityUnitElementItemList);
+    }
+
 }

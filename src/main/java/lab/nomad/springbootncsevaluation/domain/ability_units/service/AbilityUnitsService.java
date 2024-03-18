@@ -1,11 +1,18 @@
 package lab.nomad.springbootncsevaluation.domain.ability_units.service;
 
+import lab.nomad.springbootncsevaluation._core.exception.Exception400;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
+import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitOneResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUnitElements;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUnitElementsRepository;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItems;
+import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItemsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,12 +20,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class AbilityUnitsService {
     private final AbilityUnitsRepository abilityUnitsRepository;
+    private final AbilityUnitElementsRepository abilityUnitElementsRepository;
+    private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
 
     @Transactional
     public AbilityUnitSaveResponseDTO save(AbilityUnitSaveRequestDTO requestDTO) {
@@ -46,5 +58,24 @@ public class AbilityUnitsService {
         Page<AbilityUnits> pagedAbilityUnitPS = abilityUnitsRepository.findAll(pageable);
 
         return new AbilityUnitPageResponseDTO(pagedAbilityUnitPS);
+    }
+
+    public AbilityUnitOneResponseDTO one(Long id) {
+
+        AbilityUnits abilityUnitPS = abilityUnitsRepository.findById(id)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_ABILITY_UNIT.getMessage()));
+
+        List<AbilityUnitElements> abilityUnitElementPSList =
+                abilityUnitElementsRepository.findAllByAbilityUnit(abilityUnitPS);
+
+        List<AbilityUnitElementItems> abilityUnitElementItemPSList = new ArrayList<>();
+
+        abilityUnitElementPSList.stream()
+                .forEach(element ->
+                    abilityUnitElementItemPSList.addAll(abilityUnitElementItemsRepository.findAllByAbilityUnitElement(element))
+                    );
+
+        System.out.println("테스트 : " + abilityUnitElementItemPSList.size());
+        return new AbilityUnitOneResponseDTO(abilityUnitPS, abilityUnitElementPSList, abilityUnitElementItemPSList);
     }
 }
