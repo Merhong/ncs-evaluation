@@ -29,6 +29,7 @@ public class AbilityUnitPageResponseDTO {
         private Integer totalTime;
         private List<String> examTypeList;
         private LocalDateTime createDate;
+        private LocalDateTime updateDate;
 
         public AbilityUnitDTO(AbilityUnits abilityUnit) {
             this.id = abilityUnit.getId();
@@ -39,6 +40,7 @@ public class AbilityUnitPageResponseDTO {
             this.totalTime = abilityUnit.getTotalTime();
             this.examTypeList = abilityUnit.getExamTypeList().stream().map(examType -> examType.name()).toList();
             this.createDate = abilityUnit.getCreateDate();
+            this.updateDate = abilityUnit.getUpdateDate();
         }
     }
 

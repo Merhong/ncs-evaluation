@@ -3,9 +3,11 @@ package lab.nomad.springbootncsevaluation._core.utils;
 import lab.nomad.springbootncsevaluation._core.exception.Exception403;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 public class AuthorityCheckUtils {
 
     public static boolean authorityCheck(CustomUserDetails customUserDetails, String userRole) {
@@ -13,6 +15,7 @@ public class AuthorityCheckUtils {
         if (!customUserDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(userRole))) {
 
+            log.warn("인가되지 않은 요청입니다.");
             throw new Exception403(ExceptionMessage.COMMON_FORBIDDEN.getMessage());
         }
 
@@ -27,6 +30,7 @@ public class AuthorityCheckUtils {
         if (authorities.size() >= 1) {
             return true;
         } else {
+            log.warn("인가되지 않은 요청입니다.");
             throw new Exception403(ExceptionMessage.COMMON_FORBIDDEN.getMessage());
         }
     }
