@@ -143,4 +143,31 @@ public class AbilityUnitsIntegrationTest {
         resultActions.andExpect(jsonPath("$.response.pageable.empty").value(false));
         resultActions.andExpect(jsonPath("$.error").doesNotExist());
     }
+
+    @Test
+    @WithUserDetails(value = "admin", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void page_search_test() throws Exception {
+        // given
+        int page = 0;
+        int size = 10;
+        String searchValue = "애플리케이션";
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/ability-units?page="+page+"&size="+size+"&searchValue="+searchValue)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value(true));
+        resultActions.andExpect(jsonPath("$.response.pageable.pageNumber").value(page));
+        resultActions.andExpect(jsonPath("$.response.pageable.pageSize").value(size));
+        resultActions.andExpect(jsonPath("$.response.pageable.numberOfElements").value(4));
+        resultActions.andExpect(jsonPath("$.response.pageable.empty").value(false));
+        resultActions.andExpect(jsonPath("$.error").doesNotExist());
+    }
 }

@@ -37,7 +37,11 @@ public class AbilityUnitsService {
         return new AbilityUnitSaveResponseDTO(abilityUnitPS);
     }
 
-    public AbilityUnitPageResponseDTO page(Pageable pageable) {
+    public AbilityUnitPageResponseDTO page(Pageable pageable, String searchValue) {
+
+        if (!searchValue.isEmpty()) {
+            return new AbilityUnitPageResponseDTO(abilityUnitsRepository.findAllByNameContains(pageable, searchValue));
+        }
 
         Page<AbilityUnits> pagedAbilityUnitPS = abilityUnitsRepository.findAll(pageable);
 

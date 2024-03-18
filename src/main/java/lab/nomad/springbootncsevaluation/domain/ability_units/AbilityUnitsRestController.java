@@ -47,14 +47,15 @@ public class AbilityUnitsRestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
+    public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,
+                                  @RequestParam String searchValue) {
 
         // 권한 체크
         AuthorityCheckUtils.authorityCheck(
                 customUserDetails,
                 List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
 
-        AbilityUnitPageResponseDTO responseDTO = abilityUnitsService.page(pageable);
+        AbilityUnitPageResponseDTO responseDTO = abilityUnitsService.page(pageable, searchValue);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
