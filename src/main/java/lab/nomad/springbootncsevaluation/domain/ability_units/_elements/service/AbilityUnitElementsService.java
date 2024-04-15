@@ -4,6 +4,7 @@ import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementUpdateRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units.dto.AbilityUnitSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
@@ -75,4 +76,33 @@ public class AbilityUnitElementsService {
 
     }
 
+    @Transactional
+    public void update(Long abilityUnitId, Long elementId, AbilityUnitElementUpdateRequestDTO requestDTO) {
+
+        // 능력 단위 불러오기
+        // 존재하지 않는다면 400 예외 처리
+        abilityUnitsRepository.findById(abilityUnitId)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_ABILITY_UNIT.getMessage()));
+
+        // 능력 단위 요소 불러오기
+        // 존재하지 않는다면 400 예외 처리
+        AbilityUnitElements abilityUnitElementPS = abilityUnitElementsRepository.findById(elementId)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_ABILITY_UNIT_ELEMENT.getMessage()));
+
+        List<AbilityUnitElementItems> abilityUnitElementItemPSList =
+                abilityUnitElementItemsRepository.findAllByAbilityUnitElement(abilityUnitElementPS);
+
+        abilityUnitElementItemsRepository.deleteAll(abilityUnitElementItemPSList);
+
+        var abilityUnitElementItemForSave = requestDTO.getItemContents()
+                .stream()
+                .map(s -> AbilityUnitElementItems.builder()
+                        .abilityUnitElement(abilityUnitElementPS)
+                        .content(s).build()).toList();
+
+        abilityUnitElementItemPSList = abilityUnitElementItemsRepository.saveAll(abilityUnitElementItemForSave);
+
+        // TODO return as DTO
+
+    }
 }

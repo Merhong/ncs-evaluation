@@ -7,6 +7,7 @@ import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementUpdateRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.service.AbilityUnitElementsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +45,25 @@ public class AbilityUnitElementsRestController {
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
+
+    @PutMapping("/{unitId}/elements/{elementId}")
+    public ResponseEntity<?> update(@RequestBody @Valid AbilityUnitElementUpdateRequestDTO requestDTO, Errors errors,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @PathVariable Long unitId, @PathVariable Long elementId) {
+
+        // 권한 체크
+        AuthorityCheckUtils.authorityCheck(customUserDetails, UserRole.ROLE_ADMIN.name());
+
+        // 입력값 유효성 체크
+        if (errors.hasErrors()) {
+            log.warn(errors.getAllErrors().get(0).getDefaultMessage());
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        // TODO invoke service method
+
+        // TODO return response DTO
+        return ResponseEntity.ok(APIUtils.success(null));
+    }
+
 }
