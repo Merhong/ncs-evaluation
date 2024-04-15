@@ -2,7 +2,6 @@ package lab.nomad.springbootncsevaluation.model.courses;
 
 import jakarta.persistence.*;
 import lab.nomad.springbootncsevaluation.model.users.Users;
-import lab.nomad.springbootncsevaluation.model.users.academy_info.AcademyInfos;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>courses 테이블과 매핑되는 Entity 클래스입니다.</p>
- * <p>courses 테이블에는 과정명, 과정 소유 학원 등의 과정에 대한 정보가 저장되어 있습니다.</p>
+ * <p>courses 테이블에는 과정명, 학원명 등의 과정에 대한 정보가 저장되어 있습니다.</p>
  * <p></p>
  * <p>생성자는 기본생성자, 전체 매개변수 생성자를 가지고 있습니다. 또한, 빌드패턴을 사용하여 인스턴스할 수 있습니다.</p>
  *
@@ -35,6 +34,16 @@ public class Courses {
     private Long id;
 
     /**
+     * Courses Entity와 ManyToOne 관계를 가지는 Users Entity입니다.
+     *
+     * <p>각 Courses는 특정 Users에 속합니다.
+     * 이 필드를 통해 Courses의 소유자인 Usesr에 접근할 수 있습니다.</p>
+     * <p>해당 필드의 타입은 {@link Users} 타입입니다.</p>
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Users user;
+
+    /**
      * <p>courses 테이블의 name 컬럼에 매핑되는 필드입니다.</p>
      * <p>과정명을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
@@ -42,14 +51,11 @@ public class Courses {
     private String name;
 
     /**
-     * Courses Entity와 ManyToOne 관계를 가지는 AcademyInfos Entity입니다.
-     *
-     * <p>각 Course는 특정 AcademyInfos에 속합니다.
-     * 이 필드를 통해 Course의 소유자인 AcademyInfos에 접근할 수 있습니다.</p>
-     * <p>해당 필드의 타입은 {@link AcademyInfos} 타입입니다.</p>
+     * <p>courses 테이블의 academy_name 컬럼에 매핑되는 필드입니다.</p>
+     * <p>학원명을 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AcademyInfos academyInfo;
+    private String academyName;
 
     /**
      * <p>테이블의 create_date 칼럼에 매핑되는 필드입니다.</p>
@@ -72,10 +78,11 @@ public class Courses {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
-    public Courses(Long id, String name, AcademyInfos academyInfo, LocalDateTime createDate, LocalDateTime updateDate) {
+    public Courses(Long id, Users user, String name, String academyName, LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
+        this.user = user;
         this.name = name;
-        this.academyInfo = academyInfo;
+        this.academyName = academyName;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }

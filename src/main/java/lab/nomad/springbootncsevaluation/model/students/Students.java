@@ -1,7 +1,9 @@
 package lab.nomad.springbootncsevaluation.model.students;
 
 import jakarta.persistence.*;
+import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
+import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,16 @@ public class Students {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Students Entity와 ManyToOne 관계를 가지는 Courses Entity입니다.
+     *
+     * <p>각 Students는 특정 Courses에 속합니다.
+     * 이 필드를 통해 Students의 소유자인 Courses에 접근할 수 있습니다.</p>
+     * <p>해당 필드의 타입은 {@link Courses} 타입입니다.</p>
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Courses course;
 
     /**
      * <p>students 테이블의 tel 컬럼에 매핑되는 필드입니다.</p>
@@ -76,9 +88,10 @@ public class Students {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
-    public Students(Long id, String name, String tel, StudentStatus studentStatus,
+    public Students(Long id, Courses course, String name, String tel, StudentStatus studentStatus,
                    LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
+        this.course = course;
         this.name = name;
         this.tel = tel;
         this.status = studentStatus;
