@@ -8,6 +8,7 @@ import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementUpdateRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.ability_units._elements.dto.AbilityUnitElementUpdateResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.ability_units._elements.service.AbilityUnitElementsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -61,9 +62,10 @@ public class AbilityUnitElementsRestController {
         }
 
         // TODO invoke service method
+        AbilityUnitElementUpdateResponseDTO responseDTO = abilityUnitElementsService.update(unitId, elementId, requestDTO);
 
         // TODO return response DTO
-        return ResponseEntity.ok(APIUtils.success(null));
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
 
 }
