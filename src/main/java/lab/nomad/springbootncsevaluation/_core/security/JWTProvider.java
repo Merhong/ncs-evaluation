@@ -2,12 +2,16 @@ package lab.nomad.springbootncsevaluation._core.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lab.nomad.springbootncsevaluation._core.exception.Exception401;
+import lab.nomad.springbootncsevaluation._core.exception.Exception403;
 import lab.nomad.springbootncsevaluation._core.exception.Exception500;
 import lab.nomad.springbootncsevaluation.model.users.Users;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -20,6 +24,14 @@ public class JWTProvider {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER = "Authorization";
     private static final String SECRET = "MySecretKey"; // TODO 시크릿키 환경변수로 등록 필수!!
+
+    private final CustomUserDetailsService userDetailsService;
+
+    public JWTProvider(CustomUserDetailsService userDetailsService
+    ) {
+        this.userDetailsService = userDetailsService;
+    }
+
 
     // 토큰 발행 메서드
     public String create(Users user, JWTType jwtType) {
@@ -46,7 +58,7 @@ public class JWTProvider {
         }
     }
 
-    // 토큰 유효성 확인 메서드
+    // 토큰 디코딩 코드
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {
 
         if (jwt.startsWith(TOKEN_PREFIX)) {
@@ -55,6 +67,34 @@ public class JWTProvider {
 
         return JWT.require(Algorithm.HMAC512(SECRET))
                 .build().verify(jwt);
+    }
+
+    public boolean validateToken(String jwt) {
+        try {
+            var verify = verify(jwt);
+
+            if (new Date().after(verify.getExpiresAt()) ) {
+                throw new Exception401("세션이 만료되었습니다.");
+            }
+
+            if (!verify.getClaim("token-type").asString().equals(JWTType.ACCESS_TOKEN.name())) {
+                throw new Exception401("올바르지 않은 토큰입니다.");
+            }
+
+        } catch (JWTVerificationException e) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+    public Authentication getAuthentication(String token) {
+
+        var decodedJWT = verify(token);
+        var username = decodedJWT.getClaim("username").asString();
+        var userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 }
