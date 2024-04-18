@@ -29,6 +29,17 @@
     align-items: center;
 }
 
+.join-div {
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    min-height: 550px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .text-input-div {
     border: 2px solid #dfe1e5;
     border-radius: 12px;
