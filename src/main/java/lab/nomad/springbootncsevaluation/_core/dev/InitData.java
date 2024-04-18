@@ -245,6 +245,19 @@ public class InitData {
         // 리스트에 해당 객체 저장
         userList.add(user);
 
+        // 저장할 엔티티 객체 인스턴스
+        user = Users.builder()
+                .username("guest")
+                .password("$2a$10$/CtsnN1nV2qms0WIPP1s6.Ml0c09K0QGU/nEqkIuy1.WrENsLuQxK")
+                .email("guest@naver.com")
+                .tel("010-4444-5710")
+                .name("게스트")
+                .role(UserRole.ROLE_GUEST)
+                .build();
+
+        // 리스트에 해당 객체 저장
+        userList.add(user);
+
         // 리스트에 담긴 엔티티 객체 모두 DB에 저장
         usersRepository.saveAll(userList);
     }
