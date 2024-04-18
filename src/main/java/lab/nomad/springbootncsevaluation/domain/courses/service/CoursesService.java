@@ -1,4 +1,4 @@
-package lab.nomad.springbootncsevaluation.domain.courses.sercvice;
+package lab.nomad.springbootncsevaluation.domain.courses.service;
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
@@ -23,7 +23,7 @@ public class CoursesService {
     // DI
     private final CoursesRepository coursesRepository;
 
-    public CoursesPageResponseDTO 과정목록조회(Pageable pageable, String searchValue, Users user) {
+    public CoursesPageResponseDTO page(Pageable pageable, String searchValue, Users user) {
 
         // 검색 키워드 OOO
         // 해당 User(강사)와 관련된 키워드 결과만 보여줌
@@ -40,7 +40,7 @@ public class CoursesService {
     }
 
     // JPA 사용, User ID로 조회
-    public CoursesOneResponseDTO 과정단일조회(Long id, Users user) {
+    public CoursesOneResponseDTO one(Long id, Users user) {
         Courses coursesPS = coursesRepository.findByIdAndUserId(id, user.getId())
                                              .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
 
@@ -48,7 +48,7 @@ public class CoursesService {
     }
 
     @Transactional
-    public CoursesSaveResponseDTO 과정등록(Users user, CoursesSaveRequestDTO requestDTO) {
+    public CoursesSaveResponseDTO save(Users user, CoursesSaveRequestDTO requestDTO) {
         Courses coursesForSave = Courses.builder()
                                         .name(requestDTO.getName())
                                         .academyName(requestDTO.getAcademyName())
