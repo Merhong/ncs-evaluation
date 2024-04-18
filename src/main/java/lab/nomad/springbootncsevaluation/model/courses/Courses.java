@@ -48,6 +48,7 @@ public class Courses {
      * <p>과정명을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
+    @Column(nullable = false)
     private String name;
 
     /**
@@ -55,6 +56,7 @@ public class Courses {
      * <p>학원명을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
+    @Column(nullable = false)
     private String academyName;
 
     /**
@@ -77,14 +79,17 @@ public class Courses {
      * <p>전체 매개변수 생성자입니다.</p>
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
+    private LocalDateTime deleteDate;
     @Builder
-    public Courses(Long id, Users user, String name, String academyName, LocalDateTime createDate, LocalDateTime updateDate) {
+    public Courses(Long id, Users user, String name, String academyName,
+                   LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
         this.id = id;
         this.user = user;
         this.name = name;
         this.academyName = academyName;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.deleteDate = deleteDate;
     }
 
 }
