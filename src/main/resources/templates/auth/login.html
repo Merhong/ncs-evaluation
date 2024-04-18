@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
+</head>
+<body>
+    <div class="body">
+        <div class="body-item title">
+            로그인
+        </div>
+        <div class="body-item">
+            <div class="login-div">
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/person.png">
+                    <input class="login-input">
+                </div>
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/key.webp">
+                    <input class="login-input">
+                </div>
+                <button class="login-btn">로그인</button>
+                <button class="login-btn">회원가입</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

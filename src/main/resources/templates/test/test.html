@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
 </head>
 <body>
     <p th:text="${test}"></p>

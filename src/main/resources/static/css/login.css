@@ -1,0 +1,80 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-size: xx-large;
+    font-weight: bolder;
+    padding-bottom: 30px;
+    font-family: "Noto Sans NKo";
+}
+
+.login-div {
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    min-height: 400px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-input-div {
+    border: 2px solid #dfe1e5;
+    border-radius: 12px;
+    height: 44px;
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.text-input-div:hover {
+    border: 2px solid cornflowerblue;
+}
+
+.login-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn:hover {
+    background-color: royalblue;
+    color: #f8f9fa;
+}
+
+.login-icon-img {
+    padding: 10px;
+    height: 40px;
+    width: 40px;
+}
+
+.login-input {
+    width: 85%;
+    border: 0px solid white;
+}
+
+.login-input:focus {
+    outline: none;
+}
