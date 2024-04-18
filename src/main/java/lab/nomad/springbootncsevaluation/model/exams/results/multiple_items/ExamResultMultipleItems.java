@@ -13,6 +13,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+
+
 /**
  * <p>exam_result_multiple_items 테이블과 매핑되는 Entity 클래스입니다.</p>
  * <p>exam_result_multiple_items 테이블에는 시험 결과의 문제에 따른 점수가 몇 점으로 채점되었는지에 대한 정보가 저장되어 있습니다.</p>

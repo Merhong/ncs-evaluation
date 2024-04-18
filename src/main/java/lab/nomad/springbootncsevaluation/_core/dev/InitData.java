@@ -7,6 +7,8 @@ import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUni
 import lab.nomad.springbootncsevaluation.model.ability_units.elements.AbilityUnitElementsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItems;
 import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItemsRepository;
+import lab.nomad.springbootncsevaluation.model.courses.Courses;
+import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -24,6 +26,7 @@ public class InitData {
     private final AbilityUnitsRepository abilityUnitsRepository;
     private final AbilityUnitElementsRepository abilityUnitElementsRepository;
     private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
+    private final CoursesRepository coursesRepository;
 
     public void initAbilityUnit() {
         // 여러개의 AbilityUnit 객체를 담을 리스트 생성
@@ -395,4 +398,95 @@ public class InitData {
         abilityUnitElementItemsRepository.saveAll(abilityUnitElementItemList);
     }
 
+    public void initCourse() {
+        // 여러개의 Course 객체를 담을 리스트 생성
+        List<Courses> courseList = new ArrayList<>();
+
+        // 할당할 Users DB로 부터 조회
+        Optional<Users> usersOP1 = usersRepository.findById(1L);
+        Optional<Users> usersOP2 = usersRepository.findById(2L);
+        Optional<Users> usersOP3 = usersRepository.findById(3L);
+        Optional<Users> usersOP4 = usersRepository.findById(4L);
+
+        // 해당 아이디 값의 User가 존재할 경우 실행
+        if(usersOP1.isPresent()) {
+            Users userPS1 = usersOP1.get();
+
+            // 저장할 Course 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
+            Courses course = Courses.builder()
+                                    .name("AB1과정")
+                                    .academyName("AAA학원")
+                                    .user(userPS1)
+                                    .build();
+
+            // 리스트에 해당 객체 저장
+            courseList.add(course);
+        }
+
+        // 해당 아이디 값의 User가 존재할 경우 실행
+        if(usersOP2.isPresent()) {
+            Users userPS1 = usersOP1.get();
+            Users userPS2 = usersOP2.get();
+
+            // 저장할 Course 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
+            Courses course = Courses.builder()
+                                    .name("B1과정")
+                                    .academyName("ssar학원")
+                                    .user(userPS2)
+                                    .build();
+
+            Courses course1 = Courses.builder()
+                                    .name("B2과정")
+                                    .academyName("ssar학원")
+                                    .user(userPS2)
+                                    .build();
+
+            Courses course2 = Courses.builder()
+                                     .name("AA과정")
+                                     .academyName("AAA학원")
+                                     .user(userPS1)
+                                     .build();
+            // 리스트에 해당 객체 저장
+            courseList.add(course);
+            courseList.add(course1);
+            courseList.add(course2);
+        }
+
+        // 해당 아이디 값의 User가 존재할 경우 실행
+        if(usersOP3.isPresent()) {
+            Users userPS3 = usersOP3.get();
+
+            // 저장할 Course 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
+            Courses course = Courses.builder()
+                                    .name("C5과정")
+                                    .academyName("cos학원")
+                                    .user(userPS3)
+                                    .build();
+
+            // 리스트에 해당 객체 저장
+            courseList.add(course);
+        }
+
+        // 해당 아이디 값의 User가 존재할 경우 실행
+        if(usersOP4.isPresent()) {
+            Users userPS4 = usersOP4.get();
+
+            // 저장할 Course 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
+            Courses course = Courses.builder()
+                                    .name("D6과정")
+                                    .academyName("love학원")
+                                    .user(userPS4)
+                                    .build();
+
+            // 리스트에 해당 객체 저장
+            courseList.add(course);
+        }
+        // 리스트에 담긴 엔티티 객체 모두 DB에 저장
+        coursesRepository.saveAll(courseList);
+
+    }
 }

@@ -9,7 +9,8 @@ public enum ExceptionMessage {
     IS_NOT_REFRESH_TOKEN("code5: refreshToken이 아닙니다."),
     EXPIRED_TOKEN("code6: 토큰 유효 기간이 만료되었습니다."),
     LOGIN_FAIL("code7: 아이디 혹은 비밀번호가 틀렸습니다."),
-    NOT_FOUND_ABILITY_UNIT_ELEMENT("code8: 존재하지 않는 능력 단위 요소입니다.");
+    NOT_FOUND_ABILITY_UNIT_ELEMENT("code8: 존재하지 않는 능력 단위 요소입니다."),
+    NOT_FOUND_COURSE("code9: 존재하지 않는 과정입니다.");
 
     final private String message;
 

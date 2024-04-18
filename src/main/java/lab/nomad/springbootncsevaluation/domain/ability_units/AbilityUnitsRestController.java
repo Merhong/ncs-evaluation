@@ -48,6 +48,8 @@ public class AbilityUnitsRestController {
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,
                                   @RequestParam(required = false) String searchValue) {
 
+
+
         // 권한 체크
         AuthorityCheckUtils.authorityCheck(
                 customUserDetails,

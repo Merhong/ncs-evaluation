@@ -1,6 +1,7 @@
 package lab.nomad.springbootncsevaluation;
 
 import lab.nomad.springbootncsevaluation._core.dev.InitData;
+import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,6 +32,11 @@ public class SpringBootNcsEvaluationApplication {
             initData.initAbilityUnitElement();
 
             initData.initAbilityUnitElementItem();
+
+            // Course 데이터 생성
+            initData.initCourse();
+
+
         }); // return
     }
 }

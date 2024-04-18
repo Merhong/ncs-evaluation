@@ -38,12 +38,12 @@ public class JWTProvider {
 
         // 토큰 생성
         String jwt = JWT.create()
-                .withSubject(String.valueOf(user.getId()))
-                .withExpiresAt(makeExpiresAt(jwtType))
-                .withClaim("username", user.getUsername())
-                .withClaim("role", user.getRole().toString())
-                .withClaim("token-type", jwtType.name())
-                .sign(Algorithm.HMAC512(SECRET));
+                        .withSubject(String.valueOf(user.getId()))
+                        .withExpiresAt(makeExpiresAt(jwtType))
+                        .withClaim("username", user.getUsername())
+                        .withClaim("role", user.getRole().toString())
+                        .withClaim("token-type", jwtType.name())
+                        .sign(Algorithm.HMAC512(SECRET));
 
         return TOKEN_PREFIX + jwt;
     }
