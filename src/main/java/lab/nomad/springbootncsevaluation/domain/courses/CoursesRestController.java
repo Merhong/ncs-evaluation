@@ -1,5 +1,7 @@
 package lab.nomad.springbootncsevaluation.domain.courses;
 
+import jakarta.validation.Valid;
+import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
@@ -10,9 +12,11 @@ import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesSaveResponseD
 import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/courses")
+@Slf4j
 public class CoursesRestController {
     private final CoursesService coursesService;
 
@@ -52,7 +57,13 @@ public class CoursesRestController {
 
     // 과정 등록
     @PostMapping
-    public ResponseEntity<?> save(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CoursesSaveRequestDTO requestDTO) {
+    public ResponseEntity<?> save(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @RequestBody @Valid CoursesSaveRequestDTO requestDTO, Errors errors) {
+
+        if (errors.hasErrors()) {
+            log.warn(errors.getAllErrors().get(0).getDefaultMessage());
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
 
         // customUserDetails.user()는 요청한 사람(강사)
         CoursesSaveResponseDTO responseDTO = coursesService.save(customUserDetails.user(), requestDTO);
