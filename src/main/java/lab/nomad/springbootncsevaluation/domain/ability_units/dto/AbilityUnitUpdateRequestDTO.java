@@ -7,14 +7,17 @@ import lombok.Setter;
 
 import java.util.List;
 
+import static lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage.Message.EMPTY_ABILITY_CODE;
+import static lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage.Message.EMPTY_ABILITY_NAME;
+
 @Getter
 @Setter
 public class AbilityUnitUpdateRequestDTO {
 
-    @NotEmpty
+    @NotEmpty(message = EMPTY_ABILITY_CODE)
     private String code;
 
-    @NotEmpty
+    @NotEmpty(message = EMPTY_ABILITY_NAME)
     private String name;
 
     @NotEmpty

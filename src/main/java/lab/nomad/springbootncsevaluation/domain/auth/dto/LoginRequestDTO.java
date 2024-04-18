@@ -10,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class LoginRequestDTO {
 
-    @NotEmpty
+    @NotEmpty(message = ValidExceptionMessage.Message.INVALID_USERNAME)
     @Size(min = 4, max = 15, message = ValidExceptionMessage.Message.INVALID_USERNAME)
     private String username;
 
-    @NotEmpty
+    @NotEmpty(message = ValidExceptionMessage.Message.INVALID_PASSWORD)
     @Size(min = 4, max = 20, message = ValidExceptionMessage.Message.INVALID_PASSWORD)
     private String password;
 }
