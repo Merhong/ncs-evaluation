@@ -23,32 +23,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/students")
 @Slf4j
-public class StudentsConrtoller {
-
+public class StudentsController {
     private final StudentsService studentsService;
-    private final StudentsRepository studentsRepository;
 
 
-
-    //과정,학생등록
-    @PostMapping
-    //요청 응답해줄목록
-    public ResponseEntity<?> saveStudents(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody StudentsSaveRequestDTO requestDTO) {
-
-
-        Long courseId = requestDTO.getCourseId();
-
-        // 학생 등록
-        StudentsSaveResponseDTO responseDTO = studentsService.save(courseId, requestDTO);
-
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
-    }
-
-
-    //과정,한명학생조회
+    // 과정,한명학생조회
     @GetMapping("/{id}")
-
     public ResponseEntity<?> one(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id) {
         //getStudentById 메서드호출하고 DTO객체에 저장
         StudentsOneResponseDTO responseDTO = studentsService.one(id);
@@ -58,9 +38,8 @@ public class StudentsConrtoller {
     }
 
 
-    //과정,전체학생조회
+    // 과정,전체학생조회
     @GetMapping
-
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails,  Pageable pageable, @RequestParam(required = false) String searchValue) {
 
         // 권한 체크(능력단위 컨트롤러 참조)

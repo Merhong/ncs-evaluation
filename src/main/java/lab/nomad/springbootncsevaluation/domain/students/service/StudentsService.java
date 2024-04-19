@@ -2,7 +2,7 @@ package lab.nomad.springbootncsevaluation.domain.students.service;
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
-import lab.nomad.springbootncsevaluation.domain.students.StudentsRepository;
+import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsOneResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
@@ -57,7 +57,7 @@ public class StudentsService {
     }
 
 
-    //특정 학생조회
+    // 특정 학생조회
     public StudentsOneResponseDTO one(Long id) {
 
         Optional<Students> optionalStudent = studentsRepository.findById(id);
@@ -68,7 +68,7 @@ public class StudentsService {
     }
 
 
-    //전체 학생조회
+    // 전체 학생조회
     public Page<StudentsPageResponseDTO> page(String searchValue, Pageable pageable) {
         Page<Students> pageStudents;
 

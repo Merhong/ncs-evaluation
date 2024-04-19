@@ -8,6 +8,9 @@ import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.*;
 import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import java.util.List;
 @Slf4j
 public class CoursesRestController {
     private final CoursesService coursesService;
+    private final StudentsService studentsService;
 
     // 과정 수정
     @PutMapping("/{id}")
@@ -99,6 +103,18 @@ public class CoursesRestController {
 
         // customUserDetails.user()는 요청한 사람(강사)
         CoursesSaveResponseDTO responseDTO = coursesService.save(customUserDetails.user(), requestDTO);
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
+    // 과정,학생등록
+    @PostMapping("/{courseId}/students")
+    public ResponseEntity<?> saveStudents(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                          @PathVariable Long courseId,
+                                          @RequestBody StudentsSaveRequestDTO requestDTO) {
+
+        // 학생 등록
+        StudentsSaveResponseDTO responseDTO = studentsService.save(courseId, requestDTO);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }

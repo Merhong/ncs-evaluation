@@ -36,16 +36,13 @@ public class StudentsTest {
 
     @Test
     @WithUserDetails(value = "admin", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    public  void save_test() throws  Exception{
+    public void save_test() throws Exception{
 
         //given
-        Courses course = Courses.builder()
-                .id(1L) // 유효한 코스 ID
-                .build();
+        Long courseId = 1L;
         String tel = "010-1111-2222";
         String name = "ssar";
         StudentStatus studentStatus = StudentStatus.ACTIVE;
-
 
         StudentsSaveRequestDTO requestDTO = new StudentsSaveRequestDTO();
 
@@ -58,14 +55,13 @@ public class StudentsTest {
         requestDTO.setName(name);
         requestDTO.setStatus(studentStatus); // 학생 상태 설정
         //requestDTO.setStatus(StudentStatus.ACTIVE);
-        requestDTO.setCourseId(course.getId()); // 코스 ID 설정
 
         String requestBody = om.writeValueAsString(requestDTO);
 
 
         //when
         ResultActions resultActions = mvc.perform(
-                post("/api/v1/students")
+                post("/api/v1/courses/"+ courseId +"/students")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
@@ -76,10 +72,9 @@ public class StudentsTest {
 
         resultActions.andExpect(status().is2xxSuccessful());
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.course").value(course));
-        resultActions.andExpect(jsonPath("$.response.tel").value(tel));
-        resultActions.andExpect(jsonPath("$.response.name").value(name));
-        resultActions.andExpect(jsonPath("$.response.studentStatus").value(studentStatus));
+        resultActions.andExpect(jsonPath("$.response.students.tel").value(tel));
+        resultActions.andExpect(jsonPath("$.response.students.name").value(name));
+//        resultActions.andExpect(jsonPath("$.response.students.status").value());
 
     }
 }

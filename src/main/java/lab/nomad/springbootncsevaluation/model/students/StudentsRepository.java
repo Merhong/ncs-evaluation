@@ -1,4 +1,4 @@
-package lab.nomad.springbootncsevaluation.domain.students;
+package lab.nomad.springbootncsevaluation.model.students;
 
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.students.Students;

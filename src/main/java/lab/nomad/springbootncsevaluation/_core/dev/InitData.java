@@ -1,6 +1,6 @@
 package lab.nomad.springbootncsevaluation._core.dev;
 
-import lab.nomad.springbootncsevaluation.domain.students.StudentsRepository;
+import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;

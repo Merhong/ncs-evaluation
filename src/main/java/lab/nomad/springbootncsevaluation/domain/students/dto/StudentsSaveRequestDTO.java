@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public class StudentsSaveRequestDTO {
 
-
-
     @NotEmpty
     private  String tel;
 
@@ -20,7 +18,4 @@ public class StudentsSaveRequestDTO {
     private  String name;
 
     private  StudentStatus status;
-
-    private Long courseId; // courseId를 저장하는 변수 추가
-
 }
