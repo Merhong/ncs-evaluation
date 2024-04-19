@@ -92,4 +92,11 @@ public class Courses {
         this.deleteDate = deleteDate;
     }
 
+    public Courses update(String name, String academyName) {
+        this.name = name;
+        this.academyName = academyName;
+
+        return this;
+    }
+
 }

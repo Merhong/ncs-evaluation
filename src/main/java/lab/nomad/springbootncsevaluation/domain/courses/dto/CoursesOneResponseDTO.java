@@ -49,6 +49,7 @@ public class CoursesOneResponseDTO {
         private String tel;
         private String role;
         private LocalDateTime createDate;
+        private LocalDateTime updateDate;
 
         public UserDTO(Users user) {
             this.id = user.getId();
@@ -59,6 +60,7 @@ public class CoursesOneResponseDTO {
             this.role = user.getRole()
                             .getText();
             this.createDate = user.getCreateDate();
+            this.updateDate = user.getUpdateDate();
         }
     }
 }

@@ -3,27 +3,18 @@ package lab.nomad.springbootncsevaluation.domain.courses.dto;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
-public class CoursesPageResponseDTO {
-    private List<CoursesDTO> course;
-    private PageableDTO pageable;
+public class CoursesUpdateResponseDTO {
+    CoursesDTO course;
 
-
-    public CoursesPageResponseDTO(Users user, Page<Courses> coursesPage) {
-        this.course = coursesPage.getContent()
-                                 .stream()
-                                 .map(course -> new CoursesDTO(course.getUser(), course))
-                                 .toList();
-        this.pageable = new PageableDTO(coursesPage);
+    public CoursesUpdateResponseDTO(Users user, Courses course) {
+        this.course = new CoursesDTO(user, course);
     }
 
-    // 페이징시 과정에 담을 내용
+    // courses + user 내용을 가지는 DTO
     @Getter
     public static class CoursesDTO {
         private Long id;
@@ -55,6 +46,7 @@ public class CoursesPageResponseDTO {
         private LocalDateTime createDate;
         private LocalDateTime updateDate;
 
+
         public UserDTO(Users user) {
             this.id = user.getId();
             this.name = user.getName();
@@ -65,30 +57,6 @@ public class CoursesPageResponseDTO {
                             .getText();
             this.createDate = user.getCreateDate();
             this.updateDate = user.getUpdateDate();
-        }
-    }
-
-
-    @Getter
-    public static class PageableDTO {
-        private int pageNumber;
-        private int pageSize;
-        private int totalPages;
-        private long totalElements;
-        private boolean last;
-        private int numberOfElements;
-        private boolean empty;
-        private Sort sort;
-
-        public PageableDTO(Page<Courses> coursesPage) {
-            this.pageNumber = coursesPage.getNumber();
-            this.pageSize = coursesPage.getSize();
-            this.totalPages = coursesPage.getTotalPages();
-            this.totalElements = coursesPage.getTotalElements();
-            this.last = coursesPage.isLast();
-            this.numberOfElements = coursesPage.getNumberOfElements();
-            this.empty = coursesPage.isEmpty();
-            this.sort = coursesPage.getSort();
         }
     }
 }

@@ -25,6 +25,7 @@ public class CoursesSaveResponseDTO {
         private String name;
         private String academyName;
         private LocalDateTime createDate;
+        private LocalDateTime updateDate;
         private UserDTO userDTO; // 프론트입장에서 계층화
 
         public CoursesDTO(Users user, Courses course) {
@@ -32,6 +33,7 @@ public class CoursesSaveResponseDTO {
             this.name = course.getName();
             this.academyName = course.getAcademyName();
             this.createDate = course.getCreateDate();
+            this.updateDate = course.getUpdateDate();
             this.userDTO = new UserDTO(user);
         }
     }
@@ -46,6 +48,7 @@ public class CoursesSaveResponseDTO {
         private String tel;
         private String role;
         private LocalDateTime createDate;
+        private LocalDateTime updateDate;
 
         public UserDTO(Users user) {
             this.id = user.getId();
@@ -56,6 +59,7 @@ public class CoursesSaveResponseDTO {
             this.role = user.getRole()
                             .getText();
             this.createDate = user.getCreateDate();
+            this.updateDate = user.getUpdateDate();
         }
     }
 }
