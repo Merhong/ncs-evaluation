@@ -36,6 +36,8 @@ public class SpringBootNcsEvaluationApplication {
             // Course 데이터 생성
             initData.initCourse();
 
+            initData.initStudent();
+
 
         }); // return
     }

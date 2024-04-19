@@ -57,7 +57,7 @@ public class SecurityConfig {
                         authorize
                                 // 회원가입 url
                                 .requestMatchers("/join", "/api/v1/auth/join").permitAll()
-                                .requestMatchers("/api/v1/courses/**", "/api/v1/ability-units/", "/orders/**").authenticated()
+                                .requestMatchers("/api/v1/courses/**", "/api/v1/ability-units/", "/api/v1/students/**").authenticated()
                                 .requestMatchers("/admin/**", "/api/admin/**").hasAnyAuthority("ADMIN")
                                 .anyRequest().permitAll()
                         //

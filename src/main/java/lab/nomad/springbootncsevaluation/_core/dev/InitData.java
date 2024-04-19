@@ -1,5 +1,6 @@
 package lab.nomad.springbootncsevaluation._core.dev;
 
+import lab.nomad.springbootncsevaluation.domain.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
@@ -9,6 +10,8 @@ import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.Abil
 import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItemsRepository;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
+import lab.nomad.springbootncsevaluation.model.students.Students;
+import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
@@ -27,6 +30,7 @@ public class InitData {
     private final AbilityUnitElementsRepository abilityUnitElementsRepository;
     private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
     private final CoursesRepository coursesRepository;
+    private final StudentsRepository studentsRepository;
 
     public void initAbilityUnit() {
         // 여러개의 AbilityUnit 객체를 담을 리스트 생성
@@ -501,5 +505,67 @@ public class InitData {
         // 리스트에 담긴 엔티티 객체 모두 DB에 저장
         coursesRepository.saveAll(courseList);
 
+    }
+
+    public void initStudent(){
+
+        //여러개의 Student 객체를 담을 리스트 생성
+        List<Students> studentsList = new ArrayList<>();
+
+        // 할당할 Courses DB로 부터 조회
+        Optional<Courses> coursesOP1 = coursesRepository.findById(1L);
+        Optional<Courses> coursesOP2 = coursesRepository.findById(2L);
+        Optional<Courses> coursesOP3 = coursesRepository.findById(3L);
+        Optional<Courses> coursesOP4 = coursesRepository.findById(4L);
+        Optional<Courses> coursesOP5 = coursesRepository.findById(5L);
+
+        // 해당 아이디 값의 Course가 존재할 경우 실행
+        if(coursesOP1.isPresent()) {
+            Courses coursePS1 = coursesOP1.get();
+
+            //저장할 엔티티 객체 인스턴스
+            Students student = Students.builder()
+                    .course(coursePS1)
+                    .name("student1")
+                    .tel("010-0000-0000")
+                    .studentStatus(StudentStatus.ACTIVE)
+                    .build();
+
+            //리스트에 해당 객체 저장
+            studentsList.add(student);
+        }
+
+
+        if(coursesOP2.isPresent()) {
+            Courses coursePS2 = coursesOP2.get();
+
+            //저장할 엔티티 객체 인스턴스
+            Students student = Students.builder()
+                    .course(coursePS2)
+                    .name("student2")
+                    .tel("010-0000-2222")
+                    .studentStatus(StudentStatus.ACTIVE)
+                    .build();
+
+            //리스트에 해당 객체 저장
+            studentsList.add(student);
+        }
+        if(coursesOP3.isPresent()) {
+            Courses coursePS3 = coursesOP3.get();
+
+            //저장할 엔티티 객체 인스턴스
+            Students student = Students.builder()
+                    .course(coursePS3)
+                    .name("student3")
+                    .tel("010-0000-3333")
+                    .studentStatus(StudentStatus.ACTIVE)
+                    .build();
+
+            //리스트에 해당 객체 저장
+            studentsList.add(student);
+        }
+
+
+        studentsRepository.saveAll(studentsList);
     }
 }
