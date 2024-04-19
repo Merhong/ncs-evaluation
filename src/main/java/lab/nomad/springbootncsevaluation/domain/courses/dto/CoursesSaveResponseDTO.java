@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CoursesSaveResponseDTO {
-    private CoursesDTO courses;
+    private CoursesDTO course;
     // 이미 courseDTO에서 user를 userDTO로 가공후 전달함.
     // private UserDTO user;
 
     // ResponseDTO 생성자
     public CoursesSaveResponseDTO(Users user, Courses course) {
-        this.courses = new CoursesDTO(user, course);
+        this.course = new CoursesDTO(user, course);
         // this.user = new UserDTO(user);
     }
 

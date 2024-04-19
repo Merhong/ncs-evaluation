@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesSaveRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesUpdateRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,8 +59,8 @@ public class CoursesIntegrationTest {
         // then
         resultActions.andExpect(status().is2xxSuccessful());
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.courses.name").value(name));
-        resultActions.andExpect(jsonPath("$.response.courses.academyName").value(academyName));
+        resultActions.andExpect(jsonPath("$.response.course.name").value(name));
+        resultActions.andExpect(jsonPath("$.response.course.academyName").value(academyName));
         resultActions.andExpect(jsonPath("$.error").doesNotExist());
     }
 
@@ -189,5 +189,38 @@ public class CoursesIntegrationTest {
         resultActions.andExpect(jsonPath("$.response").doesNotExist());
         resultActions.andExpect(jsonPath("$.error.message").value(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
 
+    }
+
+    @Test
+    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void update_test() throws Exception {
+        int id = 2;
+        String name = "testCourseNo1";
+        String academyName = "testAcademyNo1";
+
+        CoursesUpdateRequestDTO requestDTO = new CoursesUpdateRequestDTO();
+
+        requestDTO.setName(name);
+        requestDTO.setAcademyName(academyName);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                put("/api/v1/courses/"+id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.course.id").value(id));
+        resultActions.andExpect(jsonPath("$.response.course.name").value(name));
+        resultActions.andExpect(jsonPath("$.response.course.academyName").value(academyName));
+        resultActions.andExpect(jsonPath("$.error").doesNotExist());
     }
 }
