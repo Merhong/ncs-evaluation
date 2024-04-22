@@ -107,4 +107,12 @@ public class Students {
         this.updateDate = updateDate;
         this.deleteDate = deleteDate;
     }
+    // 학생 정보를 업데이트하는 메서드
+    public void update(String name, String tel, StudentStatus status) {
+        // 각 필드를 새 값으로 업데이트
+        this.name = name;
+        this.tel = tel;
+        this.status = status;
+    }
+
 }

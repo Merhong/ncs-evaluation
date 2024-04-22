@@ -10,7 +10,11 @@ public enum ExceptionMessage {
     EXPIRED_TOKEN("code6: 토큰 유효 기간이 만료되었습니다."),
     LOGIN_FAIL("code7: 아이디 혹은 비밀번호가 틀렸습니다."),
     NOT_FOUND_ABILITY_UNIT_ELEMENT("code8: 존재하지 않는 능력 단위 요소입니다."),
-    NOT_FOUND_COURSE("code9: 존재하지 않는 과정입니다.");
+    NOT_FOUND_COURSE("code9: 존재하지 않는 과정입니다."),
+    NOT_FOUND_STUDENT("code10: 존재하지 않는 학생입니다."),
+    NOT_FOUND_USER("code11: 해당 과정의 유저가 아닙니다.");
+
+
 
     final private String message;
 

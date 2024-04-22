@@ -48,10 +48,6 @@ public class StudentsSaveResponseDTO {
     }
 
 
-    // setId() 메서드 정의
-   // public void setId(Long id) {
-      //  this.id = id;
- //  }
 
 
 }
