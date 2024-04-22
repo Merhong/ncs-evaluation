@@ -3,27 +3,18 @@ package lab.nomad.springbootncsevaluation.domain.courses.dto;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
-public class CoursesPageResponseDTO {
-    private List<CoursesDTO> course;
-    private PageableDTO pageable;
+public class CoursesDeleteResponseDTO {
+    private CoursesDTO course;
 
-
-    public CoursesPageResponseDTO(Users user, Page<Courses> coursesPage) {
-        this.course = coursesPage.getContent()
-                .stream()
-                .map(course -> new CoursesDTO(course.getUser(), course))
-                .toList();
-        this.pageable = new PageableDTO(coursesPage);
+    public CoursesDeleteResponseDTO(Users user, Courses course) {
+        this.course = new CoursesDTO(user, course);
     }
 
-    // 페이징시 과정에 담을 내용
+    // courses + user 내용을 가지는 DTO
     @Getter
     public static class CoursesDTO {
         private Long id;
@@ -31,7 +22,8 @@ public class CoursesPageResponseDTO {
         private String academyName;
         private LocalDateTime createDate;
         private LocalDateTime updateDate;
-        private UserDTO userDTO;
+        private LocalDateTime deleteDate;
+        private UserDTO userDTO; // 프론트입장에서 계층화
 
         public CoursesDTO(Users user, Courses course) {
             this.id = course.getId();
@@ -39,6 +31,7 @@ public class CoursesPageResponseDTO {
             this.academyName = course.getAcademyName();
             this.createDate = course.getCreateDate();
             this.updateDate = course.getUpdateDate();
+            this.deleteDate = course.getDeleteDate();
             this.userDTO = new UserDTO(user);
         }
     }
@@ -65,30 +58,6 @@ public class CoursesPageResponseDTO {
                     .getText();
             this.createDate = user.getCreateDate();
             this.updateDate = user.getUpdateDate();
-        }
-    }
-
-
-    @Getter
-    public static class PageableDTO {
-        private int pageNumber;
-        private int pageSize;
-        private int totalPages;
-        private long totalElements;
-        private boolean last;
-        private int numberOfElements;
-        private boolean empty;
-        private Sort sort;
-
-        public PageableDTO(Page<Courses> coursesPage) {
-            this.pageNumber = coursesPage.getNumber();
-            this.pageSize = coursesPage.getSize();
-            this.totalPages = coursesPage.getTotalPages();
-            this.totalElements = coursesPage.getTotalElements();
-            this.last = coursesPage.isLast();
-            this.numberOfElements = coursesPage.getNumberOfElements();
-            this.empty = coursesPage.isEmpty();
-            this.sort = coursesPage.getSort();
         }
     }
 }

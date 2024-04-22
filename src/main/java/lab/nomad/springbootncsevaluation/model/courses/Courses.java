@@ -80,9 +80,10 @@ public class Courses {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     private LocalDateTime deleteDate;
+
     @Builder
-    public Courses(Long id, Users user, String name, String academyName,
-                   LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
+    public Courses(Long id, Users user, String name, String academyName, LocalDateTime createDate,
+                   LocalDateTime updateDate, LocalDateTime deleteDate) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -95,6 +96,12 @@ public class Courses {
     public Courses update(String name, String academyName) {
         this.name = name;
         this.academyName = academyName;
+
+        return this;
+    }
+
+    public Courses delete() {
+        this.deleteDate = LocalDateTime.now();
 
         return this;
     }

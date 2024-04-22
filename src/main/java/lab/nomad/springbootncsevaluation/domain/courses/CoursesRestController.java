@@ -2,7 +2,6 @@ package lab.nomad.springbootncsevaluation.domain.courses;
 
 import jakarta.validation.Valid;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
-import lab.nomad.springbootncsevaluation._core.exception.ValidExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,22 +30,38 @@ public class CoursesRestController {
     private final CoursesService coursesService;
     private final StudentsService studentsService;
 
+    // 과정 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @PathVariable Long id) {
+        // 권한 체크
+        // 강사 본인 것만 수정 가능하게. + 관리자?
+        AuthorityCheckUtils.authorityCheck(customUserDetails,
+                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
+
+        // 서비스 호출
+        CoursesDeleteResponseDTO responseDTO = coursesService.delete(id, customUserDetails.user());
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
+
     // 과정 수정
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id,
-                                    @RequestBody @Valid CoursesUpdateRequestDTO requestDTO, Errors errors)  {
+                                    @RequestBody @Valid CoursesUpdateRequestDTO requestDTO, Errors errors) {
 
-        // 권한 체크 -> 강사 본인 것만 수정 가능하게. + 관리자?
+        // 강사 본인 것만 수정 가능하게. + 관리자?
         AuthorityCheckUtils.authorityCheck(customUserDetails,
                                            List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
-                           .get(0)
-                           .getDefaultMessage());
+                             .get(0)
+                             .getDefaultMessage());
             throw new Exception400(errors.getAllErrors()
-                                         .get(0)
-                                         .getDefaultMessage());
+                                           .get(0)
+                                           .getDefaultMessage());
         }
 
         // 서비스 호출
@@ -94,11 +110,11 @@ public class CoursesRestController {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
-                           .get(0)
-                           .getDefaultMessage());
+                             .get(0)
+                             .getDefaultMessage());
             throw new Exception400(errors.getAllErrors()
-                                         .get(0)
-                                         .getDefaultMessage());
+                                           .get(0)
+                                           .getDefaultMessage());
         }
 
         // customUserDetails.user()는 요청한 사람(강사)
@@ -110,8 +126,7 @@ public class CoursesRestController {
     // 과정,학생등록
     @PostMapping("/{courseId}/students")
     public ResponseEntity<?> saveStudents(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                          @PathVariable Long courseId,
-                                          @RequestBody StudentsSaveRequestDTO requestDTO) {
+                                          @PathVariable Long courseId, @RequestBody StudentsSaveRequestDTO requestDTO) {
 
         // 학생 등록
         StudentsSaveResponseDTO responseDTO = studentsService.save(courseId, requestDTO);
