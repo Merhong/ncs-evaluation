@@ -86,12 +86,20 @@ public class Users {
     private LocalDateTime updateDate;
 
     /**
+     * <p>테이블의 update_date 칼럼에 매핑되는 필드입니다.</p>
+     * <p>해당 데이터가 삭제된 일시를 저장합니다.</p>
+     * <p>해당 값이 Null이라면 삭제되지 않은 데이터입니다.</p>
+     * <p>해당 필드의 타입은 {@link LocalDateTime} 타입입니다.</p>
+     */
+    private LocalDateTime deleteDate;
+
+    /**
      * <p>전체 매개변수 생성자입니다.</p>
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
     public Users(Long id, String name, String username, String password, String email, String tel, UserRole role,
-                LocalDateTime createDate, LocalDateTime updateDate) {
+                LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -101,6 +109,7 @@ public class Users {
         this.role = role;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.deleteDate = deleteDate;
     }
 
 }
