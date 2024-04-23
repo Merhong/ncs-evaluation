@@ -115,4 +115,9 @@ public class Students {
         this.status = status;
     }
 
+    public Students delete() {
+        this.deleteDate = LocalDateTime.now();
+
+        return this;
+    }
 }

@@ -40,7 +40,7 @@ public class StudentsController {
     @GetMapping
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable, @RequestParam(required = false) String searchValue) {
 
-        // 권한 체크(능력단위 컨트롤러 참조)
+        // 권한 체크
         // 관리자, 강사, 직원이 조회 가능
         AuthorityCheckUtils.authorityCheck(customUserDetails, List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
 
@@ -58,6 +58,16 @@ public class StudentsController {
                                      @RequestBody StudentsSaveRequestDTO requestDTO){
 
         StudentsUpdateResponseDTO responseDTO = studentsService.update(id, customUserDetails.user(), requestDTO);
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+
+    }
+
+    //학생삭제
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                     @PathVariable Long id){
+        StudentsDeleteResponseDTO responseDTO = studentsService.delete(id,customUserDetails.user());
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
 

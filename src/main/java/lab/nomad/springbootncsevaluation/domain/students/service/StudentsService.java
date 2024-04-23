@@ -76,9 +76,9 @@ public class StudentsService {
 
         // 검색어가 있는 경우
         if (searchValue != null && !searchValue.isEmpty()) {
-            pageStudents = studentsRepository.findByName(searchValue, pageable);
-        } else { // 검색어가 없는 경우
-            pageStudents = studentsRepository.findAll(pageable);
+            pageStudents = studentsRepository.findByNameAndDeleteDateIsNull(searchValue, pageable);
+        } else { // 검색어가 없는 경우,전체조회
+            pageStudents = studentsRepository.findAllAndByDeleteDateIsNull(pageable);
         }
 
         // StudentsPageResponseDTO 페이지로 변환하여 반환
@@ -87,11 +87,11 @@ public class StudentsService {
 
     //학생수정
     @Transactional
-    public StudentsUpdateResponseDTO update(Long id,Users user, StudentsSaveRequestDTO requestDTO) {
-         // 해당 학생을 등록한 강사인지 확인
-        Courses coursePS = coursesRepository.findByIdAndUserId(id,user.getId())
+    public StudentsUpdateResponseDTO update(Long id, Users user, StudentsSaveRequestDTO requestDTO) {
+        // 해당 학생을 등록한 강사인지 확인
+        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
                 .orElseThrow(() -> new Exception400(
-                        ExceptionMessage.NOT_FOUND_USER.getMessage()));
+                        ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
 
         // 학생 정보 가져오기
         Students studentPS = studentsRepository.findById(id)
@@ -100,9 +100,8 @@ public class StudentsService {
 
         // 학생이 해당 강사의 과정에 속해 있는지 확인
         if (!studentPS.getCourse().equals(coursePS)) {
-            throw new Exception400( ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+            throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
         }
-
 
 
         //학생수정
@@ -112,4 +111,28 @@ public class StudentsService {
         return new StudentsUpdateResponseDTO(coursePS, studentPS);
 
     }
+
+    //학생삭제
+    @Transactional
+    public StudentsDeleteResponseDTO delete(Long id, Users user) {
+        // 해당 학생을 등록한 강사인지 확인
+        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
+
+        // 학생 정보 가져오기
+        Students studentPS = studentsRepository.findById(id)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+
+        // 학생이 해당 강사의 과정에 속해 있는지 확인
+        if (!studentPS.getCourse().equals(coursePS)) {
+            throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+        }
+
+        // 삭제 시간 업데이트
+        studentPS.delete();
+
+        //저장 및 DTO로 반환
+        return new StudentsDeleteResponseDTO(coursePS,studentPS);
+    }
 }
+

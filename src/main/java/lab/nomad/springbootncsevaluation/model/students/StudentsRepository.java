@@ -12,11 +12,15 @@ import java.util.Optional;
 
 public interface StudentsRepository extends JpaRepository <Students, Long>{
 
-   // Optional<Students> findAll();
-
-    //course id 조회하는 메서드
+    //course id 조회하는 쿼리메서드
     Optional<Students> findByCourseId(Long courseId);
 
+    //이름으로 검색하는 쿼리메서드
+    Page<Students> findByNameAndDeleteDateIsNull(String searchValue, Pageable pageable);
 
-    Page<Students> findByName(String searchValue, Pageable pageable);
+    //전체조회하는 쿼리메서드
+    Page<Students> findAllAndByDeleteDateIsNull(Pageable pageable);
+
+
+
 }
