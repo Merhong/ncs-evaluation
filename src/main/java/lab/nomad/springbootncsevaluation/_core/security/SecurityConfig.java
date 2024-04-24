@@ -19,11 +19,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
-// @PreAuthorize 활성화
-// [예제]
-// 1. @PreAuthorize("hasRole('USER')")
-// 2. @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
-// 3. @Secured("ROLE_TELLER")
 public class SecurityConfig {
 
     final JWTProvider provider;
@@ -56,10 +51,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) ->
                         authorize
                                 // 회원가입 url
-                                .requestMatchers("/join", "/api/v1/auth/join").permitAll()
-                                .requestMatchers("/api/v1/courses/**", "/api/v1/ability-units/", "/api/v1/students/**").authenticated()
-                                .requestMatchers("/api/v1/users").hasAnyAuthority("ROLE_ADMIN")
-                                .anyRequest().permitAll()
+                                .requestMatchers(WHITELIST).permitAll()
+                                .requestMatchers(ADMIN).hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(TEACHER).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
+                                .requestMatchers(EMPLOYEE).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_EMP")
+                                .anyRequest().authenticated()
                         //
 
                 )
@@ -91,4 +87,27 @@ public class SecurityConfig {
     }
 
 
+    public static final String[] ADMIN = {
+            "/api/v1/users",
+            "/api/v1/users/**",
+            "/api/v1/ability-units",
+    };
+
+    public static final String[] TEACHER = {
+    };
+
+    public static final String[] EMPLOYEE = {
+            "/api/v1/courses/**",
+            "/api/v1/ability-units/**",
+            "/api/v1/students/**",
+    };
+
+    public static final String[] WHITELIST = {
+            "/api/v1/auth/join",
+            "/api/v1/auth/login",
+            "/api/v1/auth/re-login",
+            "/h2-console/**",
+            "/h2-console",
+            "/test/**",
+    };
 }
