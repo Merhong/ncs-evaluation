@@ -1,6 +1,5 @@
 package lab.nomad.springbootncsevaluation._core.dev;
 
-import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
@@ -10,7 +9,14 @@ import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.Abil
 import lab.nomad.springbootncsevaluation.model.ability_units.elements.items.AbilityUnitElementItemsRepository;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
+import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapersRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestionsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswers;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswersRepository;
 import lab.nomad.springbootncsevaluation.model.students.Students;
+import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users.UsersRepository;
@@ -31,6 +37,9 @@ public class InitData {
     private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
     private final CoursesRepository coursesRepository;
     private final StudentsRepository studentsRepository;
+    private final ExamPapersRepository examPapersRepository;
+    private final ExamPaperMultipleQuestionsRepository questionsRepository;
+    private final ExamPaperMultipleQuestionAnswersRepository answersRepository;
 
     public void initAbilityUnit() {
         // 여러개의 AbilityUnit 객체를 담을 리스트 생성
@@ -324,7 +333,8 @@ public class InitData {
 
             // 저장할 AbilityUnitElementItem 엔티티 객체 인스턴스
             AbilityUnitElementItems abilityUnitElementItem = AbilityUnitElementItems.builder()
-                    .content("개발하고자 하는 응용소프트웨어에 대한 이해를 높이기 위해, 현행 시스템의 적용 현황을 파악함으로써 개발 범위와 향후 개발될 시스템으로의 이행 방향성을 분석할 수 있다.")
+                    .content(
+                            "개발하고자 하는 응용소프트웨어에 대한 이해를 높이기 위해, 현행 시스템의 적용 현황을 파악함으로써 개발 범위와 향후 개발될 시스템으로의 이행 방향성을 분석할 수 있다.")
                     .abilityUnitElement(abilityUnitElement)
                     .build();
             // 리스트에 해당 객체 저장
@@ -426,45 +436,45 @@ public class InitData {
         Optional<Users> usersOP4 = usersRepository.findById(4L);
 
         // 해당 아이디 값의 User가 존재할 경우 실행
-        if(usersOP1.isPresent()) {
+        if (usersOP1.isPresent()) {
             Users userPS1 = usersOP1.get();
 
             // 저장할 Course 엔티티 객체 인스턴스
             // 저장할 엔티티 객체 인스턴스
             Courses course = Courses.builder()
-                                    .name("AB1과정")
-                                    .academyName("AAA학원")
-                                    .user(userPS1)
-                                    .build();
+                    .name("AB1과정")
+                    .academyName("AAA학원")
+                    .user(userPS1)
+                    .build();
 
             // 리스트에 해당 객체 저장
             courseList.add(course);
         }
 
         // 해당 아이디 값의 User가 존재할 경우 실행
-        if(usersOP2.isPresent()) {
+        if (usersOP2.isPresent()) {
             Users userPS1 = usersOP1.get();
             Users userPS2 = usersOP2.get();
 
             // 저장할 Course 엔티티 객체 인스턴스
             // 저장할 엔티티 객체 인스턴스
             Courses course = Courses.builder()
-                                    .name("B1과정")
-                                    .academyName("ssar학원")
-                                    .user(userPS2)
-                                    .build();
+                    .name("B1과정")
+                    .academyName("ssar학원")
+                    .user(userPS2)
+                    .build();
 
             Courses course1 = Courses.builder()
-                                    .name("B2과정")
-                                    .academyName("ssar학원")
-                                    .user(userPS2)
-                                    .build();
+                    .name("B2과정")
+                    .academyName("ssar학원")
+                    .user(userPS2)
+                    .build();
 
             Courses course2 = Courses.builder()
-                                     .name("AA과정")
-                                     .academyName("AAA학원")
-                                     .user(userPS1)
-                                     .build();
+                    .name("AA과정")
+                    .academyName("AAA학원")
+                    .user(userPS1)
+                    .build();
             // 리스트에 해당 객체 저장
             courseList.add(course);
             courseList.add(course1);
@@ -472,32 +482,32 @@ public class InitData {
         }
 
         // 해당 아이디 값의 User가 존재할 경우 실행
-        if(usersOP3.isPresent()) {
+        if (usersOP3.isPresent()) {
             Users userPS3 = usersOP3.get();
 
             // 저장할 Course 엔티티 객체 인스턴스
             // 저장할 엔티티 객체 인스턴스
             Courses course = Courses.builder()
-                                    .name("C5과정")
-                                    .academyName("cos학원")
-                                    .user(userPS3)
-                                    .build();
+                    .name("C5과정")
+                    .academyName("cos학원")
+                    .user(userPS3)
+                    .build();
 
             // 리스트에 해당 객체 저장
             courseList.add(course);
         }
 
         // 해당 아이디 값의 User가 존재할 경우 실행
-        if(usersOP4.isPresent()) {
+        if (usersOP4.isPresent()) {
             Users userPS4 = usersOP4.get();
 
             // 저장할 Course 엔티티 객체 인스턴스
             // 저장할 엔티티 객체 인스턴스
             Courses course = Courses.builder()
-                                    .name("D6과정")
-                                    .academyName("love학원")
-                                    .user(userPS4)
-                                    .build();
+                    .name("D6과정")
+                    .academyName("love학원")
+                    .user(userPS4)
+                    .build();
 
             // 리스트에 해당 객체 저장
             courseList.add(course);
@@ -507,9 +517,9 @@ public class InitData {
 
     }
 
-    public void initStudent(){
+    public void initStudent() {
 
-        //여러개의 Student 객체를 담을 리스트 생성
+        // 여러개의 Student 객체를 담을 리스트 생성
         List<Students> studentsList = new ArrayList<>();
 
         // 할당할 Courses DB로 부터 조회
@@ -520,10 +530,10 @@ public class InitData {
         Optional<Courses> coursesOP5 = coursesRepository.findById(5L);
 
         // 해당 아이디 값의 Course가 존재할 경우 실행
-        if(coursesOP1.isPresent()) {
+        if (coursesOP1.isPresent()) {
             Courses coursePS1 = coursesOP1.get();
 
-            //저장할 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS1)
                     .name("student1")
@@ -531,15 +541,15 @@ public class InitData {
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
 
-            //리스트에 해당 객체 저장
+            // 리스트에 해당 객체 저장
             studentsList.add(student);
         }
 
 
-        if(coursesOP2.isPresent()) {
+        if (coursesOP2.isPresent()) {
             Courses coursePS2 = coursesOP2.get();
 
-            //저장할 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS2)
                     .name("student2")
@@ -547,13 +557,13 @@ public class InitData {
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
 
-            //리스트에 해당 객체 저장
+            // 리스트에 해당 객체 저장
             studentsList.add(student);
         }
-        if(coursesOP3.isPresent()) {
+        if (coursesOP3.isPresent()) {
             Courses coursePS3 = coursesOP3.get();
 
-            //저장할 엔티티 객체 인스턴스
+            // 저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS3)
                     .name("student3")
@@ -561,11 +571,249 @@ public class InitData {
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
 
-            //리스트에 해당 객체 저장
+            // 리스트에 해당 객체 저장
             studentsList.add(student);
         }
 
 
         studentsRepository.saveAll(studentsList);
+    }
+
+    public void initExamPaper() {
+        // 여러개의 ExamPaper 객체를 담을 리스트 생성
+        List<ExamPapers> examPaperList = new ArrayList<>();
+
+        // 할당할 값들 DB로 부터 조회
+        Optional<AbilityUnits> abilityUnitsOP1 = abilityUnitsRepository.findById(1L);
+        Optional<Users> usersOP1 = usersRepository.findById(1L);
+        Optional<AbilityUnits> abilityUnitsOP2 = abilityUnitsRepository.findById(2L);
+        Optional<Users> usersOP2 = usersRepository.findById(2L);
+        Optional<AbilityUnits> abilityUnitsOP3 = abilityUnitsRepository.findById(3L);
+        Optional<Users> usersOP3 = usersRepository.findById(3L);
+        Optional<AbilityUnits> abilityUnitsOP4 = abilityUnitsRepository.findById(4L);
+        Optional<Users> usersOP4 = usersRepository.findById(4L);
+
+        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
+        if (abilityUnitsOP1.isPresent() && usersOP1.isPresent()) {
+            AbilityUnits abilityUnitsPS1 = abilityUnitsOP1.get();
+            Users usersPS1 = usersOP1.get();
+
+            // 저장할 ExamPapers 엔티티 객체 인스턴스
+            ExamPapers examPaper1 = ExamPapers.builder()
+                    .name("시험지1")
+                    .examType(ExamType.MULTIPLE_CHOICE)
+                    .abilityUnit(abilityUnitsPS1)
+                    .user(usersPS1)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperList.add(examPaper1);
+        }
+
+        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
+        if (abilityUnitsOP2.isPresent() && usersOP2.isPresent()) {
+            AbilityUnits abilityUnitsPS2 = abilityUnitsOP2.get();
+            Users usersPS2 = usersOP2.get();
+
+            // 저장할 ExamPapers 엔티티 객체 인스턴스
+            ExamPapers examPaper2 = ExamPapers.builder()
+                    .name("시험지2")
+                    .examType(ExamType.MULTIPLE_CHOICE)
+                    .abilityUnit(abilityUnitsPS2)
+                    .user(usersPS2)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperList.add(examPaper2);
+        }
+
+        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
+        if (abilityUnitsOP3.isPresent() && usersOP3.isPresent()) {
+            AbilityUnits abilityUnitsPS3 = abilityUnitsOP3.get();
+            Users usersPS3 = usersOP3.get();
+
+            // 저장할 ExamPapers 엔티티 객체 인스턴스
+            ExamPapers examPaper3 = ExamPapers.builder()
+                    .name("시험지3")
+                    .examType(ExamType.MULTIPLE_CHOICE)
+                    .abilityUnit(abilityUnitsPS3)
+                    .user(usersPS3)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperList.add(examPaper3);
+        }
+
+        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
+        if (abilityUnitsOP4.isPresent() && usersOP4.isPresent()) {
+            AbilityUnits abilityUnitsPS4 = abilityUnitsOP4.get();
+            Users usersPS4 = usersOP4.get();
+
+            // 저장할 ExamPapers 엔티티 객체 인스턴스
+            ExamPapers examPaper4 = ExamPapers.builder()
+                    .name("시험지4")
+                    .examType(ExamType.MULTIPLE_CHOICE)
+                    .abilityUnit(abilityUnitsPS4)
+                    .user(usersPS4)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperList.add(examPaper4);
+        }
+        examPapersRepository.saveAll(examPaperList);
+    }
+
+    public void initExamPaperMultipleQuestion() {
+        // 여러개의 ExamPaperMultipleQuesion 객체를 담을 리스트 생성
+        List<ExamPaperMultipleQuestions> examPaperMultipleQuestionList = new ArrayList<>();
+
+        // 할당할 값들 DB로 부터 조회
+        Optional<ExamPapers> examPapersOP1 = examPapersRepository.findById(1L);
+        Optional<ExamPapers> examPapersOP2 = examPapersRepository.findById(2L);
+        Optional<ExamPapers> examPapersOP3 = examPapersRepository.findById(3L);
+        Optional<ExamPapers> examPapersOP4 = examPapersRepository.findById(4L);
+
+        // 해당 ExamPaper ID가 존재할 경우 실행
+        if (examPapersOP1.isPresent()) {
+            ExamPapers examPaperPS1 = examPapersOP1.get();
+
+            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestions question1 = ExamPaperMultipleQuestions.builder()
+                    .no(1)
+                    .content("문제1-1")
+                    .point(4)
+                    .examPaper(examPaperPS1)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionList.add(question1);
+        }
+
+        // 해당 ExamPaper ID가 존재할 경우 실행
+        if (examPapersOP2.isPresent()) {
+            ExamPapers examPaperPS2 = examPapersOP2.get();
+
+            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestions question2 = ExamPaperMultipleQuestions.builder()
+                    .no(1)
+                    .content("문제2-1")
+                    .point(4)
+                    .examPaper(examPaperPS2)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionList.add(question2);
+        }
+
+        // 해당 ExamPaper ID가 존재할 경우 실행
+        if (examPapersOP3.isPresent()) {
+            ExamPapers examPaperPS3 = examPapersOP3.get();
+
+            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestions question3 = ExamPaperMultipleQuestions.builder()
+                    .no(1)
+                    .content("문제3-1")
+                    .point(4)
+                    .examPaper(examPaperPS3)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionList.add(question3);
+        }
+
+        // 해당 ExamPaper ID가 존재할 경우 실행
+        if (examPapersOP4.isPresent()) {
+            ExamPapers examPaperPS4 = examPapersOP4.get();
+
+            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestions question4 = ExamPaperMultipleQuestions.builder()
+                    .no(1)
+                    .content("문제4-1")
+                    .point(4)
+                    .examPaper(examPaperPS4)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionList.add(question4);
+        }
+        // 저장
+        questionsRepository.saveAll(examPaperMultipleQuestionList);
+    }
+
+    public void initExamPaperMultipleQuestionAnswer() {
+        // 여러개의 해답을 담을 리스트 생성
+        List<ExamPaperMultipleQuestionAnswers> examPaperMultipleQuestionAnswerList = new ArrayList<>();
+
+        // 할당할 값들 DB로 부터 조회
+        Optional<ExamPaperMultipleQuestions> questionOP1 = questionsRepository.findById(1L);
+        Optional<ExamPaperMultipleQuestions> questionOP2 = questionsRepository.findById(2L);
+        Optional<ExamPaperMultipleQuestions> questionOP3 = questionsRepository.findById(3L);
+        Optional<ExamPaperMultipleQuestions> questionOP4 = questionsRepository.findById(4L);
+
+        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
+        if(questionOP1.isPresent()) {
+            ExamPaperMultipleQuestions questionPS1 = questionOP1.get();
+
+                // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
+                ExamPaperMultipleQuestionAnswers answer1 = ExamPaperMultipleQuestionAnswers.builder()
+                        .no(1)
+                        .content("1-1 A")
+                        .isCorrect(false)
+                        .examPaperQuestion(questionPS1)
+                        .build();
+
+                // 리스트에 해당 객체 저장
+                examPaperMultipleQuestionAnswerList.add(answer1);
+        }
+
+        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
+        if(questionOP2.isPresent()) {
+            ExamPaperMultipleQuestions questionPS2 = questionOP2.get();
+
+            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestionAnswers answer2 = ExamPaperMultipleQuestionAnswers.builder()
+                    .no(1)
+                    .content("2-1 A")
+                    .isCorrect(false)
+                    .examPaperQuestion(questionPS2)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionAnswerList.add(answer2);
+        }
+
+        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
+        if(questionOP3.isPresent()) {
+            ExamPaperMultipleQuestions questionPS3 = questionOP3.get();
+
+            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestionAnswers answer3 = ExamPaperMultipleQuestionAnswers.builder()
+                    .no(1)
+                    .content("3-1 A")
+                    .isCorrect(false)
+                    .examPaperQuestion(questionPS3)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionAnswerList.add(answer3);
+        }
+
+        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
+        if(questionOP4.isPresent()) {
+            ExamPaperMultipleQuestions questionPS4 = questionOP4.get();
+
+            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
+            ExamPaperMultipleQuestionAnswers answer4 = ExamPaperMultipleQuestionAnswers.builder()
+                    .no(1)
+                    .content("4-1 A")
+                    .isCorrect(false)
+                    .examPaperQuestion(questionPS4)
+                    .build();
+
+            // 리스트에 해당 객체 저장
+            examPaperMultipleQuestionAnswerList.add(answer4);
+        }
+        // 저장
+        answersRepository.saveAll(examPaperMultipleQuestionAnswerList);
     }
 }

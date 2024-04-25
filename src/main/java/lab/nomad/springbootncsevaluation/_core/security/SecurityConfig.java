@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 .requestMatchers(ADMIN).hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(TEACHER).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
                                 .requestMatchers(EMPLOYEE).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_EMP")
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                         //
 
                 )
@@ -90,15 +90,15 @@ public class SecurityConfig {
     public static final String[] ADMIN = {
             "/api/v1/users",
             "/api/v1/users/**",
-            "/api/v1/ability-units",
     };
 
     public static final String[] TEACHER = {
+            "/api/v1/exam-paper/**",
+            "/api/v1/ability-units/**",
     };
 
     public static final String[] EMPLOYEE = {
             "/api/v1/courses/**",
-            "/api/v1/ability-units/**",
             "/api/v1/students/**",
     };
 

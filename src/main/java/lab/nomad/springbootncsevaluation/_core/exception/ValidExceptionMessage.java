@@ -8,7 +8,12 @@ public enum ValidExceptionMessage {
     NULL_COURSE_NAME(Message.EMPTY_COURSE_NAME),
     EMPTY_ACADEMY_NAME(Message.EMPTY_ACADEMY_NAME),
     EMPTY_ABILITY_CODE(Message.EMPTY_ABILITY_CODE),
-    EMPTY_ABILITY_NAME(Message.EMPTY_ABILITY_NAME);
+    EMPTY_ABILITY_NAME(Message.EMPTY_ABILITY_NAME),
+    EMPTY_EXAM_PAPER_NAME(Message.EMPTY_EXAM_PAPER_NAME),
+    EMPTY_EXAM_TYPE(Message.EMPTY_EXAM_TYPE),
+    EMPTY_CONTENT(Message.EMPTY_CONTENT),
+    EMPTY_POINT(Message.EMPTY_POINT),
+    IS_CORRECT(Message.IS_CORRECT);
 
     final private String message;
 
@@ -25,6 +30,11 @@ public enum ValidExceptionMessage {
         public static final String EMPTY_ACADEMY_NAME = "학원명을 입력해주세요.";
         public static final String EMPTY_ABILITY_CODE = "능력단위(능력단위요소) 코드를 입력하세요.";
         public static final String EMPTY_ABILITY_NAME = "능력단위(능력단위요소)명 입력하세요.";
+        public static final String EMPTY_EXAM_PAPER_NAME = "시험지명을 입력하세요.";
+        public static final String EMPTY_EXAM_TYPE = "시험 종류를 입력하세요.";
+        public static final String EMPTY_CONTENT = "내용을 입력하세요.";
+        public static final String EMPTY_POINT = "배점을 입력하세요.";
+        public static final String IS_CORRECT = "정답 여부를 입력하세요.";
 
     }
 }

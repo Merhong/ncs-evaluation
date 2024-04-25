@@ -11,7 +11,11 @@ public enum ExceptionMessage {
     LOGIN_FAIL("code7: 아이디 혹은 비밀번호가 틀렸습니다."),
     NOT_FOUND_ABILITY_UNIT_ELEMENT("code8: 존재하지 않는 능력 단위 요소입니다."),
     NOT_FOUND_COURSE("code9: 존재하지 않는 과정입니다."),
-    NOT_FOUND_STUDENT("code10: 존재하지 않는 학생입니다.");
+    NOT_FOUND_STUDENT("code10: 존재하지 않는 학생입니다."),
+    NOT_FOUND_EXAM_PAPER("code11: 존재하지 않는 시험지입니다."),
+    NOT_FOUND_QUESTION("code12: 존재하지 않는 문제입니다."),
+    NOT_FOUND_EXAM_TYPE("code13: 존재하지 않는 시험 타입입니다.");
+
 
 
 

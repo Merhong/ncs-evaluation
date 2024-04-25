@@ -36,8 +36,17 @@ public class SpringBootNcsEvaluationApplication {
             // Course 데이터 생성
             initData.initCourse();
 
+            // Student 데이터 생성
             initData.initStudent();
 
+            // 선다형 시험지(ExamPapers) 데이터 생성
+            initData.initExamPaper();
+
+            // 시험지 문제(ExamPaperMultipleQuestions) 데이터 생성
+            initData.initExamPaperMultipleQuestion();
+
+            // 시험지 문제 해답(ExamPaperMultipleQuestionAnswers) 데이터 생성
+            initData.initExamPaperMultipleQuestionAnswer();
 
         }); // return
     }
