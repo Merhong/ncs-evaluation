@@ -4,6 +4,9 @@ package lab.nomad.springbootncsevaluation.domain.exams.service;
 import jakarta.persistence.Id;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
+import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
+import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsOneResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.exams.Exams;
@@ -15,8 +18,15 @@ import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Optional;
 
 import java.util.Optional;
 
@@ -65,6 +75,31 @@ public class ExamsService {
 
 
     }
+    // 시험 조회 (검색 기능 포함)
+    public Page<ExamsPageResponseDTO> page(String searchValue, Pageable pageable) {
+        Page<Exams> pageExams;
 
+        // 검색어가 있는 경우
+        if (searchValue != null && !searchValue.isEmpty()) {
+            pageExams = examsRepository.findByStudentNameContaining(searchValue, pageable);
+        } else { // 검색어가 없는 경우, 전체 조회
+            pageExams = examsRepository.findAll(pageable);
+        }
+
+        // ExamsPageResponseDTO 페이지로 변환하여 반환
+        return pageExams.map(exam -> new ExamsPageResponseDTO(exam));
+    }
+
+    //시험상세조회
+    public ExamsOneResponseDTO one(Long id) {
+        Optional<Exams> optionalExam = examsRepository.findById(id);
+
+        // 특정 ID의 시험이 존재하지 않는 경우 404 에러를 발생시킵니다.
+        Exams exam = optionalExam.orElseThrow(() ->
+                new Exception400(ExceptionMessage.NOT_FOUND_EXAM.getMessage()));
+
+        // ExamsOneResponseDTO로 변환하여 반환
+        return new ExamsOneResponseDTO(exam);
+    }
 }
 

@@ -101,4 +101,7 @@ public class ExamPapers {
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
+
+    public void setId(Long examPaperId) {
+    }
 }

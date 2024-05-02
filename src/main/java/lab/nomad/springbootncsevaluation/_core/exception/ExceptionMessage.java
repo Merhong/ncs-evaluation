@@ -15,7 +15,8 @@ public enum ExceptionMessage {
     NOT_FOUND_EXAM_PAPER("code11: 존재하지 않는 시험지입니다."),
     NOT_FOUND_QUESTION("code12: 존재하지 않는 문제입니다."),
     NOT_FOUND_EXAM_TYPE("code13: 존재하지 않는 시험 타입입니다."),
-    NOT_FOUND_STUDENT_EXAMPAPER("code14: 학생과 시험지가 존재하지않습니다.");
+    NOT_FOUND_STUDENT_EXAMPAPER("code14: 학생과 시험지가 존재하지않습니다."),
+    NOT_FOUND_EXAM("code15:  존재하지 않는 시험 입니다.");;
 
 
 
