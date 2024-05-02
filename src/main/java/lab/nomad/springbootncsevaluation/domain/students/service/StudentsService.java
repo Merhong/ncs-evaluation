@@ -87,9 +87,12 @@ public class StudentsService {
 
     //학생수정
     @Transactional
-    public StudentsUpdateResponseDTO update(Long id, Users user, StudentsSaveRequestDTO requestDTO) {
-        // 해당 학생을 등록한 강사인지 확인
-        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+
+    public StudentsUpdateResponseDTO update(Long id,Users user, StudentsSaveRequestDTO requestDTO) {
+         // 해당 학생을 등록한 강사인지 확인
+        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id,user.getId())
+
+
                 .orElseThrow(() -> new Exception400(
                         ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
 

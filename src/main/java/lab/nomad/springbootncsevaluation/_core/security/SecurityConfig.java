@@ -100,6 +100,7 @@ public class SecurityConfig {
     public static final String[] EMPLOYEE = {
             "/api/v1/courses/**",
             "/api/v1/students/**",
+            "/api/v1/exams/**",
     };
 
     public static final String[] WHITELIST = {
