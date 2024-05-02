@@ -30,29 +30,28 @@ public class ExamPaperMultipleQuestionsRestController {
     // 시험지 문제 등록
     @PostMapping("/{examPaperId}/question")
     public ResponseEntity<?> save(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long examPaperId,
-            @RequestBody @Valid ExamPaperMultipleQuestionsSaveRequestDTO requestDTO,
-            Errors errors) {
+                                  @PathVariable Long examPaperId,
+                                  @RequestBody @Valid ExamPaperMultipleQuestionsSaveRequestDTO requestDTO,
+                                  Errors errors) {
 
         // 권한 체크
         // 관리자, 강사 조회 가능
         AuthorityCheckUtils.authorityCheck(customUserDetails,
-                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
 
         // 유효성 체크
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
-                             .get(0)
-                             .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
             throw new Exception400(errors.getAllErrors()
-                                           .get(0)
-                                           .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
         }
 
         // 시험지 문제 등록
         ExamPaperMultipleQuestionsSaveResponseDTO responseDTO = questionsService.save(customUserDetails.user(),
-                                                                                      examPaperId,
-                                                                                      requestDTO);
+                examPaperId, requestDTO);
 
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));

@@ -16,7 +16,8 @@ public class ExamPaperMultipleQuestionAnswersSaveResponseDTO {
     private ExamPaperMultipleQuestionAnswersDTO examPaperMultipleQuestionAnswer;
 
     // 생성자
-    public ExamPaperMultipleQuestionAnswersSaveResponseDTO(ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswer) {
+    public ExamPaperMultipleQuestionAnswersSaveResponseDTO(
+            ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswer) {
         this.examPaperMultipleQuestionAnswer = new ExamPaperMultipleQuestionAnswersDTO(examPaperMultipleQuestionAnswer);
     }
 
@@ -34,7 +35,8 @@ public class ExamPaperMultipleQuestionAnswersSaveResponseDTO {
             this.no = examPaperMultipleQuestionAnswer.getNo();
             this.content = examPaperMultipleQuestionAnswer.getContent();
             this.isCorrect = examPaperMultipleQuestionAnswer.getIsCorrect();
-            this.examPaperMultipleQuestionsDTO = new ExamPaperMultipleQuestionsDTO(examPaperMultipleQuestionAnswer.getExamPaperMultipleQuestion());
+            this.examPaperMultipleQuestionsDTO = new ExamPaperMultipleQuestionsDTO(
+                    examPaperMultipleQuestionAnswer.getExamPaperMultipleQuestion());
         }
     }
 

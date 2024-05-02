@@ -1,9 +1,13 @@
 package lab.nomad.springbootncsevaluation.model.exams.papers;
 
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface ExamPapersRepository extends JpaRepository<ExamPapers, Long> {
 
@@ -15,5 +19,8 @@ public interface ExamPapersRepository extends JpaRepository<ExamPapers, Long> {
 
     @Meta(comment = "강사는 자기 시험지만 볼 수 있음")
     Page<ExamPapers> findByUserId(Long userId, Pageable pageable);
+
+    @Meta(comment = "시험지ID와 유저ID 둘 모두 만족하는 튜플을 찾는 쿼리 메소드")
+    Optional<ExamPapers> findByIdAndUserId(Long id, Long userId);
 
 }

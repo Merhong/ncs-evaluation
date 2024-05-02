@@ -29,25 +29,24 @@ public class ExamPaperMultipleQuestionAnswersService {
     private final ExamPapersRepository examPapersRepository;
 
     @Transactional
-    public ExamPaperMultipleQuestionAnswersSaveResponseDTO save(Users user,
-            Long id,
-            ExamPaperMultipleQuestionAnswersSaveRequestDTO requestDTO) {
+    public ExamPaperMultipleQuestionAnswersSaveResponseDTO save(Users user, Long id,
+                                                                ExamPaperMultipleQuestionAnswersSaveRequestDTO requestDTO) {
 
         // questionId로 문제 찾기
         ExamPaperMultipleQuestions questionOP = questionsRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_QUESTION.getMessage()));
 
-        // 가장 마지막 해답 번호 찾기
+        // 가장 마지막 답안 번호 찾기
         int lastNo = answersRepository.findByExamPaperMultipleQuestionId(id)
                 .stream()
                 .mapToInt(answer -> answer.getNo())
                 .max()
                 .orElse(0);
 
-        // 유저가 관리자라면 모든 시험지 문제에 해답 등록 가능
+        // 유저가 관리자라면 모든 시험지 문제에 답안 등록 가능
         if (user.getRole()
                 .equals(UserRole.ROLE_ADMIN)) {
-            // 시험지 문제 해답 등록
+            // 시험지 문제 답안 등록
             ExamPaperMultipleQuestionAnswers answerForSave = ExamPaperMultipleQuestionAnswers.builder()
                     .no(lastNo + 1)
                     .content(requestDTO.getContent())
@@ -62,7 +61,7 @@ public class ExamPaperMultipleQuestionAnswersService {
         } else {
             // 만약 시험지를 등록한 유저가 아니라면 예외처리
             ExamPapers examPaperOP = examPapersRepository.findById(questionOP.getExamPaper()
-                                                                           .getId())
+                            .getId())
                     .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
 
             if (examPaperOP.getUser()
@@ -70,7 +69,7 @@ public class ExamPaperMultipleQuestionAnswersService {
                 throw new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage());
             }
 
-            // 문제에 해답 등록
+            // 문제에 답안 등록
             ExamPaperMultipleQuestionAnswers answerForSave = ExamPaperMultipleQuestionAnswers.builder()
                     .no(lastNo + 1)
                     .content(requestDTO.getContent())

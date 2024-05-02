@@ -26,9 +26,8 @@ public class ExamPaperMultipleQuestionsService {
     private final ExamPaperMultipleQuestionsRepository questionsRepository;
 
     @Transactional
-    public ExamPaperMultipleQuestionsSaveResponseDTO save(Users user,
-            Long id,
-            ExamPaperMultipleQuestionsSaveRequestDTO requestDTO) {
+    public ExamPaperMultipleQuestionsSaveResponseDTO save(Users user, Long id,
+                                                          ExamPaperMultipleQuestionsSaveRequestDTO requestDTO) {
 
         // examPaperId로 시험지 찾기
         ExamPapers examPaperOP = examPapersRepository.findById(id)

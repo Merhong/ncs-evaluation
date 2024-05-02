@@ -1,8 +1,6 @@
 package lab.nomad.springbootncsevaluation.domain.exams._papers.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
 import lombok.Getter;
 import lombok.Setter;
 
