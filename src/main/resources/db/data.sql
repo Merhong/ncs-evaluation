@@ -131,3 +131,11 @@ Insert INTO exam_paper_multiple_question_answers(exampapermultiplequestion_id, n
 VALUES (12, 2, 'B', false);
 Insert INTO exam_paper_multiple_question_answers(exampapermultiplequestion_id, no, content, iscorrect)
 VALUES (12, 3, 'C', false);
+
+-- Exam(시험)
+INSERT INTO exams(student_id, exampaper_id, createdate, updatedate)
+VALUES (1, 1, now(), now());
+INSERT INTO exams(student_id, exampaper_id, createdate, updatedate)
+VALUES (2, 2, now(), now());
+INSERT INTO exams(student_id, exampaper_id, createdate, updatedate)
+VALUES (3, 3, now(), now());

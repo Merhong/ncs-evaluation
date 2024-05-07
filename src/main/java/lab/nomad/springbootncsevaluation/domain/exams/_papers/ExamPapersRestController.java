@@ -3,6 +3,7 @@ package lab.nomad.springbootncsevaluation.domain.exams._papers;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
+import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperDeleteResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperOneResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._papers.service.ExamPapersService;
@@ -25,6 +26,21 @@ public class ExamPapersRestController {
     // DI
     private final ExamPapersService examPapersService;
 
+
+    // 시험지 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id) {
+        // 권한 체크
+        // 강사 본인 것만 수정 가능하게. + 관리자?
+        AuthorityCheckUtils.authorityCheck(customUserDetails,
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
+
+        // 서비스 호출
+        ExamPaperDeleteResponseDTO responseDTO = examPapersService.delete(id, customUserDetails.user());
+
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
+    }
+
     // 시험지 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<?> one(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id) {
@@ -34,9 +50,7 @@ public class ExamPapersRestController {
         AuthorityCheckUtils.authorityCheck(customUserDetails,
                 List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
 
-
         ExamPaperOneResponseDTO responseDTO = examPapersService.one(id, customUserDetails.user());
-
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }

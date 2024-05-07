@@ -87,12 +87,19 @@ public class ExamPapers {
     private LocalDateTime updateDate;
 
     /**
+     * <p>테이블의 delete_date 칼럼에 매핑되는 필드입니다.</p>
+     * <p>해당 데이터의 삭제일시를 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link LocalDateTime} 타입입니다.</p>
+     */
+    private LocalDateTime deleteDate;
+
+    /**
      * <p>전체 매개변수 생성자입니다.</p>
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
     public ExamPapers(Long id, AbilityUnits abilityUnit, Users user, String name, ExamType examType,
-                     LocalDateTime createDate, LocalDateTime updateDate) {
+                      LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
         this.id = id;
         this.abilityUnit = abilityUnit;
         this.user = user;
@@ -100,6 +107,13 @@ public class ExamPapers {
         this.examType = examType;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.deleteDate = deleteDate;
+    }
+
+    public ExamPapers delete() {
+        this.deleteDate = LocalDateTime.now();
+
+        return this;
     }
 
     public void setId(Long examPaperId) {

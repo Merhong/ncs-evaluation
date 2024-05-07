@@ -1,26 +1,30 @@
 package lab.nomad.springbootncsevaluation.model.exams.papers;
 
-import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ExamPapersRepository extends JpaRepository<ExamPapers, Long> {
 
     @Meta(comment = "키워드 검색(관리자는 모든 시험지를 볼 수 있음)")
-    Page<ExamPapers> findByNameContains(String searchValue, Pageable pageable);
+    Page<ExamPapers> findByNameContainsAndDeleteDateIsNull(String searchValue, Pageable pageable);
 
     @Meta(comment = "키워드 검색(강사는 자기 시험지만 볼 수 있음")
-    Page<ExamPapers> findByNameContainsAndUserId(String searchValue, Long userId, Pageable pageable);
+    Page<ExamPapers> findByNameContainsAndUserIdAndDeleteDateIsNull(String searchValue, Long userId, Pageable pageable);
+
+    @Meta(comment = "관리자는 모든 시험지를 볼 수 있음")
+    Page<ExamPapers> findByDeleteDateIsNull(Pageable pageable);
 
     @Meta(comment = "강사는 자기 시험지만 볼 수 있음")
-    Page<ExamPapers> findByUserId(Long userId, Pageable pageable);
+    Page<ExamPapers> findByUserIdAndDeleteDateIsNull(Long userId, Pageable pageable);
 
     @Meta(comment = "시험지ID와 유저ID 둘 모두 만족하는 튜플을 찾는 쿼리 메소드")
-    Optional<ExamPapers> findByIdAndUserId(Long id, Long userId);
+    Optional<ExamPapers> findByIdAndUserIdAndDeleteDateIsNull(Long id, Long userId);
+
+    @Meta(comment = "삭제된 Log가 없는 시험지ID를 만족하는 튜플을 찾는 쿼리 메소드")
+    Optional<ExamPapers> findByIdAndDeleteDateIsNull(Long id);
 
 }

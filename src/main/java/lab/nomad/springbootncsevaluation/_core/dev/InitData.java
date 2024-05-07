@@ -612,56 +612,6 @@ public class InitData {
             examPaperList.add(examPaper1);
         }
 
-        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
-        if (abilityUnitsOP2.isPresent() && usersOP2.isPresent()) {
-            AbilityUnits abilityUnitsPS2 = abilityUnitsOP2.get();
-            Users usersPS2 = usersOP2.get();
-
-            // 저장할 ExamPapers 엔티티 객체 인스턴스
-            ExamPapers examPaper2 = ExamPapers.builder()
-                    .name("시험지2")
-                    .examType(ExamType.MULTIPLE_CHOICE)
-                    .abilityUnit(abilityUnitsPS2)
-                    .user(usersPS2)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperList.add(examPaper2);
-        }
-
-        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
-        if (abilityUnitsOP3.isPresent() && usersOP3.isPresent()) {
-            AbilityUnits abilityUnitsPS3 = abilityUnitsOP3.get();
-            Users usersPS3 = usersOP3.get();
-
-            // 저장할 ExamPapers 엔티티 객체 인스턴스
-            ExamPapers examPaper3 = ExamPapers.builder()
-                    .name("시험지3")
-                    .examType(ExamType.MULTIPLE_CHOICE)
-                    .abilityUnit(abilityUnitsPS3)
-                    .user(usersPS3)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperList.add(examPaper3);
-        }
-
-        // 해당 아이디 값의 AbilityUnit과 User가 존재할 경우 실행
-        if (abilityUnitsOP4.isPresent() && usersOP4.isPresent()) {
-            AbilityUnits abilityUnitsPS4 = abilityUnitsOP4.get();
-            Users usersPS4 = usersOP4.get();
-
-            // 저장할 ExamPapers 엔티티 객체 인스턴스
-            ExamPapers examPaper4 = ExamPapers.builder()
-                    .name("시험지4")
-                    .examType(ExamType.MULTIPLE_CHOICE)
-                    .abilityUnit(abilityUnitsPS4)
-                    .user(usersPS4)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperList.add(examPaper4);
-        }
         examPapersRepository.saveAll(examPaperList);
     }
 
@@ -691,54 +641,6 @@ public class InitData {
             examPaperMultipleQuestionList.add(question1);
         }
 
-        // 해당 ExamPaper ID가 존재할 경우 실행
-        if (examPapersOP2.isPresent()) {
-            ExamPapers examPaperPS2 = examPapersOP2.get();
-
-            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestions question2 = ExamPaperMultipleQuestions.builder()
-                    .no(2)
-                    .content("문제1-2")
-                    .point(4)
-                    .examPaper(examPaperPS2)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionList.add(question2);
-        }
-
-        // 해당 ExamPaper ID가 존재할 경우 실행
-        if (examPapersOP3.isPresent()) {
-            ExamPapers examPaperPS3 = examPapersOP3.get();
-
-            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestions question3 = ExamPaperMultipleQuestions.builder()
-                    .no(3)
-                    .content("문제1-3")
-                    .point(4)
-                    .examPaper(examPaperPS3)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionList.add(question3);
-        }
-
-        // 해당 ExamPaper ID가 존재할 경우 실행
-        if (examPapersOP4.isPresent()) {
-            ExamPapers examPaperPS4 = examPapersOP4.get();
-
-            // 저장할 ExamPaperMultipleQuestions 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestions question4 = ExamPaperMultipleQuestions.builder()
-                    .no(1)
-                    .content("문제2-1")
-                    .point(4)
-                    .examPaper(examPaperPS4)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionList.add(question4);
-        }
-
         // 저장
         questionsRepository.saveAll(examPaperMultipleQuestionList);
     }
@@ -751,15 +653,7 @@ public class InitData {
         Optional<ExamPaperMultipleQuestions> questionOP1 = questionsRepository.findById(1L); // 1-1
         Optional<ExamPaperMultipleQuestions> questionOP2 = questionsRepository.findById(1L);
         Optional<ExamPaperMultipleQuestions> questionOP3 = questionsRepository.findById(1L);
-        Optional<ExamPaperMultipleQuestions> questionOP4 = questionsRepository.findById(2L); // 1-2
-        Optional<ExamPaperMultipleQuestions> questionOP5 = questionsRepository.findById(2L);
-        Optional<ExamPaperMultipleQuestions> questionOP6 = questionsRepository.findById(3L); // 1-3
-        Optional<ExamPaperMultipleQuestions> questionOP7 = questionsRepository.findById(4L); // 2-1
-        Optional<ExamPaperMultipleQuestions> questionOP8 = questionsRepository.findById(4L);
-        Optional<ExamPaperMultipleQuestions> questionOP9 = questionsRepository.findById(5L); // 2-2
-        Optional<ExamPaperMultipleQuestions> questionOP10 = questionsRepository.findById(5L);
-        Optional<ExamPaperMultipleQuestions> questionOP11 = questionsRepository.findById(7L); // 3-1
-        Optional<ExamPaperMultipleQuestions> questionOP12 = questionsRepository.findById(10L); // 4-1
+
 
 
         // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
@@ -778,185 +672,10 @@ public class InitData {
             examPaperMultipleQuestionAnswerList.add(answer1);
         }
 
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP2.isPresent()) {
-            ExamPaperMultipleQuestions questionPS2 = questionOP2.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer2 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(2)
-                    .content("1-1 B")
-                    .isCorrect(true)
-                    .examPaperQuestion(questionPS2)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer2);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP3.isPresent()) {
-            ExamPaperMultipleQuestions questionPS3 = questionOP3.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer3 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(3)
-                    .content("1-1 C")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS3)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer3);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP4.isPresent()) {
-            ExamPaperMultipleQuestions questionPS4 = questionOP4.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer4 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(1)
-                    .content("1-2 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS4)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer4);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP5.isPresent()) {
-            ExamPaperMultipleQuestions questionPS5 = questionOP5.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer5 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(2)
-                    .content("1-2 B")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS5)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer5);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP6.isPresent()) {
-            ExamPaperMultipleQuestions questionPS6 = questionOP6.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer6 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(3)
-                    .content("1-3 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS6)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer6);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP7.isPresent()) {
-            ExamPaperMultipleQuestions questionPS7 = questionOP7.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer7 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(1)
-                    .content("2-1 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS7)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer7);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP8.isPresent()) {
-            ExamPaperMultipleQuestions questionPS8 = questionOP8.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer8 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(2)
-                    .content("2-1 B")
-                    .isCorrect(true)
-                    .examPaperQuestion(questionPS8)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer8);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP9.isPresent()) {
-            ExamPaperMultipleQuestions questionPS9 = questionOP9.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer9 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(1)
-                    .content("2-2 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS9)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer9);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP10.isPresent()) {
-            ExamPaperMultipleQuestions questionPS10 = questionOP10.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer10 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(2)
-                    .content("2-2 B")
-                    .isCorrect(true)
-                    .examPaperQuestion(questionPS10)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer10);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP11.isPresent()) {
-            ExamPaperMultipleQuestions questionPS11 = questionOP11.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer11 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(1)
-                    .content("3-1 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS11)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer11);
-        }
-
-        // 해당 ExamPaperMultipleQuestions ID가 존재할 경우 실행
-        if (questionOP12.isPresent()) {
-            ExamPaperMultipleQuestions questionPS12 = questionOP12.get();
-
-            // 저장할 ExamPaperMultipleQuestionAnswers 엔티티 객체 인스턴스
-            ExamPaperMultipleQuestionAnswers answer12 = ExamPaperMultipleQuestionAnswers.builder()
-                    .no(1)
-                    .content("4-1 A")
-                    .isCorrect(false)
-                    .examPaperQuestion(questionPS12)
-                    .build();
-
-            // 리스트에 해당 객체 저장
-            examPaperMultipleQuestionAnswerList.add(answer12);
-        }
-
         // 저장
         answersRepository.saveAll(examPaperMultipleQuestionAnswerList);
     }
+
     public void initExams(){
 
         //여러개의 Student 객체를 담을 리스트 생성

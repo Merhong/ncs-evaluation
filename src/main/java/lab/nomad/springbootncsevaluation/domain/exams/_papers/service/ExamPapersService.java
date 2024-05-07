@@ -2,13 +2,11 @@ package lab.nomad.springbootncsevaluation.domain.exams._papers.service;
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
-import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperOneResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperPageResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperSaveRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.ExamPaperSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.exams._papers.dto.*;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
+import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapersRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
@@ -37,6 +35,46 @@ public class ExamPapersService {
     private final AbilityUnitsRepository abilityUnitsRepository;
     private final ExamPaperMultipleQuestionsRepository questionsRepository;
     private final ExamPaperMultipleQuestionAnswersRepository answersRepository;
+    private final ExamsRepository examsRepository;
+
+
+    // 시험지 삭제
+    @Transactional
+    public ExamPaperDeleteResponseDTO delete(Long id, Users user) {
+
+        // 관리자(모든 시험지 삭제 가능)
+        if (user.getRole() == UserRole.ROLE_ADMIN) {
+            // 1. 시험에 포함된 시험지인지 검사, 있으면 삭제 불가 -> 예외 처리
+            if (examsRepository.existsByExamPaperId(id)) {
+                throw new Exception400(ExceptionMessage.EXISTS_EXAM_PAPER_IN_EXAM.getMessage());
+            }
+
+            // 2. 시험에 없는 시험지인 경우 삭제 가능 -> 시험지 찾기
+            ExamPapers examPaperPS = examPapersRepository.findById(id)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
+
+            // 3. 트랜잭션 처리
+            examPaperPS.delete();
+
+            return new ExamPaperDeleteResponseDTO(examPaperPS);
+        }
+
+        // 강사(자기 시험지만 삭제 가능)
+        else {
+            // 1. 시험에 포함된 시험지인지 검사, 있으면 삭제 불가 -> 예외 처리
+            if (examsRepository.existsByExamPaperId(id)) {
+                throw new Exception400(ExceptionMessage.EXISTS_EXAM_PAPER_IN_EXAM.getMessage());
+            }
+            // 2. 시험에 없는 시험지인 경우 삭제 가능 -> 시험지 찾기
+            ExamPapers examPaperPS = examPapersRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
+
+            // 3. 트랜잭션 처리
+            examPaperPS.delete();
+
+            return new ExamPaperDeleteResponseDTO(examPaperPS);
+        }
+    }
 
 
     // 시험지 상세 조회
@@ -45,7 +83,7 @@ public class ExamPapersService {
         // 관리자(모든 시험지 조회 가능)
         if (user.getRole() == UserRole.ROLE_ADMIN) {
             // 1. 시험지 찾기
-            ExamPapers examPaperPS = examPapersRepository.findById(id)
+            ExamPapers examPaperPS = examPapersRepository.findByIdAndDeleteDateIsNull(id)
                     .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
 
             // 2. 찾은 시험지에 매칭하는 문제 리스트 찾기
@@ -65,7 +103,7 @@ public class ExamPapersService {
         // 강사(자기 시험지만 조회 가능)
         else {
             // 1. 시험지 찾기
-            ExamPapers examPaperPS = examPapersRepository.findByIdAndUserId(id, user.getId())
+            ExamPapers examPaperPS = examPapersRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
                     .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
 
             // 2. 찾은 시험지에 매칭하는 문제 리스트 찾기
@@ -91,11 +129,12 @@ public class ExamPapersService {
         if (user.getRole() == UserRole.ROLE_ADMIN) {
             // 검색 키워드 OOO
             if (!(searchValue == null)) {
-                return new ExamPaperPageResponseDTO(examPapersRepository.findByNameContains(searchValue, pageable));
+                return new ExamPaperPageResponseDTO(
+                        examPapersRepository.findByNameContainsAndDeleteDateIsNull(searchValue, pageable));
             }
 
             // 검색 키워드 XXX (모든 시험지를 보여줌)
-            Page<ExamPapers> pagedExamPapersPS = examPapersRepository.findAll(pageable);
+            Page<ExamPapers> pagedExamPapersPS = examPapersRepository.findByDeleteDateIsNull(pageable);
 
             return new ExamPaperPageResponseDTO(pagedExamPapersPS);
         }
@@ -105,16 +144,17 @@ public class ExamPapersService {
             // 검색 키워드 OOO
             if (!(searchValue == null)) {
                 return new ExamPaperPageResponseDTO(
-                        examPapersRepository.findByNameContainsAndUserId(searchValue, user.getId(), pageable));
+                        examPapersRepository.findByNameContainsAndUserIdAndDeleteDateIsNull(searchValue, user.getId(),
+                                pageable));
             }
 
             // 검색 키워드 XXX
-            Page<ExamPapers> pagedExamPapersPS = examPapersRepository.findByUserId(user.getId(), pageable);
+            Page<ExamPapers> pagedExamPapersPS = examPapersRepository.findByUserIdAndDeleteDateIsNull(user.getId(),
+                    pageable);
 
             return new ExamPaperPageResponseDTO(pagedExamPapersPS);
         }
     }
-
 
 
     // 시험지 등록

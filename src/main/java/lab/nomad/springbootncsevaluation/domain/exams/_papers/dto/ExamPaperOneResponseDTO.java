@@ -97,12 +97,12 @@ public class ExamPaperOneResponseDTO {
 
     @Getter
     public static class UserDTO {
-        private final String role;
         private Long id;
         private String name;
         private String username;
         private String email;
         private String tel;
+        private String role;
         private LocalDateTime createDate;
         private LocalDateTime updateDate;
 
@@ -114,6 +114,8 @@ public class ExamPaperOneResponseDTO {
             this.tel = user.getTel();
             this.role = user.getRole()
                     .getText();
+            this.createDate = user.getCreateDate();
+            this.updateDate = user.getUpdateDate();
         }
     }
 
