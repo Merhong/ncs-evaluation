@@ -1,20 +1,21 @@
 package lab.nomad.springbootncsevaluation.domain.users;
 
+import lab.nomad.springbootncsevaluation._core.exception.Exception400;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesPageResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.users.dto.UsersSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.users.service.UsersService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,4 +38,16 @@ public class UsersRestController {
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
+    @PostMapping()
+    public ResponseEntity<?> save(@RequestBody UsersSaveRequestDTO requestDTO) {
+        try {
+            // 회원가입 로직 수행
+            usersService.save(requestDTO);
+            return ResponseEntity.ok(APIUtils.success("회원가입이 성공적으로 완료되었습니다."));
+        } catch (Exception e) {
+            log.error("회원가입 중 오류 발생", e);
+            throw new Exception400(ExceptionMessage.JOIN_FAIL.getMessage());
+        }
+    }
+
 }

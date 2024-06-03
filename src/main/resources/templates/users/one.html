@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교직원 상세 페이지</title>
+    <link rel="stylesheet" href="/css/users/one.css">
+</head>
+
+
+
+
+
+<body>
+<!-- 헤더 위치 -->
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+
+
+
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>교직원 상세</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm"
+                    th:onclick="'location.href=\'/users/update/' + ${users.getId()} + '\''">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered">
+
+                    <tbody>
+                    <tr>
+                        <th>구분</th>
+                        <td th:text="${users.getRole().getText()}"></td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td th:text="${users.getName()}"></td>
+                    </tr>
+                    <tr>
+                        <th>아이디</th>
+                        <td th:text="${users.getUsername()}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>연락처</th>
+                        <td th:text="${users.getTel()}"></td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td th:text="${users.getEmail()}"></td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+                <div class="title-item2">
+                    <button type="button" class="btn btn-primary" onclick="location.href='/users/list'">목록으로 돌아가기</button></div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

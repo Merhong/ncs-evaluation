@@ -44,18 +44,18 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults())
                 .sessionManagement((session) ->
-                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())) // Bean 기본 이름이 corsConfigurationSource
                 .authorizeHttpRequests((authorize) ->
-                        authorize
-                                // 회원가입 url
-                                .requestMatchers(WHITELIST).permitAll()
-                                .requestMatchers(ADMIN).hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(TEACHER).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
-                                .requestMatchers(EMPLOYEE).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_EMP")
-                                .anyRequest().permitAll()
+                                authorize
+                                        // 회원가입 url
+                                        .requestMatchers(WHITELIST).permitAll()
+                                        .requestMatchers(ADMIN).hasAnyAuthority("ROLE_ADMIN")
+                                        .requestMatchers(TEACHER).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
+                                        .requestMatchers(EMPLOYEE).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_EMP")
+                                        .anyRequest().permitAll()
                         //
 
                 )
@@ -101,6 +101,7 @@ public class SecurityConfig {
             "/api/v1/courses/**",
             "/api/v1/students/**",
             "/api/v1/exams/**",
+            "/api/v1/users/**",
     };
 
     public static final String[] WHITELIST = {
@@ -110,5 +111,8 @@ public class SecurityConfig {
             "/h2-console/**",
             "/h2-console",
             "/test/**",
+            "/courses/**",
+            "/students/**",
+            "/api/v1/users/**",
     };
 }

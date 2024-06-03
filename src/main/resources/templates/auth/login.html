@@ -1,76 +1,77 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-	<link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
 </head>
 <body>
-	<div class="body">
-		<div class="body-item title">로그인</div>
-		<div class="body-item">
-			<div class="login-div">
-				<form id="loginForm" th:action="@{/api/v1/auth/login}" method="post">
-					<div class="text-input-div">
-						<img class="login-icon-img" src="icon/person.png">
-						<input class="login-input" type="text" name="username" id="username" placeholder="Username"
-						       required>
-					</div>
-					<div class="text-input-div">
-						<img class="login-icon-img" src="icon/key.webp">
-						<input class="login-input" type="password" name="password" id="password" placeholder="Password"
-						       required>
-					</div>
-					<button class="login-btn">로그인</button>
-				</form>
-				<button class="login-btn" onclick="location.href='/join'">회원가입</button>
-			</div>
-		</div>
-	</div>
+<div class="body">
+    <div class="body-item title">로그인</div>
+    <div class="body-item">
+        <div class="login-div">
+            <form id="loginForm" th:action="@{/api/v1/auth/login}" method="post">
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/person.png">
+                    <input class="login-input" type="text" name="username" id="username" placeholder="Username" required>
+                </div>
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/key.webp">
+                    <input class="login-input" type="password" name="password" id="password" placeholder="Password" required>
+                </div>
+                <button class="login-btn" type="submit">로그인</button>
+            </form>
+            <button class="login-btn" onclick="location.href='/join'">회원가입</button>
+        </div>
+    </div>
+</div>
 
-	<script>
-        document.getElementById("loginForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
 
-            fetch('/api/v1/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({username: username, password: password})
-            }).then(function (response) {
-                if (!response.ok) {
-                    console.error('Network response was not ok:', response.statusText);
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(function (data) {
-                console.log('Received response data:', data); // 응답 데이터 로그
-                if (data && data.response && data.response.token) {
-                    // 쿠키에 JWT 저장
-                    setCookie('accessToken', data.response.token.accessToken, 1); // 1일 후 만료
-                    setCookie('refreshToken', data.response.token.refreshToken, 1); // 1일 후 만료
+        var requestData = {username: username, password: password};
+        console.log("Request Data:", requestData); // 요청 데이터 로그
 
-                    // 메인 페이지로 이동
-                    location.href = '/courses';
-                } else {
-                    console.error('Invalid response format');
-                }
-            }).catch(function (error) {
-                console.error('There was a problem with your fetch operation:', error);
-            });
-        });
-
-        function setCookie(name, value, days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
+        fetch('/api/v1/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        }).then(function (response) {
+            if (!response.ok) {
+                console.error('Network response was not ok:', response.statusText);
+                throw new Error('Network response was not ok');
             }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            return response.json();
+        }).then(function (data) {
+            console.log('Received response data:', data); // 응답 데이터 로그
+            if (data && data.response && data.response.token) {
+                // 쿠키에 JWT 저장
+                setCookie('accessToken', data.response.token.accessToken, 1); // 1일 후 만료
+                setCookie('refreshToken', data.response.token.refreshToken, 1); // 1일 후 만료
+
+                // 메인 페이지로 이동
+                location.href = '/students/list';
+            } else {
+                console.error('Invalid response format');
+            }
+        }).catch(function (error) {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+    });
+
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
         }
-	</script>
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+</script>
 </body>
 </html>

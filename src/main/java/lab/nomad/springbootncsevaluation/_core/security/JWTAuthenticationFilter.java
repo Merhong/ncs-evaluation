@@ -28,7 +28,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+                                 FilterChain chain) throws IOException, ServletException {
         var jwt = resolveToken(request);
         if (StringUtils.hasText(jwt)) {
 

@@ -13,23 +13,91 @@
             <div class="join-div">
                 <div class="text-input-div">
                     <img class="login-icon-img" src="icon/person.png">
-                    <input class="login-input" placeholder="Username">
+                    <input class="login-input" id="username" placeholder="Username">
+                </div>
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/person.png">
+                    <input class="login-input" id="name" placeholder="name">
                 </div>
                 <div class="text-input-div">
                     <img class="login-icon-img" src="icon/key.webp">
-                    <input class="login-input" placeholder="Password">
+                    <input class="login-input" id="password" placeholder="Password" onkeyup="maskPassword()">
                 </div>
                 <div class="text-input-div">
                     <img class="login-icon-img" src="icon/at.webp">
-                    <input class="login-input" placeholder="Email">
+                    <input class="login-input"  id="email" placeholder="Email">
+                </div>
+                <div class="text-input-div">
+                    <img class="login-icon-img" src="icon/person.png">
+                    <select id="role" class="login-input">
+                        <option selected disabled>선택하세요</option>
+                        <option value="ROLE_ADMIN">어드민</option>
+                        <option value="ROLE_EMP">직원</option>
+                        <option value="ROLE_TEACHER">강사</option>
+                        <option value="ROLE_GUEST">게스트</option>
+                    </select>
                 </div>
                 <div class="text-input-div">
                     <img class="login-icon-img" src="icon/phone.png">
-                    <input class="login-input" placeholder="Phone Number">
+                    <input class="login-input" id="tel" placeholder="tel">
                 </div>
-                <button class="login-btn">회원가입</button>
+                <button class="login-btn" onclick="registerUser()">회원가입</button>
             </div>
         </div>
     </div>
+
+    <script>
+        // 비밀번호 마스킹 함수
+        function maskPassword() {
+            var passwordInput = document.getElementById("password");
+            var maskedPassword = "";
+
+            // 입력된 비밀번호 길이만큼 '*' 문자열 생성
+            for (var i = 0; i < passwordInput.value.length; i++) {
+                maskedPassword += "*";
+            }
+
+            // 입력 필드에 대체된 문자열 설정
+            passwordInput.value = maskedPassword;
+        }
+
+        // 사용자 등록 함수
+        function registerUser() {
+            var username = document.getElementById("username").value;
+            var name = document.getElementById("name").value;
+            var password = document.getElementById("password").value;
+            var email = document.getElementById("email").value;
+            var role = document.getElementById("role").value;
+            var tel = document.getElementById("tel").value;
+
+            var userData = {
+                username: username,
+                name: name,
+                password: password,
+                email: email,
+                role: role,
+                tel: tel
+            };
+
+            fetch('/api/v1/auth/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('회원가입에 실패했습니다.');
+                    }
+                    alert('회원가입이 완료되었습니다.');
+                    window.location.href = '/login'; // 로그인 페이지로 이동
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('회원가입 중 오류가 발생했습니다.');
+                });
+        }
+    </script>
 </body>
 </html>

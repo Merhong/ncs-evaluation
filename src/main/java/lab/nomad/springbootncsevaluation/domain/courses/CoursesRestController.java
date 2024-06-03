@@ -2,6 +2,7 @@ package lab.nomad.springbootncsevaluation.domain.courses;
 
 import jakarta.validation.Valid;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
@@ -10,6 +11,8 @@ import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
+import lab.nomad.springbootncsevaluation.model.courses.Courses;
+import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +33,7 @@ import java.util.List;
 public class CoursesRestController {
     private final CoursesService coursesService;
     private final StudentsService studentsService;
+    private final CoursesRepository coursesRepository;
 
     // 과정 삭제
     @DeleteMapping("/{id}")
@@ -37,7 +42,7 @@ public class CoursesRestController {
         // 권한 체크
         // 강사 본인 것만 수정 가능하게. + 관리자?
         AuthorityCheckUtils.authorityCheck(customUserDetails,
-                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
 
         // 서비스 호출
         CoursesDeleteResponseDTO responseDTO = coursesService.delete(id, customUserDetails.user());
@@ -53,15 +58,15 @@ public class CoursesRestController {
 
         // 강사 본인 것만 수정 가능하게. + 관리자?
         AuthorityCheckUtils.authorityCheck(customUserDetails,
-                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
-                             .get(0)
-                             .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
             throw new Exception400(errors.getAllErrors()
-                                           .get(0)
-                                           .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
         }
 
         // 서비스 호출
@@ -79,8 +84,8 @@ public class CoursesRestController {
         // 권한 체크(능력단위 컨트롤러 참조)
         // 관리자, 강사, 직원이 조회 가능
         AuthorityCheckUtils.authorityCheck(customUserDetails,
-                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(),
-                                                   UserRole.ROLE_EMP.name()));
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(),
+                        UserRole.ROLE_EMP.name()));
 
         // 서비스 호출
         CoursesPageResponseDTO responseDTO = coursesService.page(pageable, searchValue, customUserDetails.user());
@@ -95,8 +100,8 @@ public class CoursesRestController {
         // 권한 체크(능력단위 컨트롤러 참조)
         // 관리자, 강사, 직원이 조회 가능
         AuthorityCheckUtils.authorityCheck(customUserDetails,
-                                           List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(),
-                                                   UserRole.ROLE_EMP.name()));
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(),
+                        UserRole.ROLE_EMP.name()));
 
         CoursesOneResponseDTO responseDTO = coursesService.one(id, customUserDetails.user());
 
@@ -110,11 +115,11 @@ public class CoursesRestController {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
-                             .get(0)
-                             .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
             throw new Exception400(errors.getAllErrors()
-                                           .get(0)
-                                           .getDefaultMessage());
+                    .get(0)
+                    .getDefaultMessage());
         }
 
         // customUserDetails.user()는 요청한 사람(강사)

@@ -42,6 +42,8 @@ public class StudentsService {
         // 과정이 있는 경우
         Courses course = optionalCourse.get();
 
+
+
         // 학생 등록
         Students student = Students.builder()
                 .course(course)

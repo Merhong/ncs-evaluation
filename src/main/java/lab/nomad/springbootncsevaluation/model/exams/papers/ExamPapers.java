@@ -119,12 +119,6 @@ public class ExamPapers {
         return this;
     }
 
-    public ExamPapers delete() {
-        this.deleteDate = LocalDateTime.now();
-
-        return this;
-    }
-
     // 수정시 ExamType이 소문자로 입력됐을경우 대문자로 변환해서 넣어준다.
     public ExamPapers update(String name, String examType) {
         this.name = name;
@@ -138,6 +132,5 @@ public class ExamPapers {
 
         return this;
     }
-
 
 }

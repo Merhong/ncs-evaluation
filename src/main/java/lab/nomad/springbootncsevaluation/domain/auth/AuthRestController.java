@@ -48,7 +48,7 @@ public class AuthRestController {
     // View의 Form 태그에서 POST 요청시 @RequestBody를 사용하면 오류가 난다.
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody @Valid LoginRequestDTO requestDTO,
-            Errors errors) {
+                                   Errors errors) {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()

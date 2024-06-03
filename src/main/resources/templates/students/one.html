@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 상세 페이지</title>
+    <link rel="stylesheet" href="/css/students/one.css">
+</head>
+
+
+
+
+
+<body>
+<!-- 헤더 위치 -->
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+
+
+
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/students/list'">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>학생 상세</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm"
+                    th:onclick="'location.href=\'/students/update/' + ${students.getId()} + '\''"
+                    style="display: none;">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered">
+
+                    <tbody>
+                    <tr>
+                        <th>학생 ID</th>
+                        <td th:text="${students.getId()}"></td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td th:text="${students.getName()}"></td>
+                    </tr>
+                    <tr>
+                        <th>수강 상태</th>
+                        <td th:text="${students.getStatus()}"></td>
+                    </tr>
+                    <tr>
+                        <th>연락처</th>
+                        <td th:text="${students.getTel()}"></td>
+                    </tr>
+                    <tr>
+                        <th>등록일</th>
+                        <td th:text="${#temporals.format(students.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    <tr>
+                        <th>과정 ID</th>
+                        <td th:text="${students.getCourse().id}"></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <div class="title-item2">
+                    <button type="button" class="btn btn-primary" onclick="location.href='/students/list'">목록으로 돌아가기</button></div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

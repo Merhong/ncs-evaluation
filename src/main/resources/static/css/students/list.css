@@ -1,0 +1,94 @@
+
+/*헤더*/
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-size: xx-large;
+    font-weight: bolder;
+    padding-bottom: 30px;
+    font-family: "Noto Sans NKo";
+}
+
+.header-div {
+    border: 1px solid #dfe1e5;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    margin: 11px 4px;
+    padding: 0 16px;
+    height: 5vh;
+    min-width: 20vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.title-item1 h1 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.title-item1 {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽으로 정렬 */
+    flex-grow: 1;
+}
+
+.title-item2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+.title-item3 {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽으로 정렬 */
+    flex-grow: 1;
+}
+td,th {
+    text-align: center;
+    border: none; /* 셀의 보더를 없앰 */
+}
+
+th {
+    background-color: lightgray !important;
+}
+ td {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+.table {
+    width: 700px !important; /* 테이블의 너비를 조정 */
+    height: auto !important;
+    border-collapse: collapse; /* 테이블의 보더를 겹치게 설정 */
+}
+

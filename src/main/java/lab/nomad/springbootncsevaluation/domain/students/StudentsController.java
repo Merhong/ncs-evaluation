@@ -1,77 +1,81 @@
 package lab.nomad.springbootncsevaluation.domain.students;
 
+
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
-import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
-import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
-import lab.nomad.springbootncsevaluation.domain.students.dto.*;
+import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
-import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
+import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
+import lab.nomad.springbootncsevaluation.model.students.Students;
+import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+@Controller
+@RequestMapping("/students")
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/api/v1/students")
-@Slf4j
 public class StudentsController {
     private final StudentsService studentsService;
+    private final StudentsRepository studentsRepository;
+    private  final CoursesRepository coursesRepository;
 
+    //전체보기
+    @GetMapping("/list")
+    public String list(@RequestParam(required = false, defaultValue = "1") int page, Model model) {
+        // 페이지당 학생 수
+        int pageSize = 10; // 페이지당 학생 수를 5로 설정합니다.
 
-    // 과정,한명학생조회
-    @GetMapping("/{id}")
-    public ResponseEntity<?> one(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id) {
-        //getStudentById 메서드호출하고 DTO객체에 저장
-        StudentsOneResponseDTO responseDTO = studentsService.one(id);
+        // 전체 학생 수 조회
+        long totalStudents = studentsRepository.count();
 
-        //조회된 결과를 ResponseEntity로반환
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
+
+        // 현재 페이지에서 가져올 학생 목록 조회
+        List<Students> students = studentsRepository.findAll(PageRequest.of(page - 1, pageSize)).getContent();
+
+        // 모델에 필요한 데이터 추가
+        model.addAttribute("students", students);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
+
+        return "students/list";
     }
 
 
-    // 과정,전체학생조회
-    @GetMapping
-    public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable, @RequestParam(required = false) String searchValue) {
+    //상세보기
+    @GetMapping("/one/{id}")
+    public  String one(@PathVariable Long id, Model model){
+        // 현재 페이지에서 가져올 학생 목록 조회
+        Optional<Students> students = studentsRepository.findById(id);
 
-        // 권한 체크
-        // 관리자, 강사, 직원이 조회 가능
-        AuthorityCheckUtils.authorityCheck(customUserDetails, List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
 
-        //전체 학생 조회 메서드 호출
-        Page<StudentsPageResponseDTO> responseDTO = studentsService.page(searchValue, pageable);
 
-        // 조회된 결과를 ResponseEntity로 변환
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
+        model.addAttribute("students", students.orElse(null)); // Optional이 비어있을 경우 null을 넘겨줌
+
+
+        return  "students/one";
     }
 
-    //학생수정
-    @PutMapping("/{id}")
-    public  ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                     @PathVariable Long id,
-                                     @RequestBody StudentsSaveRequestDTO requestDTO){
+    //수정
+    @GetMapping("/update")
+    public String update(Model model){
+        // 모든 학생 데이터 가져오기
+        List<Students> students = studentsRepository.findAll();
+        // 코스 데이터 가져오기
+        List<Courses> courses = coursesRepository.findAll();
 
-        StudentsUpdateResponseDTO responseDTO = studentsService.update(id, customUserDetails.user(), requestDTO);
-
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
-
-    }
-
-    //학생삭제
-    @DeleteMapping("/{id}")
-    public  ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                     @PathVariable Long id){
-        StudentsDeleteResponseDTO responseDTO = studentsService.delete(id,customUserDetails.user());
-
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
-
+        model.addAttribute("students", students);
+        model.addAttribute("courses", courses);
+        return "students/update";
     }
 }
-
-

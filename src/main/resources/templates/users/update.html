@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교직원 수정 페이지</title>
+    <link rel="stylesheet" href="/css/users/update.css">
+</head>
+<body>
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" th:onclick="'location.href=\'/users/one/' + ${users.getId()} + '\''">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>교직원 수정</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-primary" style="display: none;">수정완료</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form id="updateForm" th:action="@{/users/update/{id}(id=${users.getId()})}" th:object="${users}" method="post" onsubmit="submitUpdateForm(event)">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th>분류</th>
+                            <td th:text="${users.getRole().getText()}"></td>
+                        </tr>
+
+                        <tr>
+                            <th>아이디</th>
+                            <td th:text="${users.getUsername()}"></td>
+                        </tr>
+                        <tr>
+                            <th>비밀번호</th>
+                            <td><input type="password" name="password"></td>
+                        </tr>
+                        <tr>
+                            <th>비밀번호 확인</th>
+                            <td><input type="password" name="confirmPassword"></td>
+                        </tr>
+                        <tr>
+                            <th>이름</th>
+                            <td><input type="text" name="name" th:value="${users.getName()}"></td>
+                        </tr>
+                        <tr>
+                            <th>연락처</th>
+                            <td><input type="text" name="tel" th:value="${users.getTel()}"></td>
+                        </tr>
+                        <tr>
+                            <th>이메일</th>
+                            <td><input type="email" name="email" th:value="${users.getEmail()}"></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="title-item2">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function submitUpdateForm(event) {
+        event.preventDefault(); // 기본 폼 제출을 방지
+
+        var userId = document.getElementById("userId").textContent.trim();
+        var name = document.getElementById("name").value;
+        var username = document.getElementById("username").value;
+        var tel = document.getElementById("tel").value;
+        var email = document.getElementById("email").value;
+
+
+        var data = {
+            name: name,
+            username: username,
+            tel: tel,
+            smail: email,
+
+
+        };
+
+        fetch('/api/v1/users/' + userId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            if (!response.ok) {
+                console.error('Network response was not ok:', response.statusText);
+                throw new Error('Network response was not ok');
+            }
+            window.location.href = "/users/list";
+        }).catch(function (error) {
+            console.error('Failed to update user:', error);
+            alert('교직원 정보를 업데이트하는 동안 오류가 발생했습니다.');
+        });
+    }
+</script>
+</body>
+</html>

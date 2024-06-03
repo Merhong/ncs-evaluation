@@ -571,7 +571,35 @@ public class InitData {
                     .course(coursePS3)
                     .name("student3")
                     .tel("010-0000-3333")
+                    .studentStatus(StudentStatus.DROP)
+                    .build();
+
+            //리스트에 해당 객체 저장
+            studentsList.add(student);
+        }
+        if(coursesOP4.isPresent()) {
+            Courses coursePS4 = coursesOP4.get();
+
+            //저장할 엔티티 객체 인스턴스
+            Students student = Students.builder()
+                    .course(coursePS4)
+                    .name("student4")
+                    .tel("010-0000-4444")
                     .studentStatus(StudentStatus.ACTIVE)
+                    .build();
+
+            //리스트에 해당 객체 저장
+            studentsList.add(student);
+        }
+        if(coursesOP5.isPresent()) {
+            Courses coursePS5 = coursesOP5.get();
+
+            //저장할 엔티티 객체 인스턴스
+            Students student = Students.builder()
+                    .course(coursePS5)
+                    .name("student5")
+                    .tel("010-0000-5555")
+                    .studentStatus(StudentStatus.DROP)
                     .build();
 
             //리스트에 해당 객체 저장

@@ -17,7 +17,8 @@ public enum ExceptionMessage {
     NOT_FOUND_EXAM_TYPE("code13: 존재하지 않는 시험 타입입니다."),
     NOT_FOUND_STUDENT_EXAMPAPER("code14: 학생과 시험지가 존재하지않습니다."),
     NOT_FOUND_EXAM("code15:  존재하지 않는 시험 입니다."),
-    NOT_ALLOWED_EXAM_STATUS("code16: 시험 삭제가 허용되지 않는 상태입니다.");
+    NOT_ALLOWED_EXAM_STATUS("code16: 시험 삭제가 허용되지 않는 상태입니다."),
+    JOIN_FAIL("code17: 회원가입 중 오류가 발생했습니다.");
 
     final private String message;
 

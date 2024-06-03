@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/css/users/list.css"/>
+    <title>교직원리스트</title>
+</head>
+
+<body>
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <h1>교직원 관리</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-primary btn-sm" id="registerButton" onclick="location.href='/users/saveForm'">
+                교직원등록
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>NO.</th>
+                        <th>구분</th>
+                        <th>이름</th>
+                        <th>연락처</th>
+                        <th>등록일</th>
+                        <th style="width: 150px;">상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 데이터를 동적으로 추가 -->
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <button class="btn btn-danger btn-sm" th:onclick="'deleteRow(this, \'' + ${user.id} + '\')'">-</button>
+                        </td>
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.role.getText()}"></td>
+                        <td><a th:href="@{/users/one/{id}(id=${user.id})}" th:text="${user.name}"></a></td>
+                        <td th:text="${user.tel}"></td>
+                        <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${user.deleteDate == null ? '승인' : '탈퇴'}"></td> <!-- 상태 결정 -->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--페이지네이션-->
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <ul class="pagination">
+                <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">다음</a></li>
+            </ul>
+        </div>
+    </div>
+</main>
+<script>
+    function deleteRow(button, userId) {
+        // 서버에 DELETE 요청
+        fetch('/api/v1/users/' + userId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function(response) {
+            if (!response.ok) {
+                console.error('Network response was not ok:', response.statusText);
+                throw new Error('Network response was not ok');
+            }
+            // 삭제가 성공하면 해당 행을 삭제
+            var row = button.closest('tr');
+            row.parentNode.removeChild(row);
+        }).catch(function(error) {
+            console.error('Failed to delete student:', error);
+            alert('삭제 할 수 있는 권한이 없습니다.');
+        });
+    }
+</script>
+</body>
+</html>
