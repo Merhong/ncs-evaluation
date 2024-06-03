@@ -28,7 +28,6 @@ public class ExamPapersRestController {
     // DI
     private final ExamPapersService examPapersService;
 
-
     // 시험지 수정
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id,

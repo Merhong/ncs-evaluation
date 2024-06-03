@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" href="/css/courses/saveForm.css">
+	<title>새 과정 등록</title>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+        .clickable-row {
+            cursor: pointer;
+        }
+	</style>
+</head>
+
+<body>
+
+	<!-- Courses(과정) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: coursesHeader}"></th:block>
+
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<button type="button" class="btn btn-secondary" onclick="location.href='/courses'">
+					prev
+				</button>
+			</div>
+			<div class="title-item2">
+				<h1>새 과정 등록</h1>
+			</div>
+			<div class="title-item3">
+				<button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+				        data-target="#loadCoursesModal">
+					기존 과정 불러오기
+				</button>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form id="saveForm" th:action="@{/api/v1/courses}" th:object="${CoursesSaveRequestDTO}"
+					      method="post">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>과정명</td>
+									<td><input type="text" id="name" th:field="*{name}" required></td>
+								</tr>
+								<tr>
+									<td>학원명</td>
+									<td><input type="text" id="academyName" th:field="*{academyName}" required></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="title-item2">
+							<button type="button" class="btn btn-primary" onclick="showAbilityUnits()">
+								능력 단위 추가
+							</button>
+						</div>
+						<div id="abilityUnitsContainer" style="display:none;">
+							<h3>능력 단위 목록</h3>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>선택</th>
+										<th>id</th>
+										<th>능력 단위명</th>
+										<th>능력 단위 코드</th>
+										<th>능력 단위 수준</th>
+										<th>훈련시간</th>
+									</tr>
+								</thead>
+								<tbody id="abilityUnitsTableBody">
+									<!-- 능력 단위 목록이 여기에 동적으로 추가됩니다 -->
+								</tbody>
+							</table>
+							<div class="row justify-content-center">
+								<div class="col-auto">
+									<ul class="pagination" id="abilityUnitsPagination">
+										<!-- 페이지네이션 버튼이 여기에 동적으로 추가됩니다 -->
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="title-item2">
+							<button type="submit" class="btn btn-primary">
+								등록
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- 기존 과정 불러오기 모달 창 -->
+	<div class="modal fade" id="loadCoursesModal" tabindex="-1" role="dialog" aria-labelledby="loadCoursesModalLabel"
+	     aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="loadCoursesModalLabel">기존 과정 불러오기</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>id</th>
+											<th>과정명</th>
+											<th>학원명</th>
+											<th>강사</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- 데이터 출력 부분 -->
+										<p>안녕하세요 <span th:text="${username}"></span>님!</p>
+										<th:block th:each="course: ${coursesPage.course}">
+											<tr class="clickable-row"
+											    th:onclick="selectCourse([[${course.name}]], [[${course.academyName}]])">
+												<td th:text="${course.id}"></td>
+												<td th:text="${course.name}"></td>
+												<td th:text="${course.academyName}"></td>
+												<td th:text="${course.userDTO.name}"></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+							<!-- 페이지네이션 -->
+							<div class="row justify-content-center">
+								<div class="col-auto">
+									<ul class="pagination">
+										<!-- 이전 버튼 -->
+										<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+											<a class="page-link" href="#"
+											   th:onclick="|loadCoursesPage(${pageable.pageNumber - 1}, ${pageable.pageSize})|">이전</a>
+										</li>
+
+										<!-- 페이지 번호 -->
+										<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
+										    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+											<a class="page-link" href="#"
+											   th:onclick="|loadCoursesPage(${pageNum - 1}, ${pageable.pageSize})|"
+											   th:text="${pageNum}">1</a>
+										</li>
+
+										<!-- 다음 버튼 -->
+										<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+											<a class="page-link" href="#"
+											   th:onclick="|loadCoursesPage(${pageable.pageNumber + 1}, ${pageable.pageSize})|">다음</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        let selectedAbilityUnits = new Set();
+
+        function showAbilityUnits() {
+            document.getElementById('abilityUnitsContainer').style.display = 'block';
+            loadAbilityUnitsPage(0, 5);
+        }
+
+        function loadAbilityUnitsPage(page, size) {
+            fetch(`/api/v1/ability-units?page=${page}&size=${size}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const abilityUnits = data.response.abilityUnit;
+                        const pageable = data.response.pageable;
+                        const totalPages = pageable.totalPages;
+                        const currentPage = pageable.pageNumber;
+
+                        let tableBody = '';
+                        abilityUnits.forEach(abilityUnit => {
+                            const checked = selectedAbilityUnits.has(String(abilityUnit.id)) ? 'checked' : '';
+                            tableBody += `
+                            <tr>
+                                <td><input type="checkbox" class="ability-unit-checkbox" value="${abilityUnit.id}" ${checked}></td>
+                                <td>${abilityUnit.id}</td>
+                                <td>${abilityUnit.name}</td>
+                                <td>${abilityUnit.code}</td>
+                                <td>${abilityUnit.grade}</td>
+                                <td>${abilityUnit.totalTime}</td>
+                            </tr>
+                        `;
+                        });
+
+                        document.querySelector('#abilityUnitsTableBody').innerHTML = tableBody;
+
+                        let pagination = '';
+                        if (currentPage > 0) {
+                            pagination += `
+                            <li class="page-item">
+                                <a class="page-link" href="#" onclick="loadAbilityUnitsPage(${currentPage - 1}, ${size})">이전</a>
+                            </li>
+                        `;
+                        } else {
+                            pagination += `
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">이전</a>
+                            </li>
+                        `;
+                        }
+
+                        for (let i = 0; i < totalPages; i++) {
+                            if (i === currentPage) {
+                                pagination += `
+                                <li class="page-item active">
+                                    <a class="page-link" href="#" onclick="loadAbilityUnitsPage(${i}, ${size})">${i + 1}</a>
+                                </li>
+                            `;
+                            } else {
+                                pagination += `
+                                <li class="page-item">
+                                    <a class="page-link" href="#" onclick="loadAbilityUnitsPage(${i}, ${size})">${i + 1}</a>
+                                </li>
+                            `;
+                            }
+                        }
+
+                        if (currentPage < totalPages - 1) {
+                            pagination += `
+                            <li class="page-item">
+                                <a class="page-link" href="#" onclick="loadAbilityUnitsPage(${currentPage + 1}, ${size})">다음</a>
+                            </li>
+                        `;
+                        } else {
+                            pagination += `
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">다음</a>
+                            </li>
+                        `;
+                        }
+
+                        document.querySelector('#abilityUnitsPagination').innerHTML = pagination;
+                    } else {
+                        console.error('Error:', data.error);
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error: ' + error.message);
+                });
+        }
+
+        document.getElementById('saveForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const academyName = document.getElementById('academyName').value;
+            const abilityUnitIds = Array.from(selectedAbilityUnits);
+
+            const data = {
+                name: name,
+                academyName: academyName,
+                abilityUnitIdList: abilityUnitIds
+            };
+
+            fetch('/api/v1/courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw err;
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('과정 등록이 완료되었습니다.');
+                    window.location.href = '/courses';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error: ' + error.message);
+                });
+        });
+
+        function selectCourse(name, academyName) {
+            document.getElementById('name').value = name;
+            document.getElementById('academyName').value = academyName;
+            $('#loadCoursesModal').modal('hide');
+        }
+
+        document.addEventListener('change', function (event) {
+            if (event.target.classList.contains('ability-unit-checkbox')) {
+                if (event.target.checked) {
+                    selectedAbilityUnits.add(event.target.value);
+                } else {
+                    selectedAbilityUnits.delete(event.target.value);
+                }
+            }
+        });
+	</script>
+</body>
+</html>

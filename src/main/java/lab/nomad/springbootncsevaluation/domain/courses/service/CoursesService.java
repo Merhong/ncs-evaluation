@@ -3,6 +3,10 @@ package lab.nomad.springbootncsevaluation.domain.courses.service;
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.*;
+import lab.nomad.springbootncsevaluation.model._entity.CoursesAbilityUnits;
+import lab.nomad.springbootncsevaluation.model._entity.CoursesAbilityUnitsRepository;
+import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
+import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnitsRepository;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.users.Users;
@@ -13,6 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,6 +28,9 @@ public class CoursesService {
 
     // DI
     private final CoursesRepository coursesRepository;
+    private final AbilityUnitsRepository abilityUnitsRepository;
+    private final CoursesAbilityUnitsRepository coursesAbilityUnitsRepository;
+
 
     // 과정 삭제
     // deleteDate에 값이 있으면 삭제된 걸로 간주한다.
@@ -139,6 +150,27 @@ public class CoursesService {
 
         Courses coursesPS = coursesRepository.save(coursesForSave);
 
-        return new CoursesSaveResponseDTO(user, coursesPS);
+        // CoursesAbilityUnits 엔티티 생성 및 저장
+        List<CoursesAbilityUnits> coursesAbilityUnitsList = new ArrayList<>();
+        for (Long abilityUnitId : requestDTO.getAbilityUnitIdList()) {
+            AbilityUnits abilityUnit = abilityUnitsRepository.findById(abilityUnitId)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_ABILITY_UNIT.getMessage()));
+
+            CoursesAbilityUnits coursesAbilityUnitForSave = CoursesAbilityUnits.builder()
+                    .course(coursesPS)
+                    .abilityUnit(abilityUnit)
+                    .build();
+
+            coursesAbilityUnitsList.add(coursesAbilityUnitForSave);
+        }
+
+        coursesAbilityUnitsRepository.saveAll(coursesAbilityUnitsList);
+
+        // AbilityUnits 정보를 포함한 응답 DTO 생성
+        List<CoursesSaveResponseDTO.AbilityUnitDTO> abilityUnitDTOListPS = coursesAbilityUnitsList.stream()
+                .map(ca -> new CoursesSaveResponseDTO.AbilityUnitDTO(ca.getAbilityUnit()))
+                .collect(Collectors.toList());
+
+        return new CoursesSaveResponseDTO(user, coursesPS, abilityUnitDTOListPS);
     }
 }

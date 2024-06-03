@@ -139,3 +139,19 @@ INSERT INTO exams(student_id, exampaper_id, createdate, updatedate)
 VALUES (2, 2, now(), now());
 INSERT INTO exams(student_id, exampaper_id, createdate, updatedate)
 VALUES (3, 3, now(), now());
+
+-- CoursesAbilityUnits(과정 + 단위 능력 중간 테이블)
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (1, 1, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (1, 2, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (2, 3, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (2, 4, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (3, 5, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (3, 6, now(), now());
+INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
+VALUES (3, 7, now(), now());

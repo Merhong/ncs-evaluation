@@ -2,27 +2,20 @@ package lab.nomad.springbootncsevaluation._core.security;
 
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lab.nomad.springbootncsevaluation._core.exception.Exception401;
 import lab.nomad.springbootncsevaluation._core.exception.Exception403;
-import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
-import lab.nomad.springbootncsevaluation.model.users.Users;
-import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 // JWT를 통한 인증 처리 필터
 @Slf4j
@@ -34,11 +27,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    public void doFilterInternal (
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain
-    ) throws IOException, ServletException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
         var jwt = resolveToken(request);
         if (StringUtils.hasText(jwt)) {
 
@@ -48,7 +38,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
             try {
                 var authentication = provider.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
             } catch (TokenExpiredException | SignatureVerificationException exception) {
                 exception.printStackTrace();
             }
@@ -57,11 +48,23 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     String resolveToken(HttpServletRequest request) {
+        // 헤더에서 토큰 가져오기
         String bearerToken = request.getHeader(JWTProvider.HEADER);
+
         if (StringUtils.hasText(bearerToken)) {
             return bearerToken;
         }
+
+        // 쿠키에서 accessToken 가져오기
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName()
+                        .equals("accessToken")) {
+                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                }
+            }
+        }
         return null;
     }
-
 }

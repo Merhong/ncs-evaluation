@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" type="text/css" href="/css/courses/listForm.css"/>
+	<title>과정 목록</title>
+</head>
+
+
+<body>
+
+	<!-- Courses(과정) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: coursesHeader}"></th:block>
+
+	<main>
+
+		<div class="title-container">
+			<div class="title-item1">
+				<h1>과정 목록</h1>
+			</div>
+			<div class="title-item2">
+				<button type="button" class="btn btn-primary btn-sm" onclick="location.href='/courses/saveForm'">새 과정 등록</button>
+			</div>
+		</div>
+
+
+		<!-- 과정 관리 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>id</th>
+								<th>과정명</th>
+								<th>학원명</th>
+								<th>과정 시작일</th>
+								<th>과정 종료일</th>
+								<th>강사</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<!-- 데이터 출력 부분 -->
+							<p>
+								안녕하세요 <span th:text="${username}"></span>님!
+							</p>
+							<th:block th:each="course: ${coursesPage.course}">
+								<tr>
+									<td th:text="${course.id}"></td>
+									<td th:text="${course.name}"></td>
+									<td th:text="${course.academyName}"></td>
+									<td th:text="${course.createDate}"></td>
+									<td th:text="${course.updateDate}"></td>
+									<td th:text="${course.userDTO.name}"></td>
+								</tr>
+							</th:block>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+
+			<!-- 페이지네이션 -->
+			<div class="row justify-content-center">
+				<div class="col-auto">
+					<ul class="pagination">
+						<!-- 이전 버튼 -->
+						<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+							<a class="page-link" th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">이전</a>
+						</li>
+
+						<!-- 페이지 번호 -->
+						<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
+						    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+							<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}" th:text="${pageNum}">1</a>
+						</li>
+
+						<!-- 다음 버튼 -->
+						<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+							<a class="page-link" th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">다음</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" type="text/css" href="/css/exams/_papers/saveForm.css">
+	<title>평가지 등록</title>
+</head>
+<body>
+	<!-- ExamPapers(평가지) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: ExamPaperHeader}"></th:block>
+
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<button type="button" class="btn btn-secondary" onclick="location.href='/courses'">prev</button>
+			</div>
+			<div class="title-item2">
+				<h1>평가지 등록</h1>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form id="saveForm"
+					      th:action="@{/api/v1/ability-units/{abilityUnitId}/exam-paper(abilityUnitId=${abilityUnitId})}"
+					      th:object="${ExamPaperSaveRequestDTO}" method="post">
+						<input type="hidden" th:name="abilityUnitId" th:value="${abilityUnitId}"/>
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>평가지명</td>
+									<td><input type="text" id="name" th:field="*{name}" required></td>
+								</tr>
+								<tr>
+									<td>능력단위</td>
+									<td><input type="text" id="abilityUnitName"
+									           th:value="${AbilityUnit.name}" readonly
+									           required></td>
+								</tr>
+								<tr>
+									<td>평가 방법</td>
+									<td>
+										<select id="examType" th:field="*{examType}" required>
+											<option value="" disabled selected>선택하세요</option>
+											<option value="MULTIPLE_CHOICE">MULTIPLE_CHOICE</option>
+											<option value="TASK">TASK</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div id="abilityUnitsContainer" style="justify-content: center">
+							<div class="title-item3">
+								<h3>능력 단위 요소</h3>
+							</div>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>능력 단위 요소 번호</th>
+										<th>능력 단위 요소</th>
+										<th>수행 준거</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="element : ${AbilityUnitElementList}">
+										<td th:text="${element.code}"></td>
+										<td th:text="${element.name}"></td>
+										<td>
+											<ul>
+												<li th:each="item : ${element.abilityUnitElementItemList}"
+												    th:text="${item.content}"></li>
+											</ul>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- EPMQ -->
+						<div id="EPMQContainer" style="justify-content: center">
+							<div class="title-item3">
+								<h3>선다형 시험지 문제</h3>
+							</div>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>평가 항목</th>
+										<th>점수 배점</th>
+										<th>정답</th>
+										<th>오답 1</th>
+										<th>오답 2</th>
+										<th>오답 3</th>
+										<th>오답 4</th>
+									</tr>
+								</thead>
+								<tbody id="questionsContainer">
+									<tr>
+										<td>1</td>
+										<td><input type="text" class="question-content" required></td>
+										<td><input type="number" class="question-point" required></td>
+										<td><input type="text" class="answer-content" required></td>
+										<td><input type="text" class="answer-content" required></td>
+										<td><input type="text" class="answer-content" required></td>
+										<td><input type="text" class="answer-content" required></td>
+										<td><input type="text" class="answer-content" required></td>
+									</tr>
+								</tbody>
+							</table>
+							<button type="button" onclick="addQuestion()">문제 추가</button>
+						</div>
+
+						<div class="title-item3">
+							<button type="button" class="btn btn-primary" onclick="registerExam()">등록</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script>
+        // abilityUnitId를 JavaScript로 전달
+        const abilityUnitId = /*[[${abilityUnitId}]]*/'[[${abilityUnitId}]]';
+
+        function addQuestion() {
+            const questionsContainer = document.getElementById('questionsContainer');
+            const newRow = document.createElement('tr');
+            const questionCount = questionsContainer.getElementsByTagName('tr').length + 1;
+
+            newRow.innerHTML = `
+                <td>${questionCount}</td>
+                <td><input type="text" class="question-content" required></td>
+                <td><input type="number" class="question-point" required></td>
+                <td><input type="text" class="answer-content" required></td>
+                <td><input type="text" class="answer-content" required></td>
+                <td><input type="text" class="answer-content" required></td>
+                <td><input type="text" class="answer-content" required></td>
+                <td><input type="text" class="answer-content" required></td>
+            `;
+            questionsContainer.appendChild(newRow);
+        }
+
+        // 시험지 서버로 전송하여 저장
+        async function saveExamPaper() {
+            const examPaperData = {
+                name: document.getElementById('name').value,
+                examType: document.getElementById('examType').value,
+            };
+
+            const response = await fetch(`/api/v1/ability-units/${abilityUnitId}/exam-paper`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(examPaperData),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                return responseData.response.examPaper.id; // Return examPaperId for further use
+            } else {
+                console.error('Failed to save exam paper');
+                return null; // 오류 발생 시 null 반환
+            }
+        }
+
+        // 문제를 서버로 전송하여 저장
+        async function saveQuestion(examPaperId, questionData) {
+            const response = await fetch(`/api/v1/exam-paper/${examPaperId}/question`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(questionData),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                return responseData.response.examPaperMultipleQuestion.id; // Return questionId for further use
+            } else {
+                console.error('Failed to save question');
+            }
+        }
+
+        // 답안을 서버로 전송하여 저장
+        async function saveAnswer(questionId, answerData) {
+            const response = await fetch(`/api/v1/exam-paper/question/${questionId}/answer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(answerData),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                return responseData.response.examPaperMultipleQuestionAnswer.id;
+            } else {
+                console.error('Failed to save answer');
+            }
+        }
+
+        // 전체 등록 절차 수행(시험지 -> 문제 -> 답안 순서)
+        async function registerExam() {
+            // 시험지를 서버에 저장하고, 성공적으로 저장되면 시험지ID 반환
+            const examPaperId = await saveExamPaper();
+
+            if (!examPaperId) {
+                alert('시험지 저장에 실패했습니다.');
+                return;
+            }
+
+            // 문제와 답안이 포함된 컨테이너 요소를 가져옴
+            const questionsContainer = document.getElementById('questionsContainer');
+            // 각 문제 항목을 나타내는 행들을 가져옴
+            const questionRows = questionsContainer.getElementsByTagName('tr');
+
+            // 각 문제 행을 순회하며 문제 데이터를 서버에 저장
+            for (const row of questionRows) {
+                // 문제 데이터를 객체로 생성
+                const questionData = {
+                    content: row.querySelector('.question-content').value, // 문제 내용
+                    point: row.querySelector('.question-point').value, // 점수 배점
+                };
+
+                // 문제를 서버에 저장하고, 성공적으로 저장되면 문제ID 반환
+                const questionId = await saveQuestion(examPaperId, questionData);
+
+                if (!questionId) {
+                    alert('문제 저장에 실패했습니다.');
+                    return;
+                }
+
+                // 해당 문제에 대한 답안 요소들을 가져옴
+                const answerElements = row.querySelectorAll('.answer-content');
+
+                // 각 답안 요소를 순회하며 답안 데이터를 서버에 저장
+                for (const answerElement of answerElements) {
+                    // 답안 데이터를 객체로 생성
+                    const answerData = {
+                        content: answerElement.value, // 답안 내용
+                        isCorrect: false // 기본값으로 설정, 필요 시 수정
+                    };
+
+                    // 답안을 서버에 저장
+                    await saveAnswer(questionId, answerData);
+                }
+            }
+
+            // 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력
+            alert('시험지가 성공적으로 등록되었습니다.');
+        }
+
+	</script>
+</body>
+</html>

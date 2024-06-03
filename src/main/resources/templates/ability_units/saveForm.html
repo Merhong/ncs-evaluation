@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" type="text/css" href="/css/ability_units/saveForm.css">
+	<title>능력 단위 등록</title>
+</head>
+<body>
+	<!-- AbilityUnits(능력 단위) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: abilityUnitsHeader}"></th:block>
+
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<button type="button" class="btn btn-secondary" onclick="location.href='/ability-units'">prev</button>
+			</div>
+			<div class="title-item2">
+				<h1>능력 단위 등록</h1>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form id="saveForm" th:action="@{/api/v1/ability-units}" th:object="${AbilityUnitSaveRequestDTO}"
+					      method="post">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>능력 단위 코드</td>
+									<td><input type="text" id="code" th:field="*{code}" required></td>
+								</tr>
+								<tr>
+									<td>능력 단위명</td>
+									<td><input type="text" id="name" th:field="*{name}" required></td>
+								</tr>
+								<tr>
+									<td>능력 단위 수준</td>
+									<td><input type="number" id="grade" th:field="*{grade}" required min="0" step="1"></td>
+								</tr>
+								<tr>
+									<td>훈련 시간</td>
+									<td><input type="number" id="totalTime" th:field="*{totalTime}" required min="0" step="1"></td>
+								</tr>
+								<tr>
+									<td>능력 단위 정의</td>
+									<td><input type="text" id="purpose" th:field="*{purpose}" required></td>
+								</tr>
+								<tr>
+									<td>시험 종류</td>
+									<td>
+										<input type="checkbox" id="multipleChoiceCheckbox" th:field="*{examTypeList}"
+										       value="MULTIPLE_CHOICE">
+										<label for="multipleChoiceCheckbox">선다형 선택</label>
+										<input type="checkbox" id="taskCheckbox" th:field="*{examTypeList}"
+										       value="TASK">
+										<label for="taskCheckbox">주관식 선택</label>
+										<br>
+										<span class="error" id="error" style="display: none;">최소 1개 이상의 옵션을 선택해야 합니다.</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="d-flex justify-content-center submit-item">
+							<button type="button" class="btn btn-primary" id="submitBtn">능력 단위 요소 등록</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- 새로운 요소 추가를 위한 테이블 -->
+			<table class="table table-bordered" id="elementsList">
+				<thead>
+					<tr>
+						<th>능력 단위 요소 번호</th>
+						<th>능력 단위 요소</th>
+						<th>수행 준거</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 새로운 요소가 여기 추가됨 -->
+				</tbody>
+			</table>
+			<div class="d-flex justify-content-center">
+				<button type="button" class="btn btn-primary" id="saveAllBtn">저장</button>
+			</div>
+			<div class="error" id="elementError" style="display: none; color: red; text-align: center; margin-top: 10px;">
+				최소 1개의 능력 단위 요소를 추가해야 합니다.
+			</div>
+		</div>
+	</main>
+
+	<div id="alertBox" class="modal">
+		<div class="modal-content">
+			<span class="close" id="closeAlertBox">&times;</span>
+			<h2>새로운 능력 단위 등록</h2>
+			<p>새로운 능력 단위에는 능력 단위 요소 등록이 필요합니다.</p>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info" id="addElementBtn">요소 등록</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="elementInputBox" class="modal">
+		<div class="modal-content">
+			<span class="close" id="closeElementInputBox">&times;</span>
+			<h2>능력 단위 요소 추가</h2>
+			<form id="elementForm">
+				<label for="elementCode">능력 단위 요소 번호:</label>
+				<input type="text" id="elementCode" required>
+
+				<label for="elementName">능력 단위 요소:</label>
+				<input type="text" id="elementName" required>
+
+				<label for="itemContents" class="block-label">수행 준거:</label>
+				<textarea id="itemContents" required rows="4" style="width: 100%;"></textarea>
+
+				<button type="submit" class="btn btn-primary">추가</button>
+			</form>
+		</div>
+	</div>
+
+	<script>
+        // 모달 창 여닫기
+        function toggleModal(modalId, displayStyle) {
+            document.getElementById(modalId).style.display = displayStyle;
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            toggleModal('alertBox', 'block');
+        });
+
+        document.getElementById('closeAlertBox').addEventListener('click', function () {
+            toggleModal('alertBox', 'none');
+        });
+
+        document.getElementById('closeElementInputBox').addEventListener('click', function () {
+            toggleModal('elementInputBox', 'none');
+        });
+
+        document.getElementById('addElementBtn').addEventListener('click', function () {
+            toggleModal('alertBox', 'none');
+            toggleModal('elementInputBox', 'block');
+        });
+
+        function addElementToList(elementCode, elementName, itemContents) {
+            var elementsList = document.getElementById('elementsList').querySelector('tbody');
+            var newRow = document.createElement('tr');
+
+            newRow.innerHTML = `
+                <td>${elementCode}</td>
+                <td>${elementName}</td>
+                <td>${itemContents}</td>
+            `;
+
+            elementsList.appendChild(newRow);
+        }
+
+        document.getElementById('elementForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var elementCode = document.getElementById('elementCode').value;
+            var elementName = document.getElementById('elementName').value;
+            var itemContents = document.getElementById('itemContents').value;
+
+            addElementToList(elementCode, elementName, itemContents);
+
+            toggleModal('elementInputBox', 'none');
+        });
+
+        function gatherFormData() {
+            var code = document.getElementById('code').value;
+            var name = document.getElementById('name').value;
+            var grade = document.getElementById('grade').value;
+            var totalTime = document.getElementById('totalTime').value;
+            var purpose = document.getElementById('purpose').value;
+            var examTypeList = [];
+            if (document.getElementById('multipleChoiceCheckbox').checked) {
+                examTypeList.push('MULTIPLE_CHOICE');
+            }
+            if (document.getElementById('taskCheckbox').checked) {
+                examTypeList.push('TASK');
+            }
+            var elementList = [];
+            var rows = document.getElementById('elementsList').querySelector('tbody').children;
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].children;
+                var element = {
+                    code: cells[0].textContent,
+                    name: cells[1].textContent,
+                    itemContents: cells[2].textContent.split('\n') // 수행 준거를 구분하여 배열로 저장
+                 };
+                elementList.push(element);
+            }
+            return {code, name, grade, totalTime, purpose, examTypeList, abilityUnitElementList: elementList};
+        }
+
+        function saveAbilityUnit() {
+            var formData = gatherFormData();
+
+            if (formData.examTypeList.length === 0) {
+                document.getElementById('error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('error').style.display = 'none';
+            }
+
+            if (formData.abilityUnitElementList.length === 0) {
+                document.getElementById('elementError').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('elementError').style.display = 'none';
+            }
+
+            console.log('Sending formData:', formData); // Console log added here
+
+            fetch('/api/v1/ability-units', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data received:', data); // Console log added here
+                    if (data.response && data.response.abilityUnit && data.response.abilityUnit.id) {
+                        var abilityUnitId = data.response.abilityUnit.id;
+                        var elements = formData.abilityUnitElementList;
+
+                        // 각 요소에 abilityUnitId 추가
+                        elements = elements.map(element => ({...element, abilityUnitId: abilityUnitId}));
+
+                        fetch(`/api/v1/ability-units/${abilityUnitId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(elements)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Elements Data received:', data); // Console log added here
+                                alert('저장이 완료되었습니다.');
+                                location.href = '/ability-units';
+                            })
+                            .catch(error => console.error('Error:', error));
+                    } else {
+                        console.error('Error: Invalid response format', data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('saveAllBtn').addEventListener('click', saveAbilityUnit);
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('alertBox')) {
+                toggleModal('alertBox', 'none');
+            } else if (event.target == document.getElementById('elementInputBox')) {
+                toggleModal('elementInputBox', 'none');
+            }
+        }
+	</script>
+</body>
+</html>

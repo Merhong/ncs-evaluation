@@ -1,0 +1,60 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-size: xx-large;
+    font-weight: bolder;
+    padding-bottom: 30px;
+    font-family: "Noto Sans NKo";
+}
+
+.header-div {
+    border: 1px solid #dfe1e5;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    margin: 11px 4px;
+    padding: 0 16px;
+    height: 5vh;
+    min-width: 20vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+.title-item1 {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.title-item2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+th {
+    background-color: lightgray !important;
+}
