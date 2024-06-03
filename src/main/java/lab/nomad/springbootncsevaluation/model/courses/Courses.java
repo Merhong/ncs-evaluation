@@ -1,6 +1,7 @@
 package lab.nomad.springbootncsevaluation.model.courses;
 
 import jakarta.persistence.*;
+import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>courses 테이블과 매핑되는 Entity 클래스입니다.</p>
@@ -105,5 +107,6 @@ public class Courses {
 
         return this;
     }
+
 
 }

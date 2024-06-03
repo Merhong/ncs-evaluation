@@ -10,19 +10,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
-public class ExamsOneResponseDTO {
+public class ExamsDeleteResponseDTO {
     private ExamsDTO exams;
-    public ExamsOneResponseDTO(Exams exams){this.exams= new ExamsDTO(exams);}
+    public  ExamsDeleteResponseDTO(Exams exams){this.exams=new ExamsDTO(exams);
+    }
 
 
     @Getter
     @Setter
     public  static class ExamsDTO {
         private long id;
+        private ExamStatus status;
         private StudentsDTO students;
         private ExamPaperDTO examPapers;
-        private ExamStatus status;
 
         public ExamsDTO(Exams exams) {
             this.id = exams.getId();

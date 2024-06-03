@@ -1,8 +1,10 @@
 package lab.nomad.springbootncsevaluation.model.exams;
 
 import jakarta.persistence.*;
+import lab.nomad.springbootncsevaluation.model.exams._enums.ExamStatus;
 import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
+import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +57,14 @@ public class Exams {
     private ExamPapers examPaper;
 
     /**
+     * <p>students 테이블의 status 컬럼에 매핑되는 필드입니다.</p>
+     * <p>학생의 과정 수강 상태를 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link ExamStatus} 타입입니다.</p>
+     */
+    @Enumerated(EnumType.STRING)
+    private ExamStatus status;
+
+    /**
      * <p>테이블의 create_date 칼럼에 매핑되는 필드입니다.</p>
      * <p>해당 데이터의 생성일시를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link LocalDateTime} 타입입니다.</p>
@@ -72,10 +82,12 @@ public class Exams {
 
     @Builder
     public Exams(Long id, Students student, ExamPapers examPaper,
+                ExamStatus status,
                 LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.student = student;
         this.examPaper = examPaper;
+        this.status = status;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }

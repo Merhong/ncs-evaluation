@@ -9,20 +9,26 @@ import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
-public class ExamsOneResponseDTO {
-    private ExamsDTO exams;
-    public ExamsOneResponseDTO(Exams exams){this.exams= new ExamsDTO(exams);}
+public class ExamsFullDeleteResponseDTO {
 
+    private List<ExamsDTO> examsList;
+
+    public ExamsFullDeleteResponseDTO(List<Exams> exams) {
+        this.examsList = exams.stream().map(ExamsDTO::new).collect(Collectors.toList());
+    }
 
     @Getter
     @Setter
     public  static class ExamsDTO {
         private long id;
+        private ExamStatus status;
         private StudentsDTO students;
         private ExamPaperDTO examPapers;
-        private ExamStatus status;
 
         public ExamsDTO(Exams exams) {
             this.id = exams.getId();
@@ -65,3 +71,5 @@ public class ExamsOneResponseDTO {
 
     }
 }
+
+

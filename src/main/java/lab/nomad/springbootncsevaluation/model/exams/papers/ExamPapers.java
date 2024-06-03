@@ -124,6 +124,5 @@ public class ExamPapers {
         return this;
     }
 
-    public void setId(Long examPaperId) {
-    }
+
 }

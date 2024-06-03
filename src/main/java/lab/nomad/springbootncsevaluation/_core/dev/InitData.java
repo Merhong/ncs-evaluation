@@ -11,6 +11,7 @@ import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.exams.Exams;
 import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
+import lab.nomad.springbootncsevaluation.model.exams._enums.ExamStatus;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapersRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
@@ -698,6 +699,7 @@ public class InitData {
             Exams exams = Exams.builder()
                     .student(studentsPS1)
                     .examPaper(examPapersPS1)
+                    .status(ExamStatus.BEFORE_EXAM)
                     .build();
 
             //리스트에 해당 객체 저장
@@ -712,6 +714,7 @@ public class InitData {
             Exams exams = Exams.builder()
                     .student(studentsPS2)
                     .examPaper(examPapersPS2)
+                    .status(ExamStatus.AFTRE_EXAM)
                     .build();
 
             //리스트에 해당 객체 저장

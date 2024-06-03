@@ -5,11 +5,9 @@ import jakarta.validation.Valid;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
-import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsOneResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsPageResponseDTO;
-import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsSaveRequestDTO;
-import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsSaveResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.exams.dto.*;
 import lab.nomad.springbootncsevaluation.domain.exams.service.ExamsService;
+import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,4 +60,25 @@ public class ExamsRestController {
 
         return  ResponseEntity.ok(APIUtils.success(responseDTO));
  }
+
+ //시험삭제
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @PathVariable Long id){
+
+        ExamsDeleteResponseDTO responseDTO = examsService.delete(id,customUserDetails.user());
+        return  ResponseEntity.ok(APIUtils.success(responseDTO));
+
+    }
+    //학생전체삭제
+    @DeleteMapping("/students/{courseId}")
+    public  ResponseEntity<?> fulldelete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long courseId
+                                      ){
+
+        ExamsFullDeleteResponseDTO responseDTO = examsService.fulldelete(courseId,customUserDetails.user());
+        return  ResponseEntity.ok(APIUtils.success(responseDTO));
+
+    }
+
 }

@@ -3,6 +3,7 @@ package lab.nomad.springbootncsevaluation.domain.exams.dto;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.ability_units._enums.ExamType;
 import lab.nomad.springbootncsevaluation.model.exams.Exams;
+import lab.nomad.springbootncsevaluation.model.exams._enums.ExamStatus;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
@@ -22,13 +23,16 @@ public class ExamsSaveResponseDTO {
     @Setter
     public  static class ExamsDTO {
         private long id;
+        private ExamStatus status;
         private StudentsDTO students;
         private ExamPaperDTO examPapers;
 
         public ExamsDTO(Exams exams) {
             this.id = exams.getId();
+            this.status = exams.getStatus();
             this.students = new StudentsDTO(exams.getStudent());
             this.examPapers = new ExamPaperDTO(exams.getExamPaper());
+
         }
 
 

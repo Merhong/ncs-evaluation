@@ -1,10 +1,13 @@
 package lab.nomad.springbootncsevaluation.model.courses;
 
+import lab.nomad.springbootncsevaluation.model.exams.Exams;
+import lab.nomad.springbootncsevaluation.model.students.Students;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -28,4 +31,10 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
 
     @Meta(comment = "삭제된 Log가 없는 과정ID를 만족하는 튜플을 찾는 쿼리 메소드")
     Optional<Courses> findByIdAndDeleteDateIsNull(Long id);
+
+
+    @Meta(comment = "시험강사와 과정강사가 같은지 비교하는메서드")
+    Optional<Object> findByIdAndUserId(Long courseId, Long userId);
+
+
 }
