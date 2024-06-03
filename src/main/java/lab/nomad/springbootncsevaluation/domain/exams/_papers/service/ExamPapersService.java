@@ -37,6 +37,33 @@ public class ExamPapersService {
     private final ExamPaperMultipleQuestionAnswersRepository answersRepository;
     private final ExamsRepository examsRepository;
 
+    // 시험지 수정
+    @Transactional
+    public ExamPaperUpdateResponseDTO update(Long id, Users user, ExamPaperUpdateRequestDTO requestDTO) {
+        // 관리자
+        if (user.getRole() == UserRole.ROLE_ADMIN) {
+            // 시험지 찾기
+            ExamPapers examPaperPS = examPapersRepository.findByIdAndDeleteDateIsNull(id)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
+
+            // 트랜잭션 처리
+            examPaperPS.update(requestDTO.getName(), requestDTO.getExamType());
+
+            return new ExamPaperUpdateResponseDTO(examPaperPS);
+        }
+
+        // 강사
+        else {
+            // 시험지 찾기
+            ExamPapers examPaperPS = examPapersRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
+
+            // 트랜잭션 처리
+            examPaperPS.update(requestDTO.getName(), requestDTO.getExamType());
+
+            return new ExamPaperUpdateResponseDTO(examPaperPS);
+        }
+    }
 
     // 시험지 삭제
     @Transactional

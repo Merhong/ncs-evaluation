@@ -110,6 +110,14 @@ public class ExamPapers {
         this.deleteDate = deleteDate;
     }
 
+    // 수정시 ExamType이 소문자로 입력됐을경우 대문자로 변환해서 넣어준다.
+    public ExamPapers update(String name, String examType) {
+        this.name = name;
+        this.examType = ExamType.valueOf(examType.toUpperCase());
+
+        return this;
+    }
+
     public ExamPapers delete() {
         this.deleteDate = LocalDateTime.now();
 

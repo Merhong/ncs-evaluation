@@ -38,9 +38,6 @@ public class AbilityUnitsRestController {
             @RequestBody @Valid ExamPaperSaveRequestDTO requestDTO,
             Errors errors) {
 
-        // Request에 담긴 examType을 대문자로 변환, 서비스에서도 마찬가지로 처리함.
-        String examTypeUpperCase = requestDTO.getExamType().toUpperCase();
-
         // 권한 체크
         AuthorityCheckUtils.authorityCheck(customUserDetails,
                                            List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name()));
@@ -54,6 +51,9 @@ public class AbilityUnitsRestController {
                                            .get(0)
                                            .getDefaultMessage());
         }
+
+        // Request에 담긴 examType을 대문자로 변환, 서비스에서도 마찬가지로 처리함.
+        String examTypeUpperCase = requestDTO.getExamType().toUpperCase();
 
         // String으로 받아온 examType이 정확한 값이 아니라면 예외처리
         if (examTypeUpperCase.equals("MULTIPLE_CHOICE") || examTypeUpperCase.equals("TASK")) { }
