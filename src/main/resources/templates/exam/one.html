@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선다형평가</title>
+    <link rel="stylesheet" href="/css/exam/one.css">
+</head>
+
+
+
+
+
+<body>
+<!-- 헤더 위치 -->
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+
+
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'" style="display: none;">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>선다형평가</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/students/one'" style="display: none;">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- 첫 번째 테이블 시작 -->
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>교과목명</td>
+                        <td>Web Programming</td>
+                    </tr>
+                    <tr>
+                        <td>능력단위</td>
+                        <td>화면 구현<br>2001020225_19v5</td>
+                    </tr>
+                    <tr>
+                        <td>평가방법</td>
+                        <td>선다형</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 첫 번째 테이블 끝 -->
+
+                <!-- 두 번째 테이블 시작 -->
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>이름</td>
+                        <td><input type="text" id="name" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <td>연락처</td>
+                        <td><input type="text" id="tel" name="tel" required></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 두 번째 테이블 끝 -->
+
+                <table class="table table-bordered custom-table">
+                    <thead>
+                    <tr>
+                        <th>1</th>
+                        <th>분산 버전 관리 시스템은 무엇인가? (배점 10점)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input type="radio" id="option1" name="version_control" value="option1"></td>
+                        <td><label for="option1">네트워크 연결 없이 사용할 수 있는 버전 관리 시스템</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" id="option2" name="version_control" value="option2"></td>
+                        <td><label for="option2">분산된 개발 환경을 지원하는 버전 관리 시스템</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" id="option3" name="version_control" value="option3"></td>
+                        <td><label for="option3">중앙 집중식 버전 관리 시스템</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" id="option4" name="version_control" value="option4"></td>
+                        <td><label for="option4">로컬 버전 관리 시스템</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" id="option5" name="version_control" value="option5"></td>
+                        <td><label for="option5">바보가 만든 관리 시스템</label></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 세 번째 테이블 끝 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="title-item2">
+        <form id="saveForm" th:action="@{/api/v1/courses/${courseId}/students}" method="POST">
+            <button type="submit" class="btn btn-primary">
+                제출
+            </button>
+        </form>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

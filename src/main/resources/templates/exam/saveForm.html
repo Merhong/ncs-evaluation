@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선다형평가</title>
+    <link rel="stylesheet" href="/css/exam/save.css">
+</head>
+
+
+
+
+
+<body>
+<!-- 헤더 위치 -->
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+
+
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'" style="display: none;">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>선다형평가</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/students/one'" style="display: none;">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- 첫 번째 테이블 시작 -->
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>교과목명</td>
+                        <td th:text="${examPapers.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>능력단위</td>
+                        <td th:text="${examPapers.abilityUnit.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>평가방법</td>
+                        <td th:text="${examPapers.abilityUnit.examTypeList}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 첫 번째 테이블 끝 -->
+
+                <!-- 두 번째 테이블 시작 -->
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>이름</td>
+                        <td><input type="text" id="name" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <td>연락처</td>
+                        <td><input type="text" id="tel" name="tel" required></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 두 번째 테이블 끝 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="title-item2">
+        <button type="button" class="btn btn-primary" id="startEvaluation">평가 시작</button>
+    </div>
+</main>
+
+<script>
+    document.getElementById("startEvaluation").addEventListener("click", function() {
+        const name = document.getElementById("name").value;
+        const tel = document.getElementById("tel").value;
+
+        if (name && tel) {
+            // 유효성 검사가 통과되면 페이지를 이동합니다.
+            window.location.href = "/exam/one";
+        } else {
+            alert("이름과 연락처를 입력해주세요.");
+        }
+    });
+</script>
+</body>
+</html>
