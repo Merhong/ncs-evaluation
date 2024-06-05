@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" type="text/css" href="/css/ability_units/detailForm.css">
+	<title>능력 단위 상세보기</title>
+</head>
+<body>
+	<!-- AbilityUnits(능력 단위) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: abilityUnitsHeader}"></th:block>
+
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<button type="button" class="btn btn-secondary" onclick="location.href='/ability-units'">prev</button>
+			</div>
+			<div class="title-item2">
+				<h1>능력 단위 상세보기</h1>
+			</div>
+			<div class="title-item3">
+				<button type="button" class="btn btn-warning" onclick="openModal('unitModal')">능력 단위 수정</button>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td class="label">능력 단위 코드</td>
+								<td class="value" th:text="${AbilityUnit.code}"></td>
+							</tr>
+							<tr>
+								<td class="label">능력 단위명</td>
+								<td class="value" th:text="${AbilityUnit.name}"></td>
+							</tr>
+							<tr>
+								<td class="label">능력 단위 수준</td>
+								<td class="value" th:text="${AbilityUnit.grade}"></td>
+							</tr>
+							<tr>
+								<td class="label">훈련 시간</td>
+								<td class="value" th:text="${AbilityUnit.totalTime}"></td>
+							</tr>
+							<tr>
+								<td class="label">능력 단위 정의</td>
+								<td class="value" th:text="${AbilityUnit.purpose}"></td>
+							</tr>
+							<tr>
+								<td class="label">시험 종류</td>
+								<td class="value">
+                                    <span th:each="examType, examTypeStat : ${AbilityUnit.examTypeList}"
+                                          th:text="${examType} + ${examTypeStat.last ? '' : ', '}"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="title-container">
+				<div class="title-item4">
+					<h3>능력 단위 요소</h3>
+				</div>
+				<div class="title-item5">
+					<button type="button" class="btn btn-warning" onclick="openModal('elementModal')">요소 수정</button>
+				</div>
+			</div>
+
+			<table class="table table-bordered" id="elementsList">
+				<thead>
+					<tr>
+						<th>능력 단위 요소 번호</th>
+						<th>능력 단위 요소</th>
+						<th>수행 준거</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="element : ${AbilityUnitElementList}">
+						<td class="label" th:text="${element.code}"></td>
+						<td class="label" th:text="${element.name}"></td>
+						<td class="value">
+							<div th:each="item : ${element.abilityUnitElementItemList}" th:text="${item.content}"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+
+	<!-- 능력 단위 수정 모달 -->
+	<div id="unitModal" class="modal">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('unitModal')">&times;</span>
+			<h2>능력 단위 수정</h2>
+			<form id="unitForm" th:action="@{/api/v1/ability-units/{id}(id=${AbilityUnit?.id})}" method="post">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td class="modal-label">능력 단위 코드</td>
+							<td><input type="text" id="code" th:value="${AbilityUnit.code}" name="code" required></td>
+						</tr>
+						<tr>
+							<td class="modal-label">능력 단위명</td>
+							<td><input type="text" id="name" th:value="${AbilityUnit.name}" name="name" required></td>
+						</tr>
+						<tr>
+							<td class="modal-label">능력 단위 수준</td>
+							<td><input type="number" id="grade" th:value="${AbilityUnit.grade}" name="grade" required
+							           min="0" step="1"></td>
+						</tr>
+						<tr>
+							<td class="modal-label">훈련 시간</td>
+							<td><input type="number" id="totalTime" th:value="${AbilityUnit.totalTime}" name="totalTime"
+							           required min="0" step="1"></td>
+						</tr>
+						<tr>
+							<td class="modal-label">능력 단위 정의</td>
+							<td><input type="text" id="purpose" th:value="${AbilityUnit.purpose}" name="purpose"
+							           required></td>
+						</tr>
+						<tr>
+							<td class="modal-label">시험 종류</td>
+							<td>
+								<input type="checkbox" id="multipleChoiceCheckbox" name="examTypeList"
+								       value="MULTIPLE_CHOICE"
+								       th:checked="${#lists.contains(AbilityUnit.examTypeList, 'MULTIPLE_CHOICE')}">
+								<label for="multipleChoiceCheckbox">선다형 선택</label>
+								<input type="checkbox" id="taskCheckbox" name="examTypeList" value="TASK"
+								       th:checked="${#lists.contains(AbilityUnit.examTypeList, 'TASK')}">
+								<label for="taskCheckbox">주관식 선택</label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="d-flex justify-content-center submit-item">
+					<button type="button" class="btn btn-primary" id="unitSubmitBtn">수정</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 요소 수정 모달 -->
+	<div id="elementModal" class="modal">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('elementModal')">&times;</span>
+			<h2>능력 단위 요소 수정</h2>
+			<div id="elementFormContainer" th:each="element, elementStat : ${AbilityUnitElementList}">
+				<form id="elementForm"
+				      th:action="@{/api/v1/ability-units/{unitId}/elements/{elementId}(unitId=${AbilityUnit?.id}, elementId=${element.id})}"
+				      method="post">
+					<h3 th:text="'요소: ' + ${element.name}"></h3>
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td class="modal-label">능력 단위 요소명</td>
+								<td><input type="text" th:value="${element.name}" name="name" required></td>
+							</tr>
+							<tr>
+								<td class="modal-label">능력 단위 요소 코드</td>
+								<td><input type="text" th:value="${element.code}" name="code" required></td>
+							</tr>
+							<tr>
+								<td class="modal-label">수행 준거</td>
+								<td>
+                                    <textarea name="itemContents" required th:attr="data-element-id=${element.id}"><th:block th:each="item, itemStat :${element.abilityUnitElementItemList}" th:inline="text">[[${itemStat.index > 0 ? '
+                                        ' : ''}]] [[${item.content}]]</th:block></textarea>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="d-flex justify-content-center submit-item">
+						<button type="button" class="btn btn-primary elementSubmitBtn"
+						        th:attr="data-element-id=${element.id}">수정
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        // 모달 창 여닫기
+        function toggleModal(modalId, displayStyle) {
+            document.getElementById(modalId).style.display = displayStyle;
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal(event.target.id);
+            }
+        }
+
+        // 능력 단위 수정 처리
+        document.getElementById('unitSubmitBtn').addEventListener('click', function () {
+            const formData = new FormData(document.getElementById('unitForm'));
+            const json = {};
+            formData.forEach((value, key) => {
+                if (key === 'examTypeList') {
+                    if (!json[key]) {
+                        json[key] = [];
+                    }
+                    json[key].push(value);
+                } else {
+                    json[key] = value;
+                }
+            });
+
+            const actionUrl = document.getElementById('unitForm').action;
+
+            fetch(actionUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('능력 단위 수정이 완료되었습니다.');
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // 능력 단위 요소 수정 처리
+        document.querySelectorAll('.elementSubmitBtn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                const button = event.target;
+                const elementId = button.getAttribute('data-element-id');
+                const form = button.closest('form');
+                const textareas = form.querySelectorAll('textarea[name="itemContents"]');
+                textareas.forEach(function (textarea) {
+                    const contents = textarea.value.split('\n');
+                    const itemContentsArray = [];
+                    contents.forEach((content) => {
+                        itemContentsArray.push(content.trim());
+                    });
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'itemContents';
+                    hiddenInput.value = JSON.stringify(itemContentsArray);
+                    form.appendChild(hiddenInput);
+                    textarea.remove();
+                });
+
+                const formData = new FormData(form);
+                const json = {};
+                formData.forEach((value, key) => {
+                    if (key === 'itemContents') {
+                        json[key] = JSON.parse(value);
+                    } else {
+                        json[key] = value;
+                    }
+                });
+
+                const actionUrl = form.action.replace('{elementId}', elementId);
+
+                fetch(actionUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(json)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('능력 단위 요소 수정이 완료되었습니다.');
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+	</script>
+</body>
+</html>

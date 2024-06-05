@@ -102,3 +102,6 @@ textarea {
     height: auto;
 }
 
+.clickable-row {
+    cursor: pointer;
+}

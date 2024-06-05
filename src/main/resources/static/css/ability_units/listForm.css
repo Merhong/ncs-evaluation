@@ -58,3 +58,11 @@
 th {
     background-color: lightgray !important;
 }
+
+tr:hover {
+    cursor: pointer;
+}
+
+tr:active {
+    font-size: 10px;
+}

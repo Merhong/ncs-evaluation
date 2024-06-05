@@ -48,23 +48,22 @@ public class StudentsController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
 
-        return "students/list";
+        return "students/listForm";
     }
 
 
     //상세보기
     @GetMapping("/one/{id}")
-    public  String one(@PathVariable Long id, Model model){
+    public  String detailForm(@PathVariable Long id, Model model){
         // 현재 페이지에서 가져올 학생 목록 조회
         Optional<Students> students = studentsRepository.findById(id);
-
-
 
         model.addAttribute("students", students.orElse(null)); // Optional이 비어있을 경우 null을 넘겨줌
 
 
-        return  "students/one";
+        return  "students/detailForm";
     }
+
 
     //수정
     @GetMapping("/update")
@@ -76,6 +75,6 @@ public class StudentsController {
 
         model.addAttribute("students", students);
         model.addAttribute("courses", courses);
-        return "students/update";
+        return "students/updateForm";
     }
 }

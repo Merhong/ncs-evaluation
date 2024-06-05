@@ -17,10 +17,11 @@
 				<h1>능력 단위 목록</h1>
 			</div>
 			<div class="title-item2">
-				<button type="button" class="btn btn-primary btn-sm" onclick="location.href='/ability-units/saveForm'">등록</button>
+				<button type="button" class="btn btn-primary btn-sm" onclick="location.href='/ability-units/saveForm'">
+					등록
+				</button>
 			</div>
 		</div>
-
 
 		<!-- 능력 단위 목록 테이블 -->
 		<div class="container">
@@ -43,7 +44,7 @@
 								안녕하세요 <span th:text="${username}"></span>님!
 							</p>
 							<th:block th:each="abilityUnit: ${abilityUnitPage.getAbilityUnit()}">
-								<tr>
+								<tr th:onclick="'goToDetailPage(' + ${abilityUnit.id} + ')'">
 									<td th:text="${abilityUnit.id}"></td>
 									<td th:text="${abilityUnit.name}"></td>
 									<td th:text="${abilityUnit.code}"></td>
@@ -56,7 +57,6 @@
 					</table>
 				</div>
 			</div>
-
 
 			<!-- 페이지네이션 -->
 			<div class="row justify-content-center">
@@ -89,6 +89,12 @@
 		</div>
 
 	</main>
+
+	<script>
+        function goToDetailPage(id) {
+            location.href = '/ability-units/' + id;
+        }
+	</script>
 
 </body>
 </html>

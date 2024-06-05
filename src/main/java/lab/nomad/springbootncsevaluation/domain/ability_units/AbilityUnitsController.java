@@ -32,6 +32,34 @@ public class AbilityUnitsController {
     @Autowired
     private AbilityUnitsService abilityUnitsService;
 
+    /* 능력 단위 상세보기 및 수정 */
+    @GetMapping("/{id}")
+    public String detailForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id) {
+
+        // 사용자가 인증되지 않은 경우 처리
+        if (customUserDetails == null) {
+            System.out.println("사용자가 인증되지 않았습니다.");
+            return "redirect:/login";
+        }
+
+        // abilityUnitId에 해당하는 AbilityUnitOneResponseDTO 가져오기
+        AbilityUnitOneResponseDTO abilityUnitOneResponseDTO = abilityUnitsService.one(id);
+
+        // 모델에 능력 단위 데이터를 추가
+        model.addAttribute("AbilityUnit", abilityUnitOneResponseDTO.getAbilityUnit());
+        model.addAttribute("AbilityUnitElementList", abilityUnitOneResponseDTO.getAbilityUnit()
+                .getAbilityUnitElementList());
+
+        // 요청을 위한 빈 DTO를 모델에 담기
+        model.addAttribute("AbilityUnitUpdateRequestDTO", new AbilityUnitUpdateRequestDTO());
+        model.addAttribute("AbilityUnitElementUpdateRequestDTO", new AbilityUnitElementUpdateRequestDTO());
+
+        return "ability_units/detailForm";
+    }
+
+
+    /* 시험지 등록 */
     @GetMapping("/{abilityUnitId}/exam-paper/saveForm")
     public String saveForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long abilityUnitId) {
@@ -64,7 +92,7 @@ public class AbilityUnitsController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/updateForm")
     public String updateForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long id) {
 
@@ -104,7 +132,7 @@ public class AbilityUnitsController {
 
 
     @GetMapping
-    public String list(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+    public String listForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue) {
 
         // 사용자가 인증되지 않은 경우 처리
