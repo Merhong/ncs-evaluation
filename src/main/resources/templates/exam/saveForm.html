@@ -8,17 +8,9 @@
     <link rel="stylesheet" href="/css/exam/save.css">
 </head>
 
-
-
-
-
 <body>
 <!-- 헤더 위치 -->
-<!-- 헤더 위치 -->
 <th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
-
-
-
 
 <main>
     <div class="title-container">
@@ -40,59 +32,81 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <!-- 첫 번째 테이블 시작 -->
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td>교과목명</td>
-                        <td th:text="${examPapers.name}"></td>
-                    </tr>
-                    <tr>
-                        <td>능력단위</td>
-                        <td th:text="${examPapers.abilityUnit.name}"></td>
-                    </tr>
-                    <tr>
-                        <td>평가방법</td>
-                        <td th:text="${examPapers.abilityUnit.examTypeList}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <!-- 첫 번째 테이블 끝 -->
+                <!-- 폼 시작 -->
 
-                <!-- 두 번째 테이블 시작 -->
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td>이름</td>
-                        <td><input type="text" id="name" name="name" required></td>
-                    </tr>
-                    <tr>
-                        <td>연락처</td>
-                        <td><input type="text" id="tel" name="tel" required></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <!-- 두 번째 테이블 끝 -->
+                    <!-- 첫 번째 테이블: 시험 정보 -->
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>교과목명</td>
+                            <td th:text="${examPapers.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>능력단위</td>
+                            <td th:text="${examPapers.abilityUnit.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>평가방법</td>
+                            <td th:text="${examPapers.abilityUnit.examTypeList}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <form id="examForm" method="post">
+                    <!-- 두 번째 테이블: 학생 정보 입력 -->
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>이름</td>
+                            <td><input type="text" id="name" name="name" required></td>
+                        </tr>
+                        <tr>
+                            <td>연락처</td>
+                            <td><input type="text" id="tel" name="tel" required></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 숨겨진 필드: 시험지 ID -->
+
+                        <input type="hidden" id="examPaperId" value="${examPapers.id}"> <!-- 시험지 ID를 숨김 필드로 추가 -->
+                        <button type="submit">평가 시작</button>
+                    </form>
+                <!-- 폼 끝 -->
             </div>
         </div>
-    </div>
-
-    <div class="title-item2">
-        <button type="button" class="btn btn-primary" id="startEvaluation">평가 시작</button>
     </div>
 </main>
 
 <script>
-    document.getElementById("startEvaluation").addEventListener("click", function() {
-        const name = document.getElementById("name").value;
-        const tel = document.getElementById("tel").value;
+    document.getElementById('examForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 제출 방지
 
-        if (name && tel) {
-            // 유효성 검사가 통과되면 페이지를 이동합니다.
-            window.location.href = "/exam/one";
-        } else {
-            alert("이름과 연락처를 입력해주세요.");
-        }
+        const formData = new FormData(event.target);
+        const data = {
+            name: formData.get("name"),
+            tel: formData.get("tel"),
+            examPaperId: formData.get("examPaperId")
+        };
+
+        fetch('/exam/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/exam/one'; // 성공 시 페이지 이동
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류: ' + error.message);
+            });
     });
 </script>
 </body>
