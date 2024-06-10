@@ -67,9 +67,10 @@
                     </table>
 
                     <!-- 숨겨진 필드: 시험지 ID -->
-
+                    <div class="title-item2">
                     <input type="hidden" id="examPaperId" name="examPaperId" th:value="${examPapers.id}"> <!-- 시험지 ID를 숨김 필드로 추가 -->
-                        <button type="submit">평가 시작</button>
+                        <button type="submit" class="btn btn-primary">평가 시작</button>
+                    </div>
                     </form>
                 <!-- 폼 끝 -->
             </div>
@@ -100,13 +101,10 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('이름과 연락처를 확인해주세요');
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                window.location.href = '/exam/one'; // 성공 시 페이지 이동
+                // 서버에서 리디렉션하는 URL을 추적하고 클라이언트에서 해당 위치로 이동
+                window.location.href = response.url; // 서버가 리디렉션 URL을 보낼 때 이동
             })
             .catch(error => {
                 console.error('Error:', error);

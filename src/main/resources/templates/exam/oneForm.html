@@ -45,15 +45,15 @@
                     <tbody>
                     <tr>
                         <td>교과목명</td>
-                        <td>Web Programming</td>
+                        <td th:text="${examDetails.examPapers.name}"></td>
                     </tr>
                     <tr>
                         <td>능력단위</td>
-                        <td>화면 구현<br>2001020225_19v5</td>
+                        <td th:text="${examDetails.examPapers.getAbilityUnitName()}"></td>
                     </tr>
                     <tr>
                         <td>평가방법</td>
-                        <td>선다형</td>
+                        <td th:text="${examDetails.examPapers.getExamType()}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -64,11 +64,11 @@
                     <tbody>
                     <tr>
                         <td>이름</td>
-                        <td><input type="text" id="name" name="name" required></td>
+                        <td th:text="${examDetails.students.name}">
                     </tr>
                     <tr>
                         <td>연락처</td>
-                        <td><input type="text" id="tel" name="tel" required></td>
+                        <td th:text="${examDetails.students.tel}">
                     </tr>
                     </tbody>
                 </table>
