@@ -1,22 +1,23 @@
 package lab.nomad.springbootncsevaluation.domain.courses.dto;
 
+import lab.nomad.springbootncsevaluation.model.ability_units.AbilityUnits;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // 과정 단일 조회용 DTO
 @Getter
 public class CoursesOneResponseDTO {
     private CoursesDTO course;
-    // 이미 courseDTO에서 user를 userDTO로 가공후 전달함.
-    // private UserDTO user;
+    private List<AbilityUnitDTO> abilityUnitList;
 
     // ResponseDTO 생성자
-    public CoursesOneResponseDTO(Users user,Courses course) {
+    public CoursesOneResponseDTO(Users user, Courses course, List<AbilityUnitDTO> abilityUnitList) {
         this.course = new CoursesDTO(user, course);
-        // this.user = new UserDTO(user);
+        this.abilityUnitList = abilityUnitList;
     }
 
     // courses + user 내용을 가지는 DTO
@@ -58,9 +59,29 @@ public class CoursesOneResponseDTO {
             this.email = user.getEmail();
             this.tel = user.getTel();
             this.role = user.getRole()
-                            .getText();
+                    .getText();
             this.createDate = user.getCreateDate();
             this.updateDate = user.getUpdateDate();
         }
     }
+
+    @Getter
+    public static class AbilityUnitDTO {
+        private Long id;
+        private String code;
+        private String name;
+        private String purpose;
+        private Integer grade;
+        private Integer totalTime;
+
+        public AbilityUnitDTO(AbilityUnits abilityUnit) {
+            this.id = abilityUnit.getId();
+            this.code = abilityUnit.getCode();
+            this.name = abilityUnit.getName();
+            this.purpose = abilityUnit.getPurpose();
+            this.grade = abilityUnit.getGrade();
+            this.totalTime = abilityUnit.getTotalTime();
+        }
+    }
 }
+

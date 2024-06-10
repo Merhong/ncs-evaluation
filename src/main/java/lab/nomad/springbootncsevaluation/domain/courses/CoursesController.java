@@ -6,6 +6,7 @@ import lab.nomad.springbootncsevaluation.domain.ability_units.service.AbilityUni
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesOneResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesSaveRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesUpdateRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
@@ -82,14 +83,14 @@ public class CoursesController {
     // TODO : @PathVariable 사용해서 courseId, studentId 받아서 구현!!!
     // TODO : 구현완료하고 StudentsController의 detailForm 메서드 없애기
     @GetMapping("/{courseId}/students/{studentId}")
-    public  String detailForm(@PathVariable Long courseId, @PathVariable Long studentId, Model model){
+    public String detailForm(@PathVariable Long courseId, @PathVariable Long studentId, Model model) {
         // 현재 페이지에서 가져올 학생 목록 조회
         Optional<Students> students = studentsRepository.findById(studentId);
 
         model.addAttribute("students", students.orElse(null)); // Optional이 비어있을 경우 null을 넘겨줌
 
 
-        return  "students/detailForm";
+        return "students/detailForm";
     }
 
 
@@ -97,7 +98,7 @@ public class CoursesController {
     // TODO : @RequestParam 말고 @PathVariable 사용해서 courseId 받아서 구현!!!
     // TODO : 구현완료하고 StudentsController의 update 메서드 없애기
     @GetMapping("/{courseId}/students/updateForm")
-    public String update(Model model){
+    public String update(Model model) {
         // 모든 학생 데이터 가져오기
         List<Students> students = studentsRepository.findAll();
         // 코스 데이터 가져오기
@@ -173,15 +174,17 @@ public class CoursesController {
         }
 
         // 서비스 호출
+        // 과정 + 능력 단위
         CoursesOneResponseDTO coursesOneResponseDTO = coursesService.one(id, customUserDetails.user());
 
+        // 상세보기 응답을 모델에 담기
+        model.addAttribute("CoursesOneResponseDTO", coursesOneResponseDTO);
 
-        model.addAttribute("coursesOneResponseDTO", coursesOneResponseDTO);
-
+        // 과정 수정을 위한 빈 DTO 모델에 담기
+        model.addAttribute("CoursesUpdateRequestDTO", new CoursesUpdateRequestDTO());
 
         return "courses/detailForm";
     }
-
 
 
     /* 과정 등록 페이지 */

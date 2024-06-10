@@ -2,19 +2,154 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-	<link rel="stylesheet" type="text/css" href="/css/courses/listForm.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/courses/detailForm.css">
 	<title>과정 상세보기</title>
 </head>
-
-
 <body>
 
 	<!-- Courses(과정) 헤더 불러오기 -->
 	<th:block th:replace="~{_common/header.html :: coursesHeader}"></th:block>
 
 	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<h1 th:text="${CoursesOneResponseDTO?.course?.name}">과정명</h1>
+			</div>
+		</div>
 
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form id="detailForm" th:action="@{/api/v1/courses/${id}}" th:object="${CoursesOneResponseDTO}"
+					      method="post">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>과정명</td>
+									<td id="courseNameDetail" th:text="*{course?.name}">과정명</td>
+								</tr>
+								<tr>
+									<td>학원명</td>
+									<td id="academyNameDetail" th:text="*{course?.academyName}">학원명</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="title-container">
+							<h3>능력 단위 목록</h3>
+						</div>
+						<!-- 능력 단위 목록 테이블 -->
+						<div class="title-container" id="abilityUnitsContainer">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>능력 단위명</th>
+										<th>능력 단위 코드</th>
+										<th>능력 단위 수준</th>
+										<th>훈련시간</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="abilityUnit : ${CoursesOneResponseDTO?.abilityUnitList}">
+										<td th:text="${abilityUnit.id}">ID</td>
+										<td th:text="${abilityUnit.name}">능력 단위명</td>
+										<td th:text="${abilityUnit.code}">능력 단위 코드</td>
+										<td th:text="${abilityUnit.grade}">능력 단위 수준</td>
+										<td th:text="${abilityUnit.totalTime}">훈련시간</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="d-flex justify-content-center submit-item">
+							<button type="button" class="btn btn-primary" onclick="openModal('courseModal')">과정 수정
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 	</main>
+
+	<!-- 과정 수정 모달 -->
+	<div id="courseModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('courseModal')">&times;</span>
+			<h2>과정 수정</h2>
+			<form id="courseUpdateForm"
+			      th:action="@{/api/v1/courses/{id}(id=${CoursesOneResponseDTO?.course?.id})}" method="post">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td class="modal-label">과정명</td>
+							<td><input type="text" id="modalName" name="name"
+							           th:attr="value=${CoursesOneResponseDTO?.course?.name}" required></td>
+						</tr>
+						<tr>
+							<td class="modal-label">학원명</td>
+							<td><input type="text" id="modalAcademyName" name="academyName"
+							           th:attr="value=${CoursesOneResponseDTO?.course?.academyName}" required></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="d-flex justify-content-center submit-item">
+					<button type="button" class="btn btn-primary" id="courseSubmitBtn">수정</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+        // 모달 창 여닫기
+        function toggleModal(modalId, displayStyle) {
+            document.getElementById(modalId).style.display = displayStyle;
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal(event.target.id);
+            }
+        }
+
+        // 과정 수정 처리
+        document.getElementById('courseSubmitBtn').addEventListener('click', function () {
+            // 1. 폼 데이터를 가져옵니다.
+            const formData = new FormData(document.getElementById('courseUpdateForm'));
+            const json = {};
+
+            // 2. 폼 데이터를 JSON 객체로 변환합니다.
+            formData.forEach((value, key) => {
+                json[key] = value;
+            });
+
+            // 3. 폼의 action URL을 가져옵니다.
+            const actionUrl = document.getElementById('courseUpdateForm').action;
+
+            // 4. fetch API를 사용하여 서버로 PUT 요청을 보냅니다.
+            fetch(actionUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 5. 서버로부터 응답을 받으면, 성공 메시지를 표시하고 페이지를 새로고침합니다.
+                    alert('과정 수정이 완료되었습니다.');
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+	</script>
 </body>
 </html>

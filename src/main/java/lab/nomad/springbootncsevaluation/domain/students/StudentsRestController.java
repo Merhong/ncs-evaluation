@@ -70,7 +70,6 @@ public class StudentsRestController {
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
 
-
     }
 }
 

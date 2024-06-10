@@ -46,7 +46,7 @@
 								안녕하세요 <span th:text="${username}"></span>님!
 							</p>
 							<th:block th:each="course: ${coursesPage.course}">
-								<tr>
+								<tr th:onclick="'goToDetailPage(' + ${course.id} + ')'">
 									<td th:text="${course.id}"></td>
 									<td th:text="${course.name}"></td>
 									<td th:text="${course.academyName}"></td>
@@ -87,6 +87,12 @@
 		</div>
 
 	</main>
+
+	<script>
+		function goToDetailPage(id) {
+            location.href = '/courses/' + id;
+		}
+	</script>
 
 </body>
 </html>

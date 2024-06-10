@@ -56,7 +56,12 @@
 }
 
 th {
+    text-align: center;
     background-color: lightgray !important;
+}
+
+td {
+    text-align: center;
 }
 
 tr:hover {

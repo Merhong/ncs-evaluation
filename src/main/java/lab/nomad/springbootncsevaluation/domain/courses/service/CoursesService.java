@@ -134,10 +134,33 @@ public class CoursesService {
 
     // JPA 사용, User ID로 조회
     public CoursesOneResponseDTO one(Long id, Users user) {
-        Courses coursesPS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
-                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
+        // 관리자
+        // 모든 과정 조회 가능
+        if (user.getRole() == UserRole.ROLE_ADMIN) {
+            Courses coursesPS = coursesRepository.findByIdAndDeleteDateIsNull(id)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
 
-        return new CoursesOneResponseDTO(user, coursesPS);
+            List<CoursesAbilityUnits> coursesAbilityUnitsList = coursesAbilityUnitsRepository.findByCourseId(id);
+            List<CoursesOneResponseDTO.AbilityUnitDTO> abilityUnitDTOList = coursesAbilityUnitsList.stream()
+                    .map(ca -> new CoursesOneResponseDTO.AbilityUnitDTO(ca.getAbilityUnit()))
+                    .collect(Collectors.toList());
+
+            return new CoursesOneResponseDTO(user, coursesPS, abilityUnitDTOList);
+        }
+
+        // 강사일때
+        // 강사와 직원은 자기 과정만 조회 가능
+        else {
+            Courses coursesPS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
+
+            List<CoursesAbilityUnits> coursesAbilityUnitsList = coursesAbilityUnitsRepository.findByCourseId(id);
+            List<CoursesOneResponseDTO.AbilityUnitDTO> abilityUnitDTOList = coursesAbilityUnitsList.stream()
+                    .map(ca -> new CoursesOneResponseDTO.AbilityUnitDTO(ca.getAbilityUnit()))
+                    .collect(Collectors.toList());
+
+            return new CoursesOneResponseDTO(user, coursesPS, abilityUnitDTOList);
+        }
     }
 
     @Transactional
@@ -173,4 +196,5 @@ public class CoursesService {
 
         return new CoursesSaveResponseDTO(user, coursesPS, abilityUnitDTOListPS);
     }
+
 }

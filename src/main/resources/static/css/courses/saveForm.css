@@ -105,3 +105,7 @@ textarea {
 .clickable-row {
     cursor: pointer;
 }
+
+td {
+    text-align: center;
+}

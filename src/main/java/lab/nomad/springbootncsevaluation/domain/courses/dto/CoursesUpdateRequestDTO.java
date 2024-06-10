@@ -16,4 +16,6 @@ public class CoursesUpdateRequestDTO {
 
     @NotEmpty(message = EMPTY_ACADEMY_NAME)
     private String academyName;
+
+
 }
