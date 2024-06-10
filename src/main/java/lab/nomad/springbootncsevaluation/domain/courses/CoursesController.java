@@ -137,7 +137,7 @@ public class CoursesController {
 
     // TODO : 위의 saveStudentForm 구현하고 없애기!!!
     @GetMapping("/students/saveForm")
-    public String save(@RequestParam(required = false) Long courseId, Model model,
+    public String saveForm(@RequestParam(required = false) Long courseId, Model model,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         // 사용자가 인증되지 않은 경우 처리
