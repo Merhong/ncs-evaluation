@@ -18,7 +18,4 @@ public class StudentsSaveRequestDTO {
     private  String name;
 
     private  StudentStatus status;
-
-
-
 }
