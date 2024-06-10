@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +28,8 @@ public interface StudentsRepository extends JpaRepository <Students, Long>{
 
     //해당 과정에 속한 모든 학생을 조회하는 메서드
     List<Students> findByCourseId(Long courseId);
+
+    // 이름과 연락처로 학생을 찾는 메서드
+    @Query("SELECT s FROM Students s WHERE s.name = :name AND s.tel = :tel")
+    Optional<Students> findByNameAndTel(@Param("name") String name, @Param("tel") String tel);
 }

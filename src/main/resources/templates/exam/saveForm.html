@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선다형평가</title>
+    <link rel="stylesheet" href="/css/exam/save.css">
+</head>
+
+<body>
+<!-- 헤더 위치 -->
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'" style="display: none;">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>선다형평가</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/students/one'" style="display: none;">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- 폼 시작 -->
+
+                    <!-- 첫 번째 테이블: 시험 정보 -->
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>교과목명</td>
+                            <td th:text="${examPapers.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>능력단위</td>
+                            <td th:text="${examPapers.abilityUnit.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>평가방법</td>
+                            <td th:text="${examPapers.abilityUnit.examTypeList}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <form id="examForm" method="post">
+                    <!-- 두 번째 테이블: 학생 정보 입력 -->
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>이름</td>
+                            <td><input type="text" id="name" name="name" required></td>
+                        </tr>
+                        <tr>
+                            <td>연락처</td>
+                            <td><input type="text" id="tel" name="tel" required></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 숨겨진 필드: 시험지 ID -->
+                    <div class="title-item2">
+                    <input type="hidden" id="examPaperId" name="examPaperId" th:value="${examPapers.id}"> <!-- 시험지 ID를 숨김 필드로 추가 -->
+                        <button type="submit" class="btn btn-primary">평가 시작</button>
+                    </div>
+                    </form>
+                <!-- 폼 끝 -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.getElementById('examForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 제출 방지
+
+        const formData = new FormData(event.target);
+        // 숨겨진 필드 값 확인을 위한 로그 출력
+        console.log("Name:", formData.get("name"));
+        console.log("Tel:", formData.get("tel"));
+        console.log("Exam Paper ID:", formData.get("examPaperId"));
+
+        const data = {
+            name: formData.get("name"),
+            tel: formData.get("tel"),
+            examPaperId: formData.get("examPaperId")
+        };
+
+        fetch('/exam/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('이름과 연락처를 확인해주세요');
+                }
+                // 서버에서 리디렉션하는 URL을 추적하고 클라이언트에서 해당 위치로 이동
+                window.location.href = response.url; // 서버가 리디렉션 URL을 보낼 때 이동
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류: ' + error.message);
+            });
+    });
+</script>
+</body>
+</html>

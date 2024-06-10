@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -27,4 +29,6 @@ public interface ExamPapersRepository extends JpaRepository<ExamPapers, Long> {
     @Meta(comment = "삭제된 Log가 없는 시험지ID를 만족하는 튜플을 찾는 쿼리 메소드")
     Optional<ExamPapers> findByIdAndDeleteDateIsNull(Long id);
 
+    @Query("SELECT e FROM ExamPapers e LEFT JOIN FETCH e.abilityUnit WHERE e.id = :id")
+    Optional<ExamPapers> findByIdWithAbilityUnit(@Param("id") Long id);
 }

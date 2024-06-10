@@ -1,0 +1,142 @@
+
+/*헤더*/
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-size: xx-large;
+    font-weight: bolder;
+    padding-bottom: 30px;
+    font-family: "Noto Sans NKo";
+}
+
+.header-div {
+    border: 1px solid #dfe1e5;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    margin: 11px 4px;
+    padding: 0 16px;
+    height: 5vh;
+    min-width: 20vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+.title-item1 {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.title-item2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+.title-item3 {
+    display: flex;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+td,th {
+    text-align: center;
+}
+
+th {
+    background-color: lightgray !important;
+}
+td {
+    font-size: 0.9em;
+    font-weight: normal;
+    text-align: left; /* 테이블 데이터 셀의 텍스트를 왼쪽 정렬 */
+}
+/* 첫 번째 열에 배경색을 주는 CSS */
+.table-bordered tbody tr td:first-child {
+    background-color: lightgray;
+    text-align: center; /* 첫 번째 열의 텍스트는 가운데 정렬 */
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 70%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: left; /* 입력 필드의 텍스트를 왼쪽 정렬 */
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.table {
+    width: 800px; /* 테이블의 너비를 조정 */
+    height: auto;
+}
+/* .input-group 클래스는 요소들을 플렉스 박스로 정렬합니다 */
+.input-group {
+    display: inline-block; /* 인라인 블록으로 변경하여 요소들이 한 줄에 배치되도록 합니다 */
+}
+.input-group input {
+    width: 300px; /* 입력 필드의 너비를 200px로 고정합니다 */
+    margin-right: 10px; /* 입력 필드와 버튼 사이의 간격을 설정합니다 */
+}
+.input-group button {
+    white-space: nowrap; /* 버튼 텍스트가 줄 바꿈되지 않도록 합니다 */
+}
+td {
+    padding: 8px; /* 테이블 셀의 내부 여백을 설정합니다 */
+}
+
+.table td:first-child {
+    width: 30%; /* 첫 번째 열의 너비를 30%로 고정 */
+}
+.table td:last-child {
+    width: 70%; /* 두 번째 열의 너비를 70%로 고정 */
+}
+.custom-table th, .custom-table td {
+    vertical-align: middle;
+
+}
+.custom-table th {
+    background-color: #f8f9fa;
+}
+.custom-table td {
+    background-color: #ffffff;
+}
+/* 세 번째 테이블의 첫 번째 열 너비 줄이기 */
+.custom-table th:first-child, .custom-table td:first-child {
+    width: 30px !important; /* 1열의 넓이를 줄임 */
+}
+

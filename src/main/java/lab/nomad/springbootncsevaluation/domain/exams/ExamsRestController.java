@@ -7,6 +7,10 @@ import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
 import lab.nomad.springbootncsevaluation.domain.exams.dto.*;
 import lab.nomad.springbootncsevaluation.domain.exams.service.ExamsService;
+import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
+import lab.nomad.springbootncsevaluation.model.exams._enums.ExamStatus;
+import lab.nomad.springbootncsevaluation.model.students.Students;
+import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.users.Users;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +29,7 @@ import java.util.List;
 
 public class ExamsRestController {
     private  final ExamsService examsService;
+    private  final StudentsRepository studentsRepository;
 
     //시험생성
     @PostMapping("/{id}")
@@ -34,6 +40,7 @@ public class ExamsRestController {
 
         return  ResponseEntity.ok(APIUtils.success(responseDTO));
     }
+
     //시험조회
     @GetMapping
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,String searchValue){
