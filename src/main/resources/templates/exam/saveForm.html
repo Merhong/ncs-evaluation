@@ -68,7 +68,7 @@
 
                     <!-- 숨겨진 필드: 시험지 ID -->
 
-                        <input type="hidden" id="examPaperId" value="${examPapers.id}"> <!-- 시험지 ID를 숨김 필드로 추가 -->
+                    <input type="hidden" id="examPaperId" name="examPaperId" th:value="${examPapers.id}"> <!-- 시험지 ID를 숨김 필드로 추가 -->
                         <button type="submit">평가 시작</button>
                     </form>
                 <!-- 폼 끝 -->
@@ -82,6 +82,11 @@
         event.preventDefault(); // 기본 제출 방지
 
         const formData = new FormData(event.target);
+        // 숨겨진 필드 값 확인을 위한 로그 출력
+        console.log("Name:", formData.get("name"));
+        console.log("Tel:", formData.get("tel"));
+        console.log("Exam Paper ID:", formData.get("examPaperId"));
+
         const data = {
             name: formData.get("name"),
             tel: formData.get("tel"),
