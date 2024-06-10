@@ -19,7 +19,6 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
     @Meta(comment = "관리자는 모든 과정을 볼 수 있음")
     Page<Courses> findByDeleteDateIsNull(Pageable pageable);
 
-
     @Meta(comment = "키워드 검색(User 자기 자신만 보여야 함.)")
     Page<Courses> findByNameContainsAndUserIdAndDeleteDateIsNull(Pageable pageable, String searchValue, Long userId);
 
@@ -31,7 +30,6 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
 
     @Meta(comment = "삭제된 Log가 없는 과정ID를 만족하는 튜플을 찾는 쿼리 메소드")
     Optional<Courses> findByIdAndDeleteDateIsNull(Long id);
-
 
     @Meta(comment = "시험강사와 과정강사가 같은지 비교하는메서드")
     Optional<Object> findByIdAndUserId(Long courseId, Long userId);

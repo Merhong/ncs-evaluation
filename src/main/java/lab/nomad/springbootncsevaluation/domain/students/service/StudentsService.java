@@ -68,16 +68,17 @@ public class StudentsService {
 
 
     // 전체 학생조회
-    public StudentsPageResponseDTO page(Pageable pageable, String searchValue, Users user) {
+    public StudentsPageResponseDTO page(Long courseId, Pageable pageable, String searchValue, Users user) {
         Page<Students> pageStudents;
 
         // TODO : 로그인한 사람 권한에 따라 조회되는 범위 동적으로 적용시키기
 
         // 검색어가 있는 경우
         if (searchValue != null && !searchValue.isEmpty()) {
-            pageStudents = studentsRepository.findByNameAndDeleteDateIsNull(searchValue, pageable);
+            pageStudents = studentsRepository.findByNameContainsAndCourseIdAndDeleteDateIsNull(searchValue, courseId,
+                    pageable);
         } else { // 검색어가 없는 경우,전체조회
-            pageStudents = studentsRepository.findAllAndByDeleteDateIsNull(pageable);
+            pageStudents = studentsRepository.findByCourseIdAndDeleteDateIsNull(courseId, pageable);
         }
 
         // StudentsPageResponseDTO 페이지로 변환하여 반환
@@ -87,12 +88,12 @@ public class StudentsService {
     // 학생수정
     @Transactional
 
-    public StudentsUpdateResponseDTO update(Long id, Users user, StudentsSaveRequestDTO requestDTO) {
+    public StudentsUpdateResponseDTO update(Long courseId, Long id, Users user, StudentsSaveRequestDTO requestDTO) {
 
         // TODO : 관리자는 모든 학생 수정 가능하게 고치기.
 
         // 해당 학생을 등록한 강사인지 확인
-        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
+        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(courseId, user.getId())
                 .orElseThrow(() -> new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
 
         // 학생 정보 가져오기

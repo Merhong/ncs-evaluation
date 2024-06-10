@@ -8,6 +8,8 @@ import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesPageResponseD
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.courses.dto.CoursesUpdateRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsOneResponseDTO;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
@@ -15,7 +17,6 @@ import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/courses")
@@ -45,12 +45,11 @@ public class CoursesController {
      * 학생(students)
      */
 
-    /* 과정 학생 리스트 페이지 */
-    // TODO : @RequestParam 말고 @PathVariable 사용해서 courseId 받아서 구현!!!
-    // TODO : 구현완료하고 StudentsController의 list 메서드 없애기
+    /* 과정 학생 목록 페이지 */
     @GetMapping("/{courseId}/students")
-    public String listForm(@RequestParam(required = false, defaultValue = "1") int page, Model model,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long courseId) {
+    public String listForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
+            @PathVariable Long courseId) {
 
         // 사용자가 인증되지 않은 경우 처리
         if (customUserDetails == null) {
@@ -58,47 +57,49 @@ public class CoursesController {
             return "redirect:/login";
         }
 
-        // 페이지당 학생 수
-        int pageSize = 10; // 페이지당 학생 수를 5로 설정합니다.
-
-        // 전체 학생 수 조회
-        long totalStudents = studentsRepository.count();
-
-        // 총 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
-
-        // 현재 페이지에서 가져올 학생 목록 조회
-        List<Students> students = studentsRepository.findAll(PageRequest.of(page - 1, pageSize))
-                .getContent();
+        // 서비스 호출
+        StudentsPageResponseDTO responseDTO = studentsService.page(courseId, pageable, searchValue,
+                customUserDetails.user());
 
         // 모델에 필요한 데이터 추가
-        model.addAttribute("students", students);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("studentsPage", responseDTO);
+        model.addAttribute("pageable", responseDTO.getPageable());
 
         return "students/listForm";
     }
 
     /* 과정 학생 상세보기 페이지 */
-    // TODO : @PathVariable 사용해서 courseId, studentId 받아서 구현!!!
-    // TODO : 구현완료하고 StudentsController의 detailForm 메서드 없애기
-    @GetMapping("/{courseId}/students/{studentId}")
-    public String detailForm(@PathVariable Long courseId, @PathVariable Long studentId, Model model) {
-        // 현재 페이지에서 가져올 학생 목록 조회
-        Optional<Students> students = studentsRepository.findById(studentId);
+    @GetMapping("/{courseId}/students/{id}")
+    public String detailForm(@PathVariable Long courseId, @PathVariable Long id, Model model,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        model.addAttribute("students", students.orElse(null)); // Optional이 비어있을 경우 null을 넘겨줌
+        // 사용자가 인증되지 않은 경우 처리
+        if (customUserDetails == null) {
+            System.out.println("사용자가 인증되지 않았습니다.");
+            return "redirect:/login";
+        }
 
+        // 서비스 호출
+        StudentsOneResponseDTO studentsOneResponseDTO = studentsService.one(id);
+
+        // 학생 정보가 존재하지 않을 경우 처리
+        if (studentsOneResponseDTO == null || studentsOneResponseDTO.getStudent() == null) {
+            System.out.println("학생 정보를 찾을 수 없습니다.");
+            return "redirect:/courses/1/students"; // 학생 목록 페이지로 리디렉션
+        }
+
+        // 상세보기 응답을 모델에 담기
+        model.addAttribute("student", studentsOneResponseDTO.getStudent());
+        model.addAttribute("courseId", courseId);
 
         return "students/detailForm";
     }
 
 
     /* 과정 학생 수정 페이지 */
-    // TODO : @RequestParam 말고 @PathVariable 사용해서 courseId 받아서 구현!!!
-    // TODO : 구현완료하고 StudentsController의 update 메서드 없애기
-    @GetMapping("/{courseId}/students/updateForm")
-    public String update(Model model) {
+    @GetMapping("/{courseId}/students/{studentId}/updateForm")
+    public String updateForm(@PathVariable Long courseId, @PathVariable Long studentId, Model model,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 모든 학생 데이터 가져오기
         List<Students> students = studentsRepository.findAll();
         // 코스 데이터 가져오기
@@ -106,7 +107,7 @@ public class CoursesController {
 
         model.addAttribute("students", students);
         model.addAttribute("courses", courses);
-        return "students/update";
+        return "students/updateForm";
     }
 
 
@@ -224,6 +225,7 @@ public class CoursesController {
     @GetMapping
     public String listForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue) {
+
         // 사용자가 인증되지 않은 경우 처리
         if (customUserDetails == null) {
             System.out.println("사용자가 인증되지 않았습니다.");

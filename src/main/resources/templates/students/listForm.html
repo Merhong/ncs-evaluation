@@ -1,84 +1,87 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-    <link rel="stylesheet" type="text/css" href="/css/students/listForm.css"/>
-    <title>학생리스트</title>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" type="text/css" href="/css/students/listForm.css"/>
+	<title>학생리스트</title>
 </head>
 
 <body>
-<!-- 헤더 위치 -->
-<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
-<main>
-    <div class="title-container">
-        <div class="title-item1">
-            <h1>센서기반 스마트 서비스를 위한 자바&파이썬 1기</h1>
-        </div>
-        <div class="title-item3">
-            <button type="button" class="btn btn-primary btn-sm" id="registerButton" onclick="openStudentForm()">
-                학생추가
-            </button>
-        </div>
+	<!-- 헤더 위치 -->
+	<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<h1>
+					<th:block th:text="${studentsPage.student.get(0).getCoursesDTO().name}"/>
+				</h1>
+			</div>
+			<div class="title-item3">
+				<button type="button" class="btn btn-primary btn-sm" id="registerButton" onclick="openStudentForm()">
+					학생추가
+				</button>
+			</div>
 
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>NO.</th>
-                        <th>학생명</th>
-                        <th>연락처</th>
-                        <th>수강상태</th>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>NO.</th>
+								<th>학생명</th>
+								<th>연락처</th>
+								<th>수강 상태</th>
+							</tr>
+						</thead>
+						<tbody>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- 데이터를 동적으로 추가 -->
-                    <tr th:each="student : ${students}">
-                        <td th:text="${student.id}"></td>
-                        <td><a th:href="@{/students/one/{id}(id=${student.id})}" th:text="${student.name}"></a></td>
-                        <td th:text="${student.tel}"></td>
-                        <!-- 수강 상태에 따른 텍스트 표시 -->
-                        <td th:text="${student.status}" th:style="${student.status == 'ACTIVE'} ? 'color: green;' : (${student.status == 'DROP'} ? 'color: red;' : '')"></td>
-                        <td th:if="${false}" th:text="${student.getCourse().id}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="title-item2">
-                    <button type="button" class="btn btn-secondary" style="margin-right: 30px;">이전페이지</button>
-                    <button type="submit" class="btn btn-primary" onclick="location.href='/students/update'">수정</button>
-                </div>
-            </div>
-        </div>
-    </div>
+							<!-- 데이터 출력 부분 -->
+							<th:block th:each="student: ${studentsPage.student}">
+								<tr>
+									<td th:text="${student.id}"></td>
+									<td th:text="${student.name}"></td>
+									<td th:text="${student.tel}"></td>
+									<td th:text="${student.status}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 
-    <!--페이지네이션
-    <div class="row justify-content-center">
-        <div class="col-auto">
-            <ul class="pagination">
-                <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">다음</a></li>
-            </ul>
-        </div>
-    </div>-->
+		<!-- 페이지네이션 -->
+		<div class="row justify-content-center">
+			<div class="col-auto">
+				<ul class="pagination">
+					<!-- 이전 버튼 -->
+					<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+						<a class="page-link"
+						   th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'"
+						   tabindex="-1">이전</a>
+					</li>
 
-</main>
-<script>
-    function openStudentForm() {
-        // 팝업의 너비와 높이를 설정합니다.
-        var width = 600;
-        var height = 400;
-        // 화면의 중앙에 위치하도록 창의 좌표를 계산합니다.
-        var left = (screen.width - width) / 8;
-        var top = (screen.height - height) / 8;
+					<!-- 페이지 번호 -->
+					<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
+					    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+						<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}"
+						   th:text="${pageNum}">1</a>
+					</li>
 
-        // 팝업 창을 엽니다.
-        window.open('/courses/students/saveForm', 'studentForm', 'width=' + width + ', height=' + height + ', left=' + left + ', top=' + top);
-    }
-</script>
+					<!-- 다음 버튼 -->
+					<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+						<a class="page-link"
+						   th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'"
+						   tabindex="-1">다음</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	</main>
+
+
 </body>
 </html>
