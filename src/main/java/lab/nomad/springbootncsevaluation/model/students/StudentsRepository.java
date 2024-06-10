@@ -14,16 +14,21 @@ import java.util.Optional;
 
 public interface StudentsRepository extends JpaRepository <Students, Long>{
 
-    //course id 조회하는 쿼리메서드
+    //course id 조회 하는 쿼리 메서드
    // Optional<Students> findByCourseId(Long courseId);
 
-    //이름으로 검색하는 쿼리메서드
+    //이름으로 검색 하는 쿼리 메서드
     Page<Students> findByNameAndDeleteDateIsNull(String searchValue, Pageable pageable);
 
-    //전체조회하는 쿼리메서드
+    // 과정 ID로 검색 하는 쿼리 메서드
+    Page<Students> findByNameContainsAndCourseIdAndDeleteDateIsNull(String searchValue, Long courseId, Pageable pageable);
+
+    //전체 조회 하는 쿼리 메서드
     Page<Students> findAllAndByDeleteDateIsNull(Pageable pageable);
 
+    // 과정 ID로 전체 조회 하는 쿼리 메서드
+    Page<Students> findByCourseIdAndDeleteDateIsNull(Long courseId, Pageable pageable);
 
-    //해당 과정에 속한 모든 학생을 조회하는 메서드
+    //해당 과정에 속한 모든 학생을 조회 하는 메서드
     List<Students> findByCourseId(Long courseId);
 }
