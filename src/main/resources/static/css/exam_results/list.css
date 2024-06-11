@@ -121,7 +121,6 @@ td {
 
 .table td:first-child {
     width: 30%; /* 첫 번째 열의 너비를 30%로 고정 */
-    background-color: transparent;
 }
 .table td:last-child {
     width: 70%; /* 두 번째 열의 너비를 70%로 고정 */
@@ -130,15 +129,24 @@ td {
     vertical-align: middle;
 
 }
+/* 두 번째 테이블(custom-table)의 스타일 조정 */
+.custom-table th, .custom-table td {
+    vertical-align: middle;
+    white-space: nowrap; /* 내용이 길 경우 줄 바꿈을 하지 않고 한 줄에 표시 */
+    width: 14.28%; /* 모든 열의 너비를 균등하게 설정 */
+}
+
 .custom-table th {
     background-color: #f8f9fa;
 }
 .custom-table td {
     background-color: #ffffff;
 }
-/* 세 번째 테이블의 첫 번째 열 너비 줄이기 */
-.custom-table th:first-child, .custom-table td:first-child {
-    width: 30px !important; /* 1열의 넓이를 줄임 */
 
+/* custom-table의 첫 번째 열 배경색 제거 */
+.custom-table th:first-child {
+    background-color: #f8f9fa; /* 헤더의 배경색 유지 */
 }
-
+.custom-table td:first-child {
+    background-color: #ffffff; /* 데이터 셀의 배경색을 흰색으로 설정 */
+}
