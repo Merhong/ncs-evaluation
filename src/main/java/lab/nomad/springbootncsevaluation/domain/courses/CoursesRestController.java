@@ -159,6 +159,11 @@ public class CoursesRestController {
     public ResponseEntity<?> saveStudents(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long courseId, @RequestBody StudentsSaveRequestDTO requestDTO) {
 
+        // 권한 체크(능력단위 컨트롤러 참조)
+        // 관리자, 강사, 직원이 조회 가능
+        AuthorityCheckUtils.authorityCheck(customUserDetails,
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
+
         // 학생 등록
         StudentsSaveResponseDTO responseDTO = studentsService.save(courseId, requestDTO);
 

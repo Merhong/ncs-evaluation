@@ -54,12 +54,35 @@ public class StudentsService {
     }
 
 
-    // 특정 학생조회
-    public StudentsOneResponseDTO one(Long id) {
+    // 과정 학생 단일 조회
+    public StudentsOneResponseDTO one(Long courseId, Long id) {
 
+        // 과정 및 학생 조회
+        Optional<Courses> optionalCourse = coursesRepository.findById(courseId);
         Optional<Students> optionalStudent = studentsRepository.findById(id);
 
-        // 만약 학생 정보가 존재하지 않으면 404 에러를 발생시킵니다.
+        // 만약 정보가 존재하지 않으면 4040 에러를 발생시킵니다.
+        Students studentPS = optionalStudent.orElseThrow(
+                () -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+
+        Courses coursePS = optionalCourse.orElseThrow(
+                () -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
+
+        // 학생의 과정 ID와 URL의 과정 ID가 같지 않으면 예외 처리
+        if(!studentPS.getCourse().getId().equals(coursePS.getId())) {
+            throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+        }
+
+        return new StudentsOneResponseDTO(studentPS);
+    }
+
+    // 특정 학생 조회(REST 컨트롤러에서 사용)
+    public StudentsOneResponseDTO one(Long id) {
+
+        // 과정 및 학생 조회
+        Optional<Students> optionalStudent = studentsRepository.findById(id);
+
+        // 만약 정보가 존재하지 않으면 4040 에러를 발생시킵니다.
         Students studentPS = optionalStudent.orElseThrow(
                 () -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
 

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/courses")
@@ -80,16 +81,16 @@ public class CoursesController {
         }
 
         // 서비스 호출
-        StudentsOneResponseDTO studentsOneResponseDTO = studentsService.one(id);
+        StudentsOneResponseDTO responseDTO = studentsService.one(courseId, id);
 
         // 학생 정보가 존재하지 않을 경우 처리
-        if (studentsOneResponseDTO == null || studentsOneResponseDTO.getStudent() == null) {
+        if (responseDTO == null || responseDTO.getStudent() == null) {
             System.out.println("학생 정보를 찾을 수 없습니다.");
             return "redirect:/courses/1/students"; // 학생 목록 페이지로 리디렉션
         }
 
         // 상세보기 응답을 모델에 담기
-        model.addAttribute("student", studentsOneResponseDTO.getStudent());
+        model.addAttribute("student", responseDTO.getStudent());
         model.addAttribute("courseId", courseId);
 
         return "students/detailForm";
@@ -97,8 +98,8 @@ public class CoursesController {
 
 
     /* 과정 학생 수정 페이지 */
-    @GetMapping("/{courseId}/students/{studentId}/updateForm")
-    public String updateForm(@PathVariable Long courseId, @PathVariable Long studentId, Model model,
+    @GetMapping("/{courseId}/students/updateForm")
+    public String updateForm(@PathVariable Long courseId, Model model,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 모든 학생 데이터 가져오기
         List<Students> students = studentsRepository.findAll();
@@ -130,30 +131,8 @@ public class CoursesController {
         model.addAttribute("StudentsSaveRequestDTO", new StudentsSaveRequestDTO());
 
         // 코스 데이터가져오기
-        List<Courses> courses = coursesRepository.findAll();
-        model.addAttribute("courses", courses);
-
-        return "students/saveForm";
-    }
-
-    // TODO : 위의 saveStudentForm 구현하고 없애기!!!
-    @GetMapping("/students/saveForm")
-    public String saveForm(@RequestParam(required = false) Long courseId, Model model,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        // 사용자가 인증되지 않은 경우 처리
-        if (customUserDetails == null) {
-            System.out.println("사용자가 인증되지 않았습니다.");
-            return "redirect:/login";
-        }
-
-        // 사용자 인증 정보 및 코스 ID 모델에 추가
-        model.addAttribute("courseId", courseId);
-        model.addAttribute("StudentsSaveRequestDTO", new StudentsSaveRequestDTO());
-
-        // 코스 데이터가져오기
-        List<Courses> courses = coursesRepository.findAll();
-        model.addAttribute("courses", courses);
+        Optional<Courses> course = coursesRepository.findById(courseId);
+        model.addAttribute("course", course);
 
         return "students/saveForm";
     }
