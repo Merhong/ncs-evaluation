@@ -11,11 +11,12 @@ import lab.nomad.springbootncsevaluation.domain.courses.service.CoursesService;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsOneResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsSaveRequestDTO;
+import lab.nomad.springbootncsevaluation.domain.students.dto.StudentsUpdateRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.students.service.StudentsService;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
-import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
+import lab.nomad.springbootncsevaluation.model.students._enums.StudentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -99,23 +99,37 @@ public class CoursesController {
 
     /* 과정 학생 수정 페이지 */
     @GetMapping("/{courseId}/students/updateForm")
-    public String updateForm(@PathVariable Long courseId, Model model,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        // 모든 학생 데이터 가져오기
-        List<Students> students = studentsRepository.findAll();
-        // 코스 데이터 가져오기
-        List<Courses> courses = coursesRepository.findAll();
+    public String updateForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
+            @PathVariable Long courseId) {
 
-        model.addAttribute("students", students);
-        model.addAttribute("courses", courses);
+        // 사용자가 인증되지 않은 경우 처리
+        if (customUserDetails == null) {
+            System.out.println("사용자가 인증되지 않았습니다.");
+            return "redirect:/login";
+        }
+
+        // 서비스 호출
+        StudentsPageResponseDTO responseDTO = studentsService.page(courseId, pageable, searchValue,
+                customUserDetails.user());
+
+        // 모델에 필요한 데이터 추가
+        model.addAttribute("students", responseDTO.getStudent());
+        model.addAttribute("pageable", responseDTO.getPageable());
+        model.addAttribute("courseId", courseId);
+
+        // 수정시 수강 상태 state 비교하기 위해 사용
+        model.addAttribute("ACTIVE", StudentStatus.ACTIVE);
+        model.addAttribute("DROP", StudentStatus.DROP);
+
+        // 수정을 위한 빈 DTO 모델에 추가
+        model.addAttribute("StudentUpdateRequestDTO", new StudentsUpdateRequestDTO());
+
         return "students/updateForm";
     }
 
 
     /* 과정 학생 등록 페이지 */
-    // TODO : @RequestParam 말고 @PathVariable 사용해서 courseId 받아서 구현!!!
-    // TODO : 구현완료하고 아래 @GetMapping("/students/saveForm") save 메소드 없애기.
-    // TODO : 구현하지 않고 @GetMapping("/students/saveForm") save 지우면 페이지 오류남!!!
     @GetMapping("/{courseId}/students/saveForm")
     public String saveStudentForm(@PathVariable Long courseId, Model model,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
