@@ -17,7 +17,7 @@
 				</h1>
 			</div>
 			<div class="title-item3">
-				<button type="button" class="btn btn-primary btn-sm" id="registerButton" onclick="openStudentForm()">
+				<button type="button" class="btn btn-primary btn-sm" id="registerButton" th:onclick="'location.href=\'/courses/' + ${courseId} + '/students/saveForm\''">
 					학생추가
 				</button>
 			</div>
@@ -39,7 +39,7 @@
 
 							<!-- 데이터 출력 부분 -->
 							<th:block th:each="student: ${studentsPage.student}">
-								<tr>
+								<tr th:onclick="'goToDetailPage('+ ${student.coursesDTO.id}  +',' + ${student.id} + ')'">
 									<td th:text="${student.id}"></td>
 									<td th:text="${student.name}"></td>
 									<td th:text="${student.tel}"></td>
@@ -82,6 +82,11 @@
 
 	</main>
 
+	<script>
+        function goToDetailPage(courseId, id) {
+            location.href = '/courses/' + courseId + '/students/' + id;
+        }
+	</script>
 
 </body>
 </html>

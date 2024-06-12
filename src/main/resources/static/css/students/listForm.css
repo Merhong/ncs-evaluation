@@ -92,3 +92,10 @@ th {
     border-collapse: collapse; /* 테이블의 보더를 겹치게 설정 */
 }
 
+tr:hover {
+    cursor: pointer;
+}
+
+tr:active {
+    font-size: 10px;
+}

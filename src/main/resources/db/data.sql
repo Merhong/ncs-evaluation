@@ -155,3 +155,13 @@ INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updated
 VALUES (3, 6, now(), now());
 INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
 VALUES (3, 7, now(), now());
+
+-- Students(학생)
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (1, '학생A', '010-1111-1111', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (1, '학생B', '010-2222-1111', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (1, '학생C', '010-3333-1111', 'DROP', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (1, '학생D', '010-4444-4444', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (2, '학생E', '010-1111-1111', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (2, '학생F', '010-2222-2222', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (2, '학생G', '010-3333-3333', 'ACTIVE', now(), now());
+INSERT INTO students(course_id, name, tel, status, createdate, updatedate) VALUES (2, '학생H', '010-4444-4444', 'DROP', now(), now());

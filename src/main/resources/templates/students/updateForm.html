@@ -1,96 +1,170 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생 수정 페이지</title>
-    <link rel="stylesheet" href="/css/students/updateForm.css">
+	<meta charset="UTF-8">
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>학생 수정 페이지</title>
+	<link rel="stylesheet" href="/css/students/updateForm.css">
 </head>
 <body>
-<!-- 헤더 위치 -->
-<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+	<!-- 헤더 위치 -->
+	<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 
-<main>
-    <div class="title-container">
-        <div class="title-item1"></div>
-        <div class="title-item2">
-            <h1>학생 정보 수정</h1>
-        </div>
-        <div class="title-item3">
-            <button type="button" class="btn btn-primary" style="display: none;">저장</button>
-        </div>
-    </div>
+	<main>
+		<div class="title-container">
+			<div class="title-item1"></div>
+			<div class="title-item2">
+				<h1>학생 정보 수정</h1>
+			</div>
+			<div class="title-item3">
+				<button type="button" class="btn btn-primary" style="display: none;">저장</button>
+			</div>
+		</div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form id="updateForm" action="/students/update" method="post">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>NO.</th>
-                            <th>학생명</th>
-                            <th>연락처</th>
-                            <th></th>
-                            <th>수강상태</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- 데이터를 동적으로 추가 -->
-                        <tr th:each="student, stat : ${students}" th:data-student-id="${student.id}">
-                            <td>
-                                <button class="btn btn-danger btn-sm" onclick="deleteRow(this, [[${student.id}]])">삭제</button>
-                            </td>
-                            <td th:text="${stat.index + 1}"></td>
-                            <td th:text="${student.name}"></td>
-                            <td><input type="text" name="tel" th:value="${student.tel}" class="form-control"/></td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-sm">수정</button>
-                            </td>
-                            <td>
-                                <select name="status" class="form-control">
-                                    <option value="ACTIVE" th:selected="${student.status == 'ACTIVE'}">수강중</option>
-                                    <option value="DROP" th:selected="${student.status == 'DROP'}">중도포기</option>
-                                </select>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="title-item2">
-        <button type="button" class="btn btn-primary">완료</button>
-    </div>
-</main>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th></th>
+								<th>NO.</th>
+								<th>학생명</th>
+								<th>연락처</th>
+								<th>수강상태</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터를 동적으로 추가 -->
+							<tr th:each="student, stat : ${students}" th:data-student-id="${student.id}"
+							    th:data-course-id="${courseId}">
+								<td>
+									<button class="btn btn-danger btn-sm" onclick="deleteRow(this); return false;">삭제
+									</button>
+								</td>
+								<td th:text="${stat.index + 1}"></td>
+								<td><input type="text" name="name" th:value="${student.name}" class="form-control"/>
+								</td>
+								<td><input type="text" name="tel" th:value="${student.tel}" class="form-control"/></td>
+								<td>
+									<select name="status" class="form-control">
+										<option value="ACTIVE" th:selected="${student.status.toString() == 'ACTIVE'}">수강중</option>
+										<option value="DROP" th:selected="${student.status.toString() == 'DROP'}">중도 포기</option>
+									</select>
+								</td>
+								<td>
+									<button type="button" class="btn btn-warning btn-sm"
+									        onclick="updateRow(this);">수정
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 
-<script>
-    function deleteRow(button, studentId) {
-        // 서버에 DELETE 요청
-        fetch('/api/v1/students/' + studentId, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
-            if (!response.ok) {
-                console.error('Network response was not ok:', response.status, response.statusText);
-                return response.text().then(function (text) {
-                    console.error('Response text:', text);
-                    throw new Error('Network response was not ok: ' + text);
-                });
-            }
-            // 삭제가 성공하면 해당 행을 삭제
+		<!-- 페이지네이션 -->
+		<div class="row justify-content-center">
+			<div class="col-auto">
+				<ul class="pagination">
+					<!-- 이전 버튼 -->
+					<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+						<a class="page-link"
+						   th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'"
+						   tabindex="-1">이전</a>
+					</li>
+
+					<!-- 페이지 번호 -->
+					<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
+					    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+						<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}"
+						   th:text="${pageNum}">1</a>
+					</li>
+
+					<!-- 다음 버튼 -->
+					<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+						<a class="page-link"
+						   th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'"
+						   tabindex="-1">다음</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="title-item2">
+			<button type="button" class="btn btn-primary"
+			        th:onclick="'location.href=\'/courses/' + ${courseId} + '/students\''">완료
+			</button>
+		</div>
+
+	</main>
+
+	<script>
+        <!-- 학생 튜플 삭제 -->
+        function deleteRow(button) {
             var row = button.closest('tr');
-            row.parentNode.removeChild(row);
-        }).catch(function (error) {
-            console.error('Failed to delete student:', error);
-            alert('삭제 할 수 있는 권한이 없습니다.');
-        });
-    }
-</script>
+            var studentId = row.getAttribute('data-student-id');
+            var courseId = row.getAttribute('data-course-id');
+
+            fetch('/api/v1/courses/' + courseId + '/students/' + studentId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (response) {
+                if (!response.ok) {
+                    console.error('Network response was not ok:', response.status, response.statusText);
+                    return response.text().then(function (text) {
+                        console.error('Response text:', text);
+                        throw new Error('Network response was not ok: ' + text);
+                    });
+                }
+                row.parentNode.removeChild(row);
+                alert('학생을 삭제하였습니다.');
+            }).catch(function (error) {
+                console.error('Failed to delete student:', error);
+                alert('삭제 할 수 있는 권한이 없습니다.');
+            });
+        }
+
+        // 학생 튜플 수정
+        function updateRow(button) {
+            var row = button.closest('tr');
+            var studentId = row.getAttribute('data-student-id');
+            var courseId = row.getAttribute('data-course-id');
+            var name = row.querySelector('input[name="name"]').value;
+            var tel = row.querySelector('input[name="tel"]').value;
+            var status = row.querySelector('select[name="status"]').value;
+
+            var data = {
+                name: name,
+                tel: tel,
+                status: status
+            };
+
+            fetch('/api/v1/courses/' + courseId + '/students/' + studentId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (response) {
+                if (!response.ok) {
+                    console.error('Network response was not ok:', response.status, response.statusText);
+                    return response.text().then(function (text) {
+                        console.error('Response text:', text);
+                        throw new Error('Network response was not ok: ' + text);
+                    });
+                }
+                alert('학생 정보가 성공적으로 수정되었습니다.');
+            }).catch(function (error) {
+                console.error('Failed to update student:', error);
+                alert('수정 할 수 있는 권한이 없습니다.');
+            });
+        }
+	</script>
 </body>
 </html>

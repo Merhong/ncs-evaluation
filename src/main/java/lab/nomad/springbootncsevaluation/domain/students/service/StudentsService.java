@@ -8,6 +8,7 @@ import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lab.nomad.springbootncsevaluation.model.users.Users;
+import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -54,12 +55,35 @@ public class StudentsService {
     }
 
 
-    // 특정 학생조회
-    public StudentsOneResponseDTO one(Long id) {
+    // 과정 학생 단일 조회
+    public StudentsOneResponseDTO one(Long courseId, Long id) {
 
+        // 과정 및 학생 조회
+        Optional<Courses> optionalCourse = coursesRepository.findById(courseId);
         Optional<Students> optionalStudent = studentsRepository.findById(id);
 
-        // 만약 학생 정보가 존재하지 않으면 404 에러를 발생시킵니다.
+        // 만약 정보가 존재하지 않으면 4040 에러를 발생시킵니다.
+        Students studentPS = optionalStudent.orElseThrow(
+                () -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+
+        Courses coursePS = optionalCourse.orElseThrow(
+                () -> new Exception400(ExceptionMessage.NOT_FOUND_COURSE.getMessage()));
+
+        // 학생의 과정 ID와 URL의 과정 ID가 같지 않으면 예외 처리
+        if(!studentPS.getCourse().getId().equals(coursePS.getId())) {
+            throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+        }
+
+        return new StudentsOneResponseDTO(studentPS);
+    }
+
+    // 특정 학생 조회(REST 컨트롤러에서 사용)
+    public StudentsOneResponseDTO one(Long id) {
+
+        // 과정 및 학생 조회
+        Optional<Students> optionalStudent = studentsRepository.findById(id);
+
+        // 만약 정보가 존재하지 않으면 4040 에러를 발생시킵니다.
         Students studentPS = optionalStudent.orElseThrow(
                 () -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
 
@@ -87,7 +111,6 @@ public class StudentsService {
 
     // 학생수정
     @Transactional
-
     public StudentsUpdateResponseDTO update(Long courseId, Long id, Users user, StudentsSaveRequestDTO requestDTO) {
 
         // TODO : 관리자는 모든 학생 수정 가능하게 고치기.
@@ -116,26 +139,54 @@ public class StudentsService {
 
     // 학생삭제
     @Transactional
-    public StudentsDeleteResponseDTO delete(Long id, Users user) {
-        // 해당 학생을 등록한 강사인지 확인
-        Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(id, user.getId())
-                .orElseThrow(() -> new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
+    public StudentsDeleteResponseDTO delete(Long courseId, Long id, Users user) {
 
-        // 학생 정보 가져오기
-        Students studentPS = studentsRepository.findById(id)
-                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+        // 관리자
+        if(user.getRole() == UserRole.ROLE_ADMIN) {
+            // 해당 학생을 등록한 강사인지 확인
+            Courses coursePS = coursesRepository.findByIdAndDeleteDateIsNull(courseId)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
 
-        // 학생이 해당 강사의 과정에 속해 있는지 확인
-        if (!studentPS.getCourse()
-                .equals(coursePS)) {
-            throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+            // 학생 정보 가져오기
+            Students studentPS = studentsRepository.findById(id)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+
+            // 학생이 해당 강사의 과정에 속해 있는지 확인
+            if (!studentPS.getCourse()
+                    .equals(coursePS)) {
+                throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+            }
+
+            // 삭제 시간 업데이트
+            studentPS.delete();
+
+            // 저장 및 DTO로 반환
+            return new StudentsDeleteResponseDTO(studentPS);
         }
 
-        // 삭제 시간 업데이트
-        studentPS.delete();
+        // 강사
+        else {
+            // 해당 학생을 등록한 강사인지 확인
+            Courses coursePS = coursesRepository.findByIdAndUserIdAndDeleteDateIsNull(courseId, user.getId())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.COMMON_FORBIDDEN.getMessage()));
 
-        // 저장 및 DTO로 반환
-        return new StudentsDeleteResponseDTO(studentPS);
+            // 학생 정보 가져오기
+            Students studentPS = studentsRepository.findById(id)
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage()));
+
+            // 학생이 해당 강사의 과정에 속해 있는지 확인
+            if (!studentPS.getCourse()
+                    .equals(coursePS)) {
+                throw new Exception400(ExceptionMessage.NOT_FOUND_STUDENT.getMessage());
+            }
+
+            // 삭제 시간 업데이트
+            studentPS.delete();
+
+            // 저장 및 DTO로 반환
+            return new StudentsDeleteResponseDTO(studentPS);
+        }
+
     }
 }
 

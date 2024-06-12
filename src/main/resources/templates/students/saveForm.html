@@ -2,109 +2,116 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생 등록 페이지</title>
-    <link rel="stylesheet" href="/css/students/saveForm.css">
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>학생 등록 페이지</title>
+	<link rel="stylesheet" href="/css/students/saveForm.css">
 </head>
 
 
 <body>
-<!-- 헤더 위치 -->
-<!-- 헤더 위치 -->
-<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+	<!-- 헤더 위치 -->
+	<!-- 헤더 위치 -->
+	<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 
 
-<main>
-    <div class="title-container">
-        <div class="title-item1">
-            <button type="button" class="btn btn-secondary" onclick="location.href='/students/list'">
-                prev
-            </button>
-        </div>
-        <div class="title-item2">
-            <h1>학생 등록</h1>
-        </div>
-        <div class="title-item3">
-            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/students/one'">
-                정보수정
-            </button>
-        </div>
-    </div>
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				<button type="button" class="btn btn-secondary"
+				        th:onclick="'location.href=\'/courses/' + ${courseId} + '/students\''">
+					prev
+				</button>
+			</div>
+			<div class="title-item2">
+				<h1>학생 등록</h1>
+			</div>
+			<div class="title-item3">
+				<button type="button" class="btn btn-warning btn-sm"
+				        th:onclick="'location.href=\'/courses/' + ${courseId} + '/students/updateForm\''">
+					정보수정
+				</button>
+			</div>
+		</div>
 
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
-              <!-- <input type="hidden" id="courseId" th:value="${courseId}">-->
-
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td>성명</td>
-                        <td><input type="text" id="name" name="name" required></td>
-                    </tr>
-                    <tr>
-                        <td>연락처</td>
-                        <td><input type="text" id="tel" name="tel" required></td>
-                    </tr>
-                    <tr>
-                        <td>상태</td>
-                        <td>
-                            <select id="status" name="status" required>
-                                <option value="ACTIVE">ACTIVE</option>
-                                <option value="DROP">DROP</option>
-                            </select>
-                        </td>
-                    </tr>
-
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="title-item2">
-        <form id="saveForm" th:action="@{/api/v1/courses/${courseId}/students}" method="POST">
-            <button type="submit" class="btn btn-primary">
-                등록
-            </button>
-        </form>
-    </div>
-
-</main>
-
-<script>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form id="studentSaveForm" th:action="@{/api/v1/courses/{courseId}/students(courseId=${courseId})}"
+					      th:attr="data-course-id=${courseId}"
+					      th:object="${StudentsSaveRequestDTO}" method="post">
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>성명</td>
+									<td><input type="text" id="name" name="name" th:field="*{name}" required></td>
+								</tr>
+								<tr>
+									<td>연락처</td>
+									<td><input type="text" id="tel" name="tel" th:field="*{tel}" required></td>
+								</tr>
+								<tr>
+									<td>상태</td>
+									<td>
+										<select id="status" name="status" th:field="*{status}" required>
+											<option value="ACTIVE">ACTIVE</option>
+											<option value="DROP">DROP</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="title-item2">
+							<button type="submit" class="btn btn-primary">
+								등록
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 
-    document.getElementById("saveForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-        var name = document.getElementById("name").value;
-        var tel = document.getElementById("tel").value;
-        var status = document.getElementById("status").value;
-        // courseId 추출 및 변환
+	</main>
 
+	<script>
+        document.getElementById("studentSaveForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            var name = document.getElementById("name").value;
+            var tel = document.getElementById("tel").value;
+            var status = document.getElementById("status").value;
 
+            var data = {
+                name: name,
+                tel: tel,
+                status: status
+            };
 
-        fetch('/api/v1/courses/' + courseId + '/students', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({name: name, tel: tel, status: status})
-        }).then(function (response) {
-            if (!response.ok) {
-                console.error('Network response was not ok:', response.statusText);
-                throw new Error('Network response was not ok');
-            }
-            // 성공적으로 응답을 받아온 경우에만 리스트 페이지로 이동
-            window.location.href = "/students/list";
-        })
-    });
+            // form 요소에서 data-course-id 속성 값 추출
+            var courseId = document.getElementById("studentSaveForm").getAttribute("data-course-id");
 
+            // courseId 추출 및 변환
+            fetch('/api/v1/courses/' + courseId + '/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (response) {
+                if (!response.ok) {
+                    console.error('Network response was not ok:', response.statusText);
+                    throw new Error('Network response was not ok');
+                }
+                // 성공적으로 응답을 받아온 경우에만 리스트 페이지로 이동
+                alert('학생 정보가 성공적으로 저장되었습니다.');
+                window.location.href = "/courses/" + courseId + "/students";
+            }).catch(function (error) {
+                console.error('There was a problem with the fetch', error);
+	        });
+        });
 
-</script>
+	</script>
 
 </body>
 </html>

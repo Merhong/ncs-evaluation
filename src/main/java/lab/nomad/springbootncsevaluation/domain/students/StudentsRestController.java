@@ -39,17 +39,6 @@ public class StudentsRestController {
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
 
-
-
-    // 학생삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long id) {
-        StudentsDeleteResponseDTO responseDTO = studentsService.delete(id, customUserDetails.user());
-
-        return ResponseEntity.ok(APIUtils.success(responseDTO));
-
-    }
 }
 
 
