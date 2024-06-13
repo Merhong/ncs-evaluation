@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" href="/css/exams/_papers/detailForm.css">
+	<title>화면 구현(평가지명) - 평가지</title>
+</head>
+<body>
+	<!-- ExamPapers(평가지) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: examPaperHeader}"></th:block>
+
+	<main>
+		<div class="title-container">
+			<div class="title-item1">
+				빈칸
+			</div>
+			<div class="title-item2">
+				평가지명 - 평가지
+			</div>
+			<div class="title-item3">
+				결재(세로)
+			</div>
+			<div class="title-item4">
+				<div class="title2-container">
+					<div class=".title2-container1">
+						<div class="title2-item1">
+							담당자
+						</div>
+						<div class="title2-item2">
+							빈칸
+						</div>
+					</div>
+					<div class=".title2-container2">
+						<div class="title2-item3">
+							팀장
+						</div>
+						<div class="title2-item4">
+							빈칸
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 능력 단위 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered">
+	 					<thead>
+							<tr>
+								<th>id</th>
+								<th>능력 단위명</th>
+								<th>능력 단위 코드</th>
+								<th>능력 단위 수준</th>
+								<th>훈련시간</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>단위 A</td>
+								<td>Code</td>
+								<td>Grade</td>
+								<td>100</td>
+							</tr>
+
+
+							<!-- 데이터 출력 부분 -->
+							<!-- <th:block th:each="abilityUnit: ${abilityUnitPage.getAbilityUnit()}"> -->
+							<!-- 	<tr th:onclick="'goToDetailPage(' + ${abilityUnit.id} + ')'"> -->
+							<!-- 		<td th:text="${abilityUnit.id}"></td> -->
+							<!-- 		<td th:text="${abilityUnit.name}"></td> -->
+							<!-- 		<td th:text="${abilityUnit.code}"></td> -->
+							<!-- 		<td th:text="${abilityUnit.grade}"></td> -->
+							<!-- 		<td th:text="${abilityUnit.totalTime}"></td> -->
+							<!-- 	</tr> -->
+							<!-- </th:block> -->
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="section">
+				<table class="table table-bordered vertical-header">
+					<tbody>
+						<tr>
+							<th>능력 단위 코드</th>
+							<td>2001022211_19v5</td>
+							<th>훈련수준</th>
+							<td>3</td>
+						</tr>
+						<tr>
+							<th>평가 방법</th>
+							<td>선다형</td>
+							<th></th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>능력 단위 요소</th>
+							<td>UI 설계 확인하기<br>UI 구현하기</td>
+							<th>요소 코드</th>
+							<td>2001022211_19v5.1<br>2001022211_19v5.2</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</main>
+
+</body>
+</html>

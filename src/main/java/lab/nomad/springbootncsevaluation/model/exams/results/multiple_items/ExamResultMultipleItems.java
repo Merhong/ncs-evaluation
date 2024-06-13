@@ -53,7 +53,7 @@ public class ExamResultMultipleItems {
      * <p>어떤 문제를 풀었는지를 의미하는 칼럼입니다.</p>
      * <p>해당 필드의 타입은 {@link ExamPaperMultipleQuestions} 타입입니다.</p>
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ExamPaperMultipleQuestions examPaperQuestion;
 
     /**
@@ -62,7 +62,7 @@ public class ExamResultMultipleItems {
      * <p>어떤 답을 체크하였는지를 의미하는 칼럽입니다.</p>
      * <p>해당 필드의 타입은 {@link ExamPaperMultipleQuestionAnswers} 타입입니다.</p>
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswers;
 
     /**

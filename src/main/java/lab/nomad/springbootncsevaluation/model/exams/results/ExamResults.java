@@ -92,12 +92,14 @@ public class ExamResults {
     @Builder
     public ExamResults(Long id, Exams exam, Integer totalPoint,
                       Integer grade, String comment,
+                      ExamResultStatus status,
                       LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.exam = exam;
         this.totalPoint = totalPoint;
         this.grade = grade;
         this.comment = comment;
+        this.status = status;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
