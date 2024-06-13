@@ -189,30 +189,30 @@ VALUES (3, 20, 1, '미흡한 면이 있습니다.', 'WAIT', now(), now());
 -- 학생 1의 국어 시험 채점
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (1, 1, 1, 20, '1-1 문제(20점) A 정답', now(), now());
+VALUES (1, 1, 1, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (1, 2, 6, 20, '1-2 문제(20점) C 정답', now(), now());
+VALUES (1, 2, 6, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (1, 3, 7, 20, '1-3 문제(20점) A 정답', now(), now());
+VALUES (1, 3, 7, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 -- 학생 2의 국어 시험 채점
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (2, 1, 1, 20, '1-1 문제(20점) A 정답', now(), now());
+VALUES (2, 1, 1, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (2, 2, 4, 0, '1-2 문제(20점) A 오답', now(), now());
+VALUES (2, 2, 4, 0, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (2, 3, 7, 20, '1-3 문제(20점) A 정답', now(), now());
+VALUES (2, 3, 7, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 -- 학생 3의 국어 시험 채점
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (3, 1, 2, 0, '1-1 문제(20점) B 오답', now(), now());
+VALUES (3, 1, 2, 0, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (3, 2, 5, 0, '1-2 문제(20점) B 오답', now(), now());
+VALUES (3, 2, 5, 0, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (3, 3, 7, 20, '1-3 문제(20점) A 오답', now(), now());
+VALUES (3, 3, 7, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
