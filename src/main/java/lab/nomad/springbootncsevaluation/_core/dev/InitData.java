@@ -539,7 +539,7 @@ public class InitData {
             //저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS1)
-                    .name("student1")
+                    .name("학생A")
                     .tel("010-0000-0000")
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
@@ -555,7 +555,7 @@ public class InitData {
             //저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS2)
-                    .name("student2")
+                    .name("학생B")
                     .tel("010-0000-2222")
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
@@ -569,7 +569,7 @@ public class InitData {
             //저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS3)
-                    .name("student3")
+                    .name("학생C")
                     .tel("010-0000-3333")
                     .studentStatus(StudentStatus.DROP)
                     .build();
@@ -583,7 +583,7 @@ public class InitData {
             //저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS4)
-                    .name("student4")
+                    .name("학생D")
                     .tel("010-0000-4444")
                     .studentStatus(StudentStatus.ACTIVE)
                     .build();
@@ -597,7 +597,7 @@ public class InitData {
             //저장할 엔티티 객체 인스턴스
             Students student = Students.builder()
                     .course(coursePS5)
-                    .name("student5")
+                    .name("학생E")
                     .tel("010-0000-5555")
                     .studentStatus(StudentStatus.DROP)
                     .build();

@@ -1,5 +1,6 @@
 package lab.nomad.springbootncsevaluation.domain.exams._results.service;
 
+import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsPageRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams.dto.ExamsSaveResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +34,21 @@ public class ExamResultsService {
     private ExamPaperMultipleQuestionsRepository examPaperMultipleQuestionsRepository;
     @Autowired
     private ExamPaperMultipleQuestionAnswersRepository examPaperMultipleQuestionAnswersRepository;
-
+    //시험결과저장
     @Transactional
     public ExamResultsSaveResponseDTO save(Long examId, ExamResultsSaveRequestDTO requestDTO) {
+        if (examId == null) {
+            throw new IllegalArgumentException("Exam ID must not be null");
+        }
+
         // 시험 ID로 시험 정보 조회
         Exams exam = examsRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with id: " + examId));
+
+        // 시험 결과가 이미 존재하는지 확인
+        if (examResultsRepository.findByExamId(examId).isPresent()) {
+            throw new RuntimeException("Exam result already exists for exam id: " + examId);
+        }
 
         // 시험 문제 목록 조회
         List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(exam.getExamPaper().getId());
@@ -74,5 +85,37 @@ public class ExamResultsService {
 
         // 시험 결과 저장 응답 DTO 생성
         return new ExamResultsSaveResponseDTO(examResults);
+    }
+
+    //시험결과리스트
+    public List<ExamResultsPageRequestDTO> getExamResultsByCourseId(Long courseId) {
+        return examResultsRepository.findByCourseId(courseId).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private ExamResultsPageRequestDTO convertToDto(ExamResults examResult) {
+       //String status = examResult.getStatus() == ExamResultStatus.DONE ? "평가완료" : "총평입력필요";
+        //String color = examResult.getStatus() == ExamResultStatus.DONE ? "green" : "orange";
+        String status = examResult.getStatus() == ExamResultStatus.WAIT ? "총평입력필요" : "평가완료";
+        String color = examResult.getStatus() == ExamResultStatus.WAIT ? "orange" : "green";
+        int grade = calculateGrade(examResult.getTotalPoint());
+
+        return ExamResultsPageRequestDTO.builder()
+                .studentName(examResult.getExam().getStudent().getName())
+                .tel(examResult.getExam().getStudent().getTel())
+                .grade(grade)
+                .totalPoint(examResult.getTotalPoint())
+                .status(status)
+                .color(color)
+                .build();
+    }
+
+    private int calculateGrade(int totalPoint) {
+        if (totalPoint >= 90) return 5;
+        if (totalPoint >= 80) return 4;
+        if (totalPoint >= 70) return 3;
+        if (totalPoint >= 60) return 2;
+        return 1;
     }
 }
