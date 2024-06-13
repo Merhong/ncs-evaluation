@@ -1,0 +1,150 @@
+/*헤더*/
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-size: xx-large;
+    font-weight: bolder;
+    padding-bottom: 30px;
+    font-family: "Noto Sans NKo";
+}
+
+.header-div {
+    border: 1px solid #dfe1e5;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    margin: 11px 4px;
+    padding: 0 16px;
+    height: 5vh;
+    min-width: 20vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-item1 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 0.5
+}
+
+.title-item2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 4;
+}
+
+/* 결재 */
+.title-item3 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* 담당자&팀장 공간 */
+.title-item4 {
+    display: flex;
+    justify-content: flex-start;
+    flex-grow: 3;
+}
+
+/* 담당자 | 팀장 */
+.title2-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 담당자 가로 나누기용 컨테이너*/
+.title2-container1 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+/* 담당자 제목 */
+.title2-item1 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+/* 담당자 빈칸*/
+.title2-item2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+/* 팀장 가로 나누기용 컨테이너*/
+.title2-container2 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+.title2-container3 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+.title2-container4 {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+}
+
+.table th, .table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+}
+
+.table .vertical-header th {
+    background-color: darkgray; !important;
+}
+
+.table .vertical-header td {
+    text-align: left;
+    vertical-align: top;
+}
+
