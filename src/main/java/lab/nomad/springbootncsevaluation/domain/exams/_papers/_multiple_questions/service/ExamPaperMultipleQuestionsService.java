@@ -48,6 +48,7 @@ public class ExamPaperMultipleQuestionsService {
                     .no(lastNo + 1)
                     .content(requestDTO.getContent())
                     .point(requestDTO.getPoint())
+                    .comment(requestDTO.getComment())
                     .examPaper(examPaperOP)
                     .build();
 
@@ -68,6 +69,7 @@ public class ExamPaperMultipleQuestionsService {
                     .no(lastNo + 1)
                     .content(requestDTO.getContent())
                     .point(requestDTO.getPoint())
+                    .comment(requestDTO.getComment())
                     .examPaper(examPaperOP)
                     .build();
 

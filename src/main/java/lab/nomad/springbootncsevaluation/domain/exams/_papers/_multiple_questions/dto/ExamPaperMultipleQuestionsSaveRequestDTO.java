@@ -20,4 +20,7 @@ public class ExamPaperMultipleQuestionsSaveRequestDTO {
 
     @NotNull(message = EMPTY_POINT)
     private Integer point;
+
+    @NotNull(message = EMPTY_POINT)
+    private String comment;
 }

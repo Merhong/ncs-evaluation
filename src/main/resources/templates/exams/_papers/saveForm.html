@@ -89,6 +89,7 @@
 										<th>번호</th>
 										<th>평가 항목</th>
 										<th>점수 배점</th>
+										<th>평가 내용</th>
 										<th>정답</th>
 										<th>오답 1</th>
 										<th>오답 2</th>
@@ -101,7 +102,8 @@
 										<td>1</td>
 										<td><input type="text" class="question-content" required></td>
 										<td><input type="number" class="question-point" required></td>
-										<td><input type="text" class="answer-content" required></td>
+										<td><input type="text" class="question-comment" required></td>
+										<td><input type="text" class="answer-content correct-answer" required></td>
 										<td><input type="text" class="answer-content" required></td>
 										<td><input type="text" class="answer-content" required></td>
 										<td><input type="text" class="answer-content" required></td>
@@ -134,6 +136,7 @@
                 <td>${questionCount}</td>
                 <td><input type="text" class="question-content" required></td>
                 <td><input type="number" class="question-point" required></td>
+                <td><input type="text" class="question-comment" required></td>
                 <td><input type="text" class="answer-content" required></td>
                 <td><input type="text" class="answer-content" required></td>
                 <td><input type="text" class="answer-content" required></td>
@@ -224,6 +227,7 @@
                 const questionData = {
                     content: row.querySelector('.question-content').value, // 문제 내용
                     point: row.querySelector('.question-point').value, // 점수 배점
+                    comment: row.querySelector('.question-comment').value // 평가 내용
                 };
 
                 // 문제를 서버에 저장하고, 성공적으로 저장되면 문제ID 반환
@@ -242,7 +246,59 @@
                     // 답안 데이터를 객체로 생성
                     const answerData = {
                         content: answerElement.value, // 답안 내용
-                        isCorrect: false // 기본값으로 설정, 필요 시 수정
+                        isCorrect: answerElement.classList.contains('correct-answer') // 정답 필드 여부에 따라 설정
+                    };
+
+                    // 답안을 서버에 저장
+                    await saveAnswer(questionId, answerData);
+                }
+            }
+
+            // 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력
+            alert('시험지가 성공적으로 등록되었습니다.');
+        }
+
+        // 전체 등록 절차 수행(시험지 -> 문제 -> 답안 순서)
+        async function registerExam() {
+            // 시험지를 서버에 저장하고, 성공적으로 저장되면 시험지ID 반환
+            const examPaperId = await saveExamPaper();
+
+            if (!examPaperId) {
+                alert('시험지 저장에 실패했습니다.');
+                return;
+            }
+
+            // 문제와 답안이 포함된 컨테이너 요소를 가져옴
+            const questionsContainer = document.getElementById('questionsContainer');
+            // 각 문제 항목을 나타내는 행들을 가져옴
+            const questionRows = questionsContainer.getElementsByTagName('tr');
+
+            // 각 문제 행을 순회하며 문제 데이터를 서버에 저장
+            for (const row of questionRows) {
+                // 문제 데이터를 객체로 생성
+                const questionData = {
+                    content: row.querySelector('.question-content').value, // 문제 내용
+                    point: row.querySelector('.question-point').value, // 점수 배점
+                    comment: row.querySelector('.question-comment').value // 평가 내용
+                };
+
+                // 문제를 서버에 저장하고, 성공적으로 저장되면 문제ID 반환
+                const questionId = await saveQuestion(examPaperId, questionData);
+
+                if (!questionId) {
+                    alert('문제 저장에 실패했습니다.');
+                    return;
+                }
+
+                // 해당 문제에 대한 답안 요소들을 가져옴
+                const answerElements = row.querySelectorAll('.answer-content');
+
+                // 각 답안 요소를 순회하며 답안 데이터를 서버에 저장
+                for (const answerElement of answerElements) {
+                    // 답안 데이터를 객체로 생성
+                    const answerData = {
+                        content: answerElement.value, // 답안 내용
+                        isCorrect: answerElement.classList.contains('correct-answer') // 정답 필드 여부에 따라 설정
                     };
 
                     // 답안을 서버에 저장

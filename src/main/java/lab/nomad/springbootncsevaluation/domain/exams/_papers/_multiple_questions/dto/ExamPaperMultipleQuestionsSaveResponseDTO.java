@@ -25,6 +25,7 @@ public class ExamPaperMultipleQuestionsSaveResponseDTO {
         private Integer no;
         private String content;
         private Integer point;
+        private String comment;
         private LocalDateTime createDate;
         private LocalDateTime updateDate;
         private ExamPapersDTO examPapersDTO;
@@ -35,6 +36,7 @@ public class ExamPaperMultipleQuestionsSaveResponseDTO {
             this.no = examPaperMultipleQuestion.getNo();
             this.content = examPaperMultipleQuestion.getContent();
             this.point = examPaperMultipleQuestion.getPoint();
+            this.comment = examPaperMultipleQuestion.getComment();
             this.createDate = examPaperMultipleQuestion.getCreateDate();
             this.updateDate = examPaperMultipleQuestion.getUpdateDate();
             this.examPapersDTO = new ExamPapersDTO(examPaperMultipleQuestion.getExamPaper());
