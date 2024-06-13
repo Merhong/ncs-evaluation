@@ -50,6 +50,13 @@ public class ExamPaperMultipleQuestions {
     private Integer point;
 
     /**
+     * <p>exam_paper_questions 테이블의 comment 컬럼에 매핑되는 필드입니다.</p>
+     * <p>강사의 평가 내용을 저장합니다.</p>
+     * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
+     */
+    private String comment;
+
+    /**
      * ExamPaperQuestion Entity와 ManyToOne 관계를 가지는 ExamPaper Entity입니다.
      *
      * <p>각 ExamPaperQuestion는 특정 ExamPaper에 속합니다.
@@ -80,12 +87,13 @@ public class ExamPaperMultipleQuestions {
      * <p>빌드 패턴을 사용하여 해당 객체를 인스턴스 할 수 있습니다.</p>
      */
     @Builder
-    public ExamPaperMultipleQuestions(Long id, Integer no, String content, Integer point,
+    public ExamPaperMultipleQuestions(Long id, Integer no, String content, Integer point, String comment,
                                       ExamPapers examPaper, LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.no = no;
         this.content = content;
         this.point = point;
+        this.comment = comment;
         this.examPaper = examPaper;
         this.createDate = createDate;
         this.updateDate = updateDate;
