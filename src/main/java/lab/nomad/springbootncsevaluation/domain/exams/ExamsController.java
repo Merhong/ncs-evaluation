@@ -10,6 +10,10 @@ import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
 import lab.nomad.springbootncsevaluation.model.exams._enums.ExamStatus;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapersRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestionsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswers;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswersRepository;
 import lab.nomad.springbootncsevaluation.model.students.Students;
 import lab.nomad.springbootncsevaluation.model.students.StudentsRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +23,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -30,6 +36,8 @@ public class ExamsController {
     private  final StudentsRepository studentsRepository;
     private  final ExamsService examsService;
     private  final ExamsRepository examsRepository;
+    private  final ExamPaperMultipleQuestionsRepository examPaperMultipleQuestionsRepository;
+    private  final ExamPaperMultipleQuestionAnswersRepository examPaperMultipleQuestionAnswersRepository;
 
     // 등록
     @GetMapping("saveForm/{examPaperId}")
@@ -73,10 +81,20 @@ public class ExamsController {
         if (examOptional.isPresent()) {
             Exams exam = examOptional.get();
             ExamsOneResponseDTO examsOneResponseDTO = new ExamsOneResponseDTO(exam);
+
+            // ExamPaperMultipleQuestions 가져오기
+            List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(exam.getExamPaper().getId());
+            List<ExamPaperMultipleQuestionAnswers> answers = examPaperMultipleQuestionAnswersRepository.findByExamPaperMultipleQuestionIdIn(
+                    questions.stream().map(ExamPaperMultipleQuestions::getId).collect(Collectors.toList())
+            );
+
             model.addAttribute("examDetails", examsOneResponseDTO.getExams());
+            model.addAttribute("questions", questions);
+            model.addAttribute("answers", answers);
         } else {
             throw new IllegalArgumentException("Invalid Exam ID: " + id);
         }
         return "exam/oneForm";
     }
+
 }

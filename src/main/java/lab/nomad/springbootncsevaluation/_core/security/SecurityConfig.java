@@ -102,6 +102,7 @@ public class SecurityConfig {
             "/api/v1/students/**",
             "/api/v1/exams/**",
             "/api/v1/users/**",
+            "/api/v1/exam_results/**",
     };
 
     public static final String[] WHITELIST = {
@@ -114,5 +115,7 @@ public class SecurityConfig {
             "/courses/**",
             "/students/**",
             "/api/v1/users/**",
+            "/api/v1/exams/**",
+            "/api/v1/exam_results/**",
     };
 }

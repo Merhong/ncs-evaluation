@@ -7,19 +7,8 @@
     <title>선다형평가</title>
     <link rel="stylesheet" href="/css/exam/one.css">
 </head>
-
-
-
-
-
 <body>
-<!-- 헤더 위치 -->
-<!-- 헤더 위치 -->
 <th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
-
-
-
-
 <main>
     <div class="title-container">
         <div class="title-item1">
@@ -40,8 +29,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <!-- 첫 번째 테이블 시작 -->
-                <table class="table table-bordered">
+                <table class="table table-bordered one-table">
                     <tbody>
                     <tr>
                         <td>교과목명</td>
@@ -57,67 +45,92 @@
                     </tr>
                     </tbody>
                 </table>
-                <!-- 첫 번째 테이블 끝 -->
 
-                <!-- 두 번째 테이블 시작 -->
-                <table class="table table-bordered">
+                <table class="table table-bordered one-table">
                     <tbody>
                     <tr>
                         <td>이름</td>
-                        <td th:text="${examDetails.students.name}">
+                        <td th:text="${examDetails.students.name}"></td>
                     </tr>
                     <tr>
                         <td>연락처</td>
-                        <td th:text="${examDetails.students.tel}">
+                        <td th:text="${examDetails.students.tel}"></td>
                     </tr>
                     </tbody>
                 </table>
-                <!-- 두 번째 테이블 끝 -->
 
                 <table class="table table-bordered custom-table">
                     <thead>
                     <tr>
-                        <th>1</th>
-                        <th>분산 버전 관리 시스템은 무엇인가? (배점 10점)</th>
+                        <th>번호</th>
+                        <th>질문</th>
+                        <th>답변</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><input type="radio" id="option1" name="version_control" value="option1"></td>
-                        <td><label for="option1">네트워크 연결 없이 사용할 수 있는 버전 관리 시스템</label></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" id="option2" name="version_control" value="option2"></td>
-                        <td><label for="option2">분산된 개발 환경을 지원하는 버전 관리 시스템</label></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" id="option3" name="version_control" value="option3"></td>
-                        <td><label for="option3">중앙 집중식 버전 관리 시스템</label></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" id="option4" name="version_control" value="option4"></td>
-                        <td><label for="option4">로컬 버전 관리 시스템</label></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" id="option5" name="version_control" value="option5"></td>
-                        <td><label for="option5">1234</label></td>
+                    <tr th:each="question : ${questions}">
+                        <td th:text="${question.no}"></td>
+                        <td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'"></td>
+                        <td>
+                            <table>
+                                <tbody>
+                                <tr th:each="answer : ${answers}">
+                                    <td th:if="${answer.examPaperMultipleQuestion.id == question.id}">
+                                        <input type="radio" th:id="'option' + ${answer.no}" th:name="'version_control_' + ${question.no}" th:value="${answer.id}">
+                                        <label th:for="'option' + ${answer.no}" th:text="${answer.content}"></label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-                <!-- 세 번째 테이블 끝끝 -->
             </div>
         </div>
     </div>
 
     <div class="title-item2">
-        <form id="saveForm" th:action="@{/api/v1/courses/${courseId}/students}" method="POST">
-            <button type="submit" class="btn btn-primary">
+        <!-- th:attr을 사용하여 data-exams-id 속성을 설정 -->
+        <form id="saveForm" th:attr="data-exams-id=${examDetails.id}">
+            <button type="button" class="btn btn-primary" onclick="submitExam()">
                 제출
             </button>
         </form>
     </div>
 </main>
 
-<script src="script.js"></script>
+<script>
+    function submitExam() {
+        const form = document.getElementById('saveForm');
+        const examsId = form.getAttribute('data-exams-id'); // 시험 ID 가져오기
+
+        // examId가 제대로 설정되어 있는지 확인
+        console.log('시험 ID:', examsId);
+
+        const selectedAnswers = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+            const questionId = input.name.split('_').pop();
+            selectedAnswers[questionId] = input.value;
+        });
+
+        fetch(`/api/v1/exams/result/${examsId}`, { // 시험 ID를 URL에 포함
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // 적절한 토큰으로 대체
+            },
+            body: JSON.stringify({
+                selectedAnswers: selectedAnswers
+            })
+        }).then(response => response.json())
+            .then(data => {
+                alert('제출이 완료되었습니다.');
+            }).catch(error => {
+            alert('제출 중 오류가 발생했습니다.');
+            console.error('Error:', error);
+        });
+    }
+</script>
 </body>
 </html>

@@ -35,4 +35,5 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
     Optional<Object> findByIdAndUserId(Long courseId, Long userId);
 
 
+
 }

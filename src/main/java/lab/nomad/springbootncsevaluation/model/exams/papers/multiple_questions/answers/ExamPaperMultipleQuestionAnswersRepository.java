@@ -14,4 +14,7 @@ public interface ExamPaperMultipleQuestionAnswersRepository extends
 
     // 마지막 답안 번호를 찾는 쿼리 메소드
     List<ExamPaperMultipleQuestionAnswers> findByExamPaperMultipleQuestionId(Long id);
+
+    //해당문제에속하는답안리스트
+    List<ExamPaperMultipleQuestionAnswers> findByExamPaperMultipleQuestionIdIn(List<Long> questionIds);
 }
