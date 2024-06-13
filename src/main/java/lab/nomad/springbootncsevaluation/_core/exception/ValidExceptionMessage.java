@@ -34,7 +34,11 @@ public enum ValidExceptionMessage {
         public static final String EMPTY_EXAM_TYPE = "시험 종류를 입력하세요.";
         public static final String EMPTY_CONTENT = "내용을 입력하세요.";
         public static final String EMPTY_POINT = "배점을 입력하세요.";
+        public static final String EMPTY_EXAM_RESULT = "평가를 입력하세요.";
+        public static final String EMPTY_QUESTION = "문제를 입력하세요.";
+        public static final String EMPTY_QUESTION_ANSWER = "답안을 입력하세요.";
         public static final String IS_CORRECT = "정답 여부를 입력하세요.";
+
 
     }
 }
