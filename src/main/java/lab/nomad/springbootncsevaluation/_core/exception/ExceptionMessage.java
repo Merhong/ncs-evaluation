@@ -19,7 +19,9 @@ public enum ExceptionMessage {
     NOT_FOUND_EXAM("code15:  존재하지 않는 시험 입니다."),
     NOT_ALLOWED_EXAM_STATUS("code16: 시험 삭제가 허용되지 않는 상태입니다."),
     JOIN_FAIL("code17: 회원가입 중 오류가 발생했습니다."),
-    EXISTS_EXAM_PAPER_IN_EXAM("code18: 시험안에 시험지가 존재합니다.");
+    EXISTS_EXAM_PAPER_IN_EXAM("code18: 시험안에 시험지가 존재합니다."),
+    NOT_FOUND_EXAM_RESULT("code19: 존재하지 않는 평가 결과 입니다."),
+    NOT_FOUND_QUESTION_ANSWER("code20: 존재하지 않는 문제 답안 입니다.");
 
     final private String message;
 
