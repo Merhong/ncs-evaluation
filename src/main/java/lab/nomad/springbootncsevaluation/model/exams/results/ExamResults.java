@@ -91,7 +91,8 @@ public class ExamResults {
 
     @Builder
     public ExamResults(Long id, Exams exam, Integer totalPoint,
-                      Integer grade, String comment,ExamResultStatus status,
+                      Integer grade, String comment,
+                      ExamResultStatus status,
                       LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.exam = exam;

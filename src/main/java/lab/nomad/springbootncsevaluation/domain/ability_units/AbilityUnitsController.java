@@ -59,7 +59,19 @@ public class AbilityUnitsController {
     }
 
 
-    /* 시험지 등록 */
+    /**
+     * 시험지
+     */
+
+    // 시험지 상세보기
+    @GetMapping("/1/exam-paper")
+    public String detailForm() {
+
+        return "exams/_papers/detailForm";
+    }
+
+
+    // 시험지 등록
     @GetMapping("/{abilityUnitId}/exam-paper/saveForm")
     public String saveForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long abilityUnitId) {

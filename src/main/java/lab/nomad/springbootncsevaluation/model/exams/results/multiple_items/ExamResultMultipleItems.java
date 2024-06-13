@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 
-
 /**
  * <p>exam_result_multiple_items 테이블과 매핑되는 Entity 클래스입니다.</p>
  * <p>exam_result_multiple_items 테이블에는 시험 결과의 문제에 따른 점수가 몇 점으로 채점되었는지에 대한 정보가 저장되어 있습니다.</p>
@@ -53,7 +52,7 @@ public class ExamResultMultipleItems {
      * <p>어떤 문제를 풀었는지를 의미하는 칼럼입니다.</p>
      * <p>해당 필드의 타입은 {@link ExamPaperMultipleQuestions} 타입입니다.</p>
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ExamPaperMultipleQuestions examPaperQuestion;
 
     /**
@@ -62,12 +61,12 @@ public class ExamResultMultipleItems {
      * <p>어떤 답을 체크하였는지를 의미하는 칼럽입니다.</p>
      * <p>해당 필드의 타입은 {@link ExamPaperMultipleQuestionAnswers} 타입입니다.</p>
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswers;
 
     /**
      * <p>exam_result_multiple_items 테이블의 point 컬럼에 매핑되는 필드입니다.</p>
-     * <p>해당 시험 문제의 점수를 저장합니다.</p>
+     * <p>해당 평가 내용의 배점을 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link Integer} 타입입니다.</p>
      */
     private Integer point;
@@ -97,8 +96,8 @@ public class ExamResultMultipleItems {
 
     @Builder
     public ExamResultMultipleItems(Long id, ExamResults examResult, ExamPaperMultipleQuestions examPaperQuestion,
-                                   ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswers, Integer point, String comment,
-                                   LocalDateTime createDate, LocalDateTime updateDate) {
+            ExamPaperMultipleQuestionAnswers examPaperMultipleQuestionAnswers, Integer point, String comment,
+            LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.examResult = examResult;
         this.examPaperQuestion = examPaperQuestion;
