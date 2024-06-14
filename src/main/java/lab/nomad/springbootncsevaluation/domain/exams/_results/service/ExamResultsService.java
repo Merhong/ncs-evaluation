@@ -95,8 +95,6 @@ public class ExamResultsService {
     }
 
     private ExamResultsPageRequestDTO convertToDto(ExamResults examResult) {
-       //String status = examResult.getStatus() == ExamResultStatus.DONE ? "평가완료" : "총평입력필요";
-        //String color = examResult.getStatus() == ExamResultStatus.DONE ? "green" : "orange";
         String status = examResult.getStatus() == ExamResultStatus.WAIT ? "총평입력필요" : "평가완료";
         String color = examResult.getStatus() == ExamResultStatus.WAIT ? "orange" : "green";
         int grade = calculateGrade(examResult.getTotalPoint());
