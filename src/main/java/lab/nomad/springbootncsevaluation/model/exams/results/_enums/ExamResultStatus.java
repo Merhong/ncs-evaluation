@@ -17,7 +17,7 @@ public enum ExamResultStatus {
     /**
      * 평가 전 상태
      */
-    WAIT("평가전"),
+    WAIT("총평입력필요"),
     /**
      * 평가 완료
      */
