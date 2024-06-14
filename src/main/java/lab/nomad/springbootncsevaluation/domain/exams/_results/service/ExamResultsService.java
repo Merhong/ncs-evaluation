@@ -34,7 +34,7 @@ public class ExamResultsService {
     private ExamPaperMultipleQuestionsRepository examPaperMultipleQuestionsRepository;
     @Autowired
     private ExamPaperMultipleQuestionAnswersRepository examPaperMultipleQuestionAnswersRepository;
-    //시험결과저장
+    // 시험 결과 저장
     @Transactional
     public ExamResultsSaveResponseDTO save(Long examId, ExamResultsSaveRequestDTO requestDTO) {
         if (examId == null) {
@@ -60,6 +60,9 @@ public class ExamResultsService {
         for (ExamPaperMultipleQuestions question : questions) {
             // 각 문제에 대해 제출된 답변 ID 가져오기
             Long selectedAnswerId = requestDTO.getSelectedAnswers().get(question.getId());
+            if (selectedAnswerId == null) {
+                continue;
+            }
             // 해당 답변이 정답인지 확인
             boolean isCorrect = examPaperMultipleQuestionAnswersRepository.findById(selectedAnswerId)
                     .map(answer -> answer.getIsCorrect())
