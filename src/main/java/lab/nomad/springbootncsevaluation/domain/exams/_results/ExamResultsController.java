@@ -5,6 +5,7 @@ import lab.nomad.springbootncsevaluation.domain.exams._results.service.ExamResul
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
+import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -36,4 +37,15 @@ public class ExamResultsController {
         }
         return "exam_results/listForm";
     }
+
+    //학생평가 상세보기페이지
+    @GetMapping("oneForm/{id}")
+    public String one(@PathVariable Long id, Model model) {
+        ExamResults examResults = examResultsService.getExamResultById(id);
+        // 모델에 시험 결과 데이터를 추가합니다.
+        model.addAttribute("examResults", examResults);
+
+        return "exam_results/oneForm";
+    }
+
 }

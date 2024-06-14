@@ -15,4 +15,14 @@ public interface ExamResultsRepository extends JpaRepository<ExamResults, Long> 
 
     //시험ID중복확인
     Optional<ExamResults> findByExamId(Long examId);
+
+    //엔티티한번에로드하기
+    @Query("SELECT er FROM ExamResults er " +
+            "JOIN FETCH er.exam e " +
+            "JOIN FETCH e.student s " +
+            "JOIN FETCH s.course c " +
+            "JOIN FETCH e.examPaper ep " +
+            "JOIN FETCH ep.abilityUnit " +
+            "WHERE er.id = :id")
+    Optional<ExamResults> findByIdWithFetch(@Param("id") Long id);
 }

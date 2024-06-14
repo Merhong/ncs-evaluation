@@ -119,4 +119,11 @@ public class ExamResultsService {
         if (totalPoint >= 60) return 2;
         return 1;
     }
+
+
+    // 시험 결과 ID를 통해 데이터를 가져오는 메서드
+    @Transactional
+    public ExamResults getExamResultById(Long id) {
+        return examResultsRepository.findByIdWithFetch(id).orElse(null);
+    }
 }
