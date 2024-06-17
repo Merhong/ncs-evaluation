@@ -67,23 +67,27 @@
                     </tbody>
                 </table>
 
-
-                <table class="table table-bordered one-table">
-                    <tbody>
-                    <tr>
-                        <td>총평</td>
-                        <td ></td>
-                    </tr>
-
-                    </tbody>
-                </table>
+                <!-- 총평 입력 영역 추가 -->
+                <form th:action="@{/exam_results/save}" method="post">
+                    <input type="hidden" name="id" th:value="${examResults.id}" />
+                    <table class="table table-bordered one-table">
+                        <tbody>
+                        <tr>
+                            <td>총평</td>
+                            <td>
+                                <textarea class="form-control" name="comment" rows="5" th:text="${examResults.comment}"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- 저장 버튼 추가 -->
+                    <div class="button-container">
+                        <button type="button" class="btn btn-secondary" onclick="history.back()">이전</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
-
-    <div class="title-item2">
-        <!-- th:attr을 사용하여 data-exams-id 속성을 설정 -->
-
     </div>
 </main>
 

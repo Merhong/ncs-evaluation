@@ -10,9 +10,7 @@ import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -46,6 +44,13 @@ public class ExamResultsController {
         model.addAttribute("examResults", examResults);
 
         return "exam_results/oneForm";
+    }
+
+    // 총평 업데이트 페이지
+    @PostMapping("/save")
+    public String updateComment(@RequestParam Long id, @RequestParam String comment) {
+        examResultsService.updateComment(id, comment);
+        return "redirect:/exam_results/oneForm/" + id;
     }
 
 }

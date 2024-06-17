@@ -91,9 +91,9 @@ public class ExamResults {
 
     @Builder
     public ExamResults(Long id, Exams exam, Integer totalPoint,
-                      Integer grade, String comment,
-                      ExamResultStatus status,
-                      LocalDateTime createDate, LocalDateTime updateDate) {
+                       Integer grade, String comment,
+                       ExamResultStatus status,
+                       LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.exam = exam;
         this.totalPoint = totalPoint;
@@ -101,6 +101,18 @@ public class ExamResults {
         this.comment = comment;
         this.status = status;
         this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setStatus(ExamResultStatus status) {
+        this.status = status;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 }

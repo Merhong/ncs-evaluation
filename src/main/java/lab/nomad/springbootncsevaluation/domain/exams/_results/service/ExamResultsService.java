@@ -90,7 +90,18 @@ public class ExamResultsService {
         return new ExamResultsSaveResponseDTO(examResults);
     }
 
-    //시험결과리스트
+    // 시험 결과 업데이트
+    @Transactional
+    public void updateComment(Long id, String comment) {
+        ExamResults examResults = examResultsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Exam result not found with id: " + id));
+        examResults.setComment(comment);
+        examResults.setStatus(ExamResultStatus.DONE);
+        examResults.setUpdateDate(LocalDateTime.now());
+        examResultsRepository.save(examResults);
+    }
+
+    // 시험결과리스트
     public List<ExamResultsPageRequestDTO> getExamResultsByCourseId(Long courseId) {
         return examResultsRepository.findByCourseId(courseId).stream()
                 .map(this::convertToDto)
@@ -103,6 +114,7 @@ public class ExamResultsService {
         int grade = calculateGrade(examResult.getTotalPoint());
 
         return ExamResultsPageRequestDTO.builder()
+                .id(examResult.getId())
                 .studentName(examResult.getExam().getStudent().getName())
                 .tel(examResult.getExam().getStudent().getTel())
                 .grade(grade)
@@ -119,7 +131,6 @@ public class ExamResultsService {
         if (totalPoint >= 60) return 2;
         return 1;
     }
-
 
     // 시험 결과 ID를 통해 데이터를 가져오는 메서드
     @Transactional

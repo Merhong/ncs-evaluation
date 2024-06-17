@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ExamResultsPageRequestDTO {
+    private Long id;
     private String studentName;
     private String tel;
     private int grade;

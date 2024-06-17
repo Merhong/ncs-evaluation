@@ -82,7 +82,12 @@
                         <td th:text="${result.grade}"></td>
                         <td th:text="${result.totalPoint + '/100'}"></td>
                         <td th:style="'color:' + ${result.color}" th:text="${result.status}"></td>
-                        <td><button class="btn btn-primary">상세보기</button></td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    th:onclick="|location.href='/exam_results/oneForm/' + ${result.id} + ''|">
+                                상세보기
+                            </button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
