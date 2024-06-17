@@ -2,6 +2,7 @@ package lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.
 
 import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
+import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
@@ -12,10 +13,14 @@ import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItemsRepository;
+import lab.nomad.springbootncsevaluation.model.users.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,22 @@ public class ExamResultMultipleItemsService {
     private final ExamResultsRepository resultsRepository;
     private final ExamPaperMultipleQuestionsRepository questionsRepository;
     private final ExamPaperMultipleQuestionAnswersRepository answersRepository;
+
+    // 채점 문제 페이지(리스트) 조회
+    public ExamResultMultipleItemsPageResponseDTO page(Long resultId, Pageable pageable, String searchValue, Users user) {
+
+        // 검색어 있는 경우
+        if (!(searchValue == null)) {
+            return new ExamResultMultipleItemsPageResponseDTO(
+                    itemsRepository.findByExamResultIdAndCommentContains(resultId, pageable, searchValue));
+        }
+
+        // 검색 키워드 없는 경우
+        Page<ExamResultMultipleItems> itemsPagePS = itemsRepository.findByExamResultId(resultId, pageable);
+
+        return new ExamResultMultipleItemsPageResponseDTO(itemsPagePS);
+    }
+
 
     // 문제 채점 등록
     @Transactional

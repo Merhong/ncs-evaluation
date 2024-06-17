@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+	<link rel="stylesheet" href="/css/exams/_result/_multiple_items/detailForm.css">
+	<title>화면 구현(평가지명) - 평가지</title>
+</head>
+<body>
+	<!-- ExamPapers(평가지) 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: examPaperHeader}"></th:block>
+
+	<main>
+		<div class="container">
+			<table class="custom-table full-width-table">
+				<tr>
+					<td class="empty-space" rowspan="2"></td>
+					<td class="title" rowspan="2" th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 채점지'"></td>
+					<td class="signature-title" rowspan="2">결재</td>
+					<td class="approval-title">담당자</td>
+					<td class="approval-title">팀장</td>
+				</tr>
+				<tr>
+					<td class="signature-space"></td>
+					<td class="signature-space"></td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- 평가지 + 학생 + 강사 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<!-- <th>id</th> -->
+								<th>평가지명</th>
+								<th>훈련생</th>
+								<th>강사</th>
+								<th>점수</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터 출력 부분 -->
+							<th:block th:each="item, iterStat : ${ItemList}">
+								<tr th:if="${iterStat.index == 0}">
+									<!-- <td th:text="${item.id}"></td> -->
+									<td th:text="${item.examResultDTO.examsDTO.examPapersDTO.name}">N/A</td>
+									<td th:text="${item.examResultDTO.examsDTO.studentsDTO.name}">N/A</td>
+									<td th:text="${item.examResultDTO.examsDTO.examPapersDTO.userDTO.name}">N/A</td>
+									<td th:text="${item.examResultDTO.totalPoint}">N/A</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- 능력 단위 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<th>능력 단위명</th>
+								<th>능력 단위 코드</th>
+								<th>능력 단위 수준</th>
+								<th>훈련 시간</th>
+								<th>평가 방법</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="unit: ${AbilityUnit}">
+								<tr>
+									<td th:text="${unit.name}"></td>
+									<td th:text="${unit.code}"></td>
+									<td th:text="${unit.grade}"></td>
+									<td th:text="${unit.totalTime}"></td>
+									<td>
+										<span th:if="${unit.examTypeList.contains('MULTIPLE_CHOICE')}">선다형</span>
+										<span th:if="${unit.examTypeList.contains('TASK')}"
+										      th:unless="${unit.examTypeList.size() == 1}">, </span>
+										<span th:if="${unit.examTypeList.contains('TASK')}">포트폴리오형</span>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- 평가 기준 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<th>평가 기준(평가시 고려 사항)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터 출력 부분 -->
+							<th:block th:object="${AbilityUnit}">
+								<tr>
+									<td class="td-left" th:text="*{purpose}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- 평가 내용 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<th>평가 내용</th>
+								<th>배점</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터 출력 부분 -->
+							<th:block th:each="item: ${ItemList}">
+								<th:block th:each="question : ${item.questionDTO}">
+									<tr>
+										<td class="td-left" th:text="${question.comment}">N/A</td>
+										<td th:text="${question.point}">N/A</td>
+									</tr>
+								</th:block>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- 능력 단위 요소 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<th>능력 단위 요소 번호</th>
+								<th>능력 단위 요소</th>
+								<th>수행 준거</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터 출력 부분 -->
+							<th:block th:each="element : ${AbilityUnit.abilityUnitElementList}">
+								<tr>
+									<td th:text="${element.code}"></td>
+									<td th:text="${element.name}"></td>
+									<td class="value td-left">
+										<div th:each="item : ${element.abilityUnitElementItemList}">
+											<p th:text="${item.content}"></p>
+										</div>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- 총평 테이블 -->
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered full-width-table">
+						<thead>
+							<tr>
+								<th>총평</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- 데이터 출력 부분 -->
+							<tr th:object="${ItemList[0].examResultDTO}">
+								<td class="td-left" th:text="*{comment}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
