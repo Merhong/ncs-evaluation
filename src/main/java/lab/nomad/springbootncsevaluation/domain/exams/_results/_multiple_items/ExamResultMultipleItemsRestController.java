@@ -5,12 +5,14 @@ import lab.nomad.springbootncsevaluation._core.exception.Exception400;
 import lab.nomad.springbootncsevaluation._core.security.CustomUserDetails;
 import lab.nomad.springbootncsevaluation._core.utils.APIUtils;
 import lab.nomad.springbootncsevaluation._core.utils.AuthorityCheckUtils;
+import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsPageResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.dto.ExamResultMultipleItemsSaveResponseDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.service.ExamResultMultipleItemsService;
 import lab.nomad.springbootncsevaluation.model.users._enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -21,24 +23,29 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/exams/result")
+@RequestMapping("/api/v1/exam-results")
 public class ExamResultMultipleItemsRestController {
 
     // DI
-    private final ExamResultMultipleItemsService examResultMultipleItemsService;
+    private final ExamResultMultipleItemsService itemsService;
 
-    // TODO : 채점지 상세조회
-    // 채점지 상세조회
-    @GetMapping("/item/{id}")
-    public ResponseEntity<?> one(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long id) {
+    // TODO : 채점 문제 리스트(페이지) 조회
+    // 채점 문제 리스트 조회
+    @GetMapping("/{resultId}/items")
+    public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,
+            @RequestParam(required = false) String searchValue, @PathVariable Long resultId) {
 
         // 권한 체크
         // 관리자, 강사, 직원이 조회 가능
-        AuthorityCheckUtils.authorityCheck(customUserDetails, List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
+        AuthorityCheckUtils.authorityCheck(customUserDetails,
+                List.of(UserRole.ROLE_ADMIN.name(), UserRole.ROLE_TEACHER.name(), UserRole.ROLE_EMP.name()));
 
 
+        // 서비스 호출
+        ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(resultId, pageable, searchValue,
+                customUserDetails.user());
 
-        return null;
+        return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
 
     // 채점 결과 저장
@@ -60,8 +67,8 @@ public class ExamResultMultipleItemsRestController {
                     .getDefaultMessage());
         }
 
-        ExamResultMultipleItemsSaveResponseDTO responseDTO = examResultMultipleItemsService.save(
-                requestDTO.getResultId(), requestDTO.getQuestionId(), requestDTO.getAnswerId(), requestDTO);
+        ExamResultMultipleItemsSaveResponseDTO responseDTO = itemsService.save(requestDTO.getResultId(),
+                requestDTO.getQuestionId(), requestDTO.getAnswerId(), requestDTO);
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
