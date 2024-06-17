@@ -29,10 +29,10 @@ public class ExamResultMultipleItemsController {
 
 
     // 채점지
-    @GetMapping("/{resultId}/item")
+    @GetMapping("/item/{id}")
     public String detailForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
-            @PathVariable Long resultId) {
+            @PathVariable Long id) {
 
         // 사용자가 인증되지 않은 경우 처리
         if (customUserDetails == null) {
@@ -42,7 +42,7 @@ public class ExamResultMultipleItemsController {
 
         // 서비스 호출
         // ERMI 내용 조회
-        ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(resultId, pageable, searchValue,
+        ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(id, pageable, searchValue,
                 customUserDetails.user());
         // AbilityUnit 조회
         AbilityUnitOneResponseDTO abilityUnitOneResponseDTO = abilityUnitsService.one(responseDTO.getItems().get(0).getExamResultDTO().getExamsDTO().getExamPapersDTO().getAbilityUnitDTO().getId());

@@ -31,9 +31,9 @@ public class ExamResultMultipleItemsRestController {
 
     // TODO : 채점 문제 리스트(페이지) 조회
     // 채점 문제 리스트 조회
-    @GetMapping("/{resultId}/items")
+    @GetMapping("/items/{id}")
     public ResponseEntity<?> page(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable,
-            @RequestParam(required = false) String searchValue, @PathVariable Long resultId) {
+            @RequestParam(required = false) String searchValue, @PathVariable Long id) {
 
         // 권한 체크
         // 관리자, 강사, 직원이 조회 가능
@@ -42,7 +42,7 @@ public class ExamResultMultipleItemsRestController {
 
 
         // 서비스 호출
-        ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(resultId, pageable, searchValue,
+        ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(id, pageable, searchValue,
                 customUserDetails.user());
 
         return ResponseEntity.ok(APIUtils.success(responseDTO));

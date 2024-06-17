@@ -14,7 +14,8 @@
 			<table class="custom-table full-width-table">
 				<tr>
 					<td class="empty-space" rowspan="2"></td>
-					<td class="title" rowspan="2" th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 채점지'"></td>
+					<td class="title" rowspan="2"
+					    th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 채점지'"></td>
 					<td class="signature-title" rowspan="2">결재</td>
 					<td class="approval-title">담당자</td>
 					<td class="approval-title">팀장</td>
@@ -123,8 +124,13 @@
 					<table class="table table-bordered full-width-table">
 						<thead>
 							<tr>
-								<th>평가 내용</th>
+								<th class="centered" rowspan="2">평가 내용</th>
+								<th colspan="3">평가결과</th>
+							</tr>
+							<tr>
 								<th>배점</th>
+								<th class="equal-width">예</th>
+								<th class="equal-width">아니오</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -133,7 +139,9 @@
 								<th:block th:each="question : ${item.questionDTO}">
 									<tr>
 										<td class="td-left" th:text="${question.comment}">N/A</td>
-										<td th:text="${question.point}">N/A</td>
+										<td class="td-center" th:text="${question.point}">N/A</td>
+										<td class="td-center" th:text="${item.point != 0 ? '✔' : ''}"></td>
+										<td class="td-center" th:text="${item.point == 0 ? '✔' : ''}"></td>
 									</tr>
 								</th:block>
 							</th:block>
@@ -142,6 +150,7 @@
 				</div>
 			</div>
 		</div>
+
 
 		<!-- 능력 단위 요소 테이블 -->
 		<div class="container">
@@ -152,7 +161,7 @@
 							<tr>
 								<th>능력 단위 요소 번호</th>
 								<th>능력 단위 요소</th>
-								<th>수행 준거</th>
+								<th class="centered">수행 준거</th>
 							</tr>
 						</thead>
 						<tbody>
