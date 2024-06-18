@@ -76,7 +76,7 @@
                                 <tbody>
                                 <tr th:each="answer : ${answers}">
                                     <td th:if="${answer.examPaperMultipleQuestion.id == question.id}">
-                                        <input type="radio" th:id="'option' + ${answer.no}" th:name="'version_control_' + ${question.no}" th:value="${answer.id}">
+                                        <input type="radio" th:id="'option' + ${answer.no}" th:name="'version_control_' + ${question.no}" th:value="${answer.id}" th:data-question-id="${question.id}" th:data-point="${question.point}" th:data-comment="${question.comment}">
                                         <label th:for="'option' + ${answer.no}" th:text="${answer.content}"></label>
                                     </td>
                                 </tr>
@@ -93,6 +93,10 @@
     <div class="title-item2">
         <!-- th:attr을 사용하여 data-exams-id 속성을 설정 -->
         <form id="saveForm" th:attr="data-exams-id=${examDetails.id}">
+            <input type="hidden" id="questionId" value="">
+            <input type="hidden" id="answerId" value="">
+            <input type="hidden" id="point" value="">
+            <input type="hidden" id="comment" value="">
             <button type="button" class="btn btn-primary" onclick="submitExam()">
                 제출
             </button>
@@ -123,46 +127,114 @@
             body: JSON.stringify({
                 selectedAnswers: selectedAnswers
             })
-        }).then(response => response.json())
-            .then(data => {
-                alert('제출이 완료되었습니다.');
-                saveExamItems(examsId, selectedAnswers);
-            }).catch(error => {
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        }).then(data => {
+            alert('제출이 완료되었습니다.');
+            console.log('서버 응답 데이터:', data);
+            const examResultId = data.response.examresults?.id || data.response.id; // 서버에서 반환된 examResultId 사용
+            console.log('Exam Result ID:', examResultId);
+            saveExamItems(examResultId, selectedAnswers);
+        }).catch(error => {
             alert('제출 중 오류가 발생했습니다.');
             console.error('Error:', error);
         });
     }
 
-    function saveExamItems(examsId, selectedAnswers) {
-        const items = Object.keys(selectedAnswers).map(questionId => {
-            const pointElement = document.querySelector(`[name="version_control_${questionId}"]:checked`).closest('tr').querySelector('.question-point');
-            const pointText = pointElement ? pointElement.innerText : '0';
-            const point = parseInt(pointText.replace(/\D/g, ''), 10); // 숫자만 추출하여 정수로 변환
+    function submitExam() {
+        const form = document.getElementById('saveForm');
+        const examsId = form.getAttribute('data-exams-id'); // 시험 ID 가져오기
 
-            return {
-                resultId: examsId,
-                questionId: questionId,
-                answerId: selectedAnswers[questionId],
-                comment: "자동 생성평가 내용"
-            };
+        // examId가 제대로 설정되어 있는지 확인
+        console.log('시험 ID:', examsId);
+
+        const selectedAnswers = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+            const questionId = input.name.split('_').pop();
+            selectedAnswers[questionId] = input.value;
         });
 
-        items.forEach(item => {
-            fetch('/api/v1/exams/result/item', {
+        fetch(`/api/v1/exams/result/${examsId}`, { // 시험 ID를 URL에 포함
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // 적절한 토큰으로 대체
+            },
+            body: JSON.stringify({
+                selectedAnswers: selectedAnswers
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        }).then(data => {
+            alert('제출이 완료되었습니다.');
+            console.log('서버 응답 데이터:', data);
+
+            // 서버 응답 데이터에서 examResultId 추출
+            const examResultId = data.response.examresults ? data.response.examresults.id : data.response.id;
+            console.log('Exam Result ID:', examResultId);
+
+            saveExamItems(examResultId, selectedAnswers);
+        }).catch(error => {
+            alert('제출 중 오류가 발생했습니다.');
+            console.error('Error:', error);
+        });
+    }
+
+    function saveExamItems(examResultId, selectedAnswers) {
+        const requests = Object.keys(selectedAnswers).map(questionId => {
+            const answerId = selectedAnswers[questionId];
+            const point = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.point;
+            const comment = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.comment;
+
+            const payload = {
+                resultId: examResultId,
+                questionId: parseInt(questionId),
+                answerId: parseInt(answerId),
+                point: parseInt(point),
+                comment: comment
+            };
+
+            console.log('전송 데이터:', payload);
+
+            return fetch('/api/v1/exam-results/item', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // 적절한 토큰으로 대체
                 },
-                body: JSON.stringify(item)
-            }).then(response => response.json())
-                .then(data => {
-                    console.log('개별 항목 저장 완료:', data);
-                }).catch(error => {
-                console.error('개별 항목 저장 중 오류 발생:', error);
+                body: JSON.stringify(payload)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
             });
         });
+
+        Promise.all(requests)
+            .then(results => {
+                alert('추가 데이터 전송이 완료되었습니다.');
+            })
+            .catch(error => {
+                alert('추가 데이터 전송 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
     }
+
+    // 사용자가 선택한 답변에 따라 hidden 필드 값 설정
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', function() {
+            document.getElementById('questionId').value = this.dataset.questionId;
+            document.getElementById('answerId').value = this.value;
+            document.getElementById('point').value = this.dataset.point;
+            document.getElementById('comment').value = this.dataset.comment;
+        });
+    });
 </script>
 </body>
 </html>
