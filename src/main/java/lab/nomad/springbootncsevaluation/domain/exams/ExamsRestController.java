@@ -35,7 +35,7 @@ public class ExamsRestController {
     private  final StudentsRepository studentsRepository;
     private  final ExamResultsService examResultsService;
 
-    //시험결과저장
+    // 시험 결과 저장
     @PostMapping("/result/{id}")
     public ResponseEntity<?> save(@PathVariable Long id,
                                   @RequestBody ExamResultsSaveRequestDTO requestDTO) {

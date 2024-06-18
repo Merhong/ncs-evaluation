@@ -70,7 +70,7 @@
                     <tbody>
                     <tr th:each="question : ${questions}">
                         <td th:text="${question.no}"></td>
-                        <td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'"></td>
+                        <td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'" class="question-point"></td>
                         <td>
                             <table>
                                 <tbody>
@@ -126,9 +126,41 @@
         }).then(response => response.json())
             .then(data => {
                 alert('제출이 완료되었습니다.');
+                saveExamItems(examsId, selectedAnswers);
             }).catch(error => {
             alert('제출 중 오류가 발생했습니다.');
             console.error('Error:', error);
+        });
+    }
+
+    function saveExamItems(examsId, selectedAnswers) {
+        const items = Object.keys(selectedAnswers).map(questionId => {
+            const pointElement = document.querySelector(`[name="version_control_${questionId}"]:checked`).closest('tr').querySelector('.question-point');
+            const pointText = pointElement ? pointElement.innerText : '0';
+            const point = parseInt(pointText.replace(/\D/g, ''), 10); // 숫자만 추출하여 정수로 변환
+
+            return {
+                resultId: examsId,
+                questionId: questionId,
+                answerId: selectedAnswers[questionId],
+                comment: "자동 생성평가 내용"
+            };
+        });
+
+        items.forEach(item => {
+            fetch('/api/v1/exams/result/item', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // 적절한 토큰으로 대체
+                },
+                body: JSON.stringify(item)
+            }).then(response => response.json())
+                .then(data => {
+                    console.log('개별 항목 저장 완료:', data);
+                }).catch(error => {
+                console.error('개별 항목 저장 중 오류 발생:', error);
+            });
         });
     }
 </script>

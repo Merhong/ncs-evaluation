@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생평가결과</title>
+    <link rel="stylesheet" href="/css/exam_results/one.css">
+</head>
+<body>
+<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
+<main>
+    <div class="title-container">
+        <div class="title-item1">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users/list'" style="display: none;">
+                prev
+            </button>
+        </div>
+        <div class="title-item2">
+            <h1>학생평가결과</h1>
+        </div>
+        <div class="title-item3">
+            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/students/one'" style="display: none;">
+                정보수정
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered one-table">
+                    <tbody>
+                    <tr>
+                        <td>교과목명</td>
+                        <td th:text="${examResults.exam.student.course.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>능력단위</td>
+                        <td th:text="${examResults.exam.examPaper.abilityUnit.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>평가방법</td>
+                        <td th:text="${examResults.exam.examPaper.examType}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered one-table">
+                    <tbody>
+                    <tr>
+                        <td>이름</td>
+                        <td th:text="${examResults.exam.student.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>연락처</td>
+                        <td th:text="${examResults.exam.student.tel}"></td>
+                    </tr>
+                    <tr>
+                        <td>평가점수</td>
+                        <td th:text="${examResults.totalPoint}"></td>
+                    </tr>
+                    <tr>
+                        <td>성취수준</td>
+                        <td th:text="${examResults.grade}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- 총평 입력 영역 추가 -->
+                <form th:action="@{/exam_results/save}" method="post">
+                    <input type="hidden" name="id" th:value="${examResults.id}" />
+                    <table class="table table-bordered one-table">
+                        <tbody>
+                        <tr>
+                            <td>총평</td>
+                            <td>
+                                <textarea class="form-control" name="comment" rows="5" th:text="${examResults.comment}"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- 저장 버튼 추가 -->
+                    <div class="button-container">
+                        <button type="button" class="btn btn-secondary" onclick="history.back()">이전</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+</script>
+</body>
+</html>
