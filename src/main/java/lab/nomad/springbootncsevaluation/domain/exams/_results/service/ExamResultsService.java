@@ -12,7 +12,10 @@ import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.a
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results._enums.ExamResultStatus;
+import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
+import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItemsRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,11 @@ public class ExamResultsService {
     private ExamPaperMultipleQuestionsRepository examPaperMultipleQuestionsRepository;
     @Autowired
     private ExamPaperMultipleQuestionAnswersRepository examPaperMultipleQuestionAnswersRepository;
+    @Autowired
+    private ExamResultMultipleItemsRepository examResultMultipleItemsRepository;
+
+
+
     // 시험 결과 저장
     @Transactional
     public ExamResultsSaveResponseDTO save(Long examId, ExamResultsSaveRequestDTO requestDTO) {
@@ -135,6 +143,42 @@ public class ExamResultsService {
     // 시험 결과 ID를 통해 데이터를 가져오는 메서드
     @Transactional
     public ExamResults getExamResultById(Long id) {
-        return examResultsRepository.findByIdWithFetch(id).orElse(null);
+        ExamResults examResults = examResultsRepository.findById(id).orElse(null);
+        if (examResults != null) {
+            Hibernate.initialize(examResults.getExam());
+            Hibernate.initialize(examResults.getExam().getExamPaper());
+
+            if (examResults.getExam().getStudent() != null) {
+                Hibernate.initialize(examResults.getExam().getStudent());
+                if (examResults.getExam().getStudent().getCourse() != null) {
+                    Hibernate.initialize(examResults.getExam().getStudent().getCourse());
+                }
+            }
+
+            if (examResults.getExam().getExamPaper().getAbilityUnit() != null) {
+                Hibernate.initialize(examResults.getExam().getExamPaper().getAbilityUnit());
+            }
+
+            List<ExamPaperMultipleQuestions> multipleQuestions = examPaperMultipleQuestionsRepository.findByExamPaperId(examResults.getExam().getExamPaper().getId());
+            multipleQuestions.forEach(question -> {
+                Hibernate.initialize(question);
+                // 추가된 부분: 각 질문에 대한 답변을 초기화합니다.
+                Hibernate.initialize(question.getAnswers());
+            });
+
+            List<ExamResultMultipleItems> examResultItems = examResultMultipleItemsRepository.findByExamResultId(examResults.getId());
+            examResultItems.forEach(item -> {
+                Hibernate.initialize(item.getExamPaperQuestion());
+                Hibernate.initialize(item.getExamPaperMultipleQuestionAnswers());
+            });
+
+            examResults.setExamResultItems(examResultItems);
+        }
+        return examResults;
+    }
+
+    // 학생이 선택한 답변을 가져오는 메서드 추가
+    public List<ExamResultMultipleItems> getExamResultItemsByExamResultId(Long examResultId) {
+        return examResultsRepository.findItemsByExamResultId(examResultId);
     }
 }
