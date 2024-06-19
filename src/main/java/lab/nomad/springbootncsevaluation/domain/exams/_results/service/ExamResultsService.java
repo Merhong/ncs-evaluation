@@ -41,6 +41,7 @@ public class ExamResultsService {
     private ExamResultMultipleItemsRepository examResultMultipleItemsRepository;
 
 
+
     // 시험 결과 저장
     @Transactional
     public ExamResultsSaveResponseDTO save(Long examId, ExamResultsSaveRequestDTO requestDTO) {
@@ -161,6 +162,8 @@ public class ExamResultsService {
             List<ExamPaperMultipleQuestions> multipleQuestions = examPaperMultipleQuestionsRepository.findByExamPaperId(examResults.getExam().getExamPaper().getId());
             multipleQuestions.forEach(question -> {
                 Hibernate.initialize(question);
+                // 추가된 부분: 각 질문에 대한 답변을 초기화합니다.
+                Hibernate.initialize(question.getAnswers());
             });
 
             List<ExamResultMultipleItems> examResultItems = examResultMultipleItemsRepository.findByExamResultId(examResults.getId());

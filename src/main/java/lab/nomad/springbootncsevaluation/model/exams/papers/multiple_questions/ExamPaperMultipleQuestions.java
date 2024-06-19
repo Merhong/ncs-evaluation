@@ -2,6 +2,7 @@ package lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions;
 
 import jakarta.persistence.*;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswers;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>exam_paper_questions 테이블과 매핑되는 Entity 클래스입니다.</p>
@@ -81,6 +83,9 @@ public class ExamPaperMultipleQuestions {
      */
     @LastModifiedDate
     private LocalDateTime updateDate;
+    @OneToMany(mappedBy = "examPaperMultipleQuestion", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExamPaperMultipleQuestionAnswers> answers;
+
 
     /**
      * <p>전체 매개변수 생성자입니다.</p>
@@ -88,7 +93,7 @@ public class ExamPaperMultipleQuestions {
      */
     @Builder
     public ExamPaperMultipleQuestions(Long id, Integer no, String content, Integer point, String comment,
-                                      ExamPapers examPaper, LocalDateTime createDate, LocalDateTime updateDate) {
+                                      ExamPapers examPaper, LocalDateTime createDate, LocalDateTime updateDate, List<ExamPaperMultipleQuestionAnswers> answers) {
         this.id = id;
         this.no = no;
         this.content = content;
@@ -97,5 +102,6 @@ public class ExamPaperMultipleQuestions {
         this.examPaper = examPaper;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.answers = answers;
     }
 }

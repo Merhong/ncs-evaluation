@@ -9,6 +9,7 @@ import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,11 @@ public class ExamResultsController {
     public String one(@PathVariable Long id, Model model) {
         ExamResults examResults = examResultsService.getExamResultById(id);
         List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
+
+        // 각 시험 문제에 대한 모든 답변을 초기화
+        for (ExamResultMultipleItems item : examResults.getExamResultItems()) {
+            Hibernate.initialize(item.getExamPaperQuestion().getAnswers());
+        }
 
         // 모델에 시험 결과 데이터 추가
         model.addAttribute("examResults", examResults);
