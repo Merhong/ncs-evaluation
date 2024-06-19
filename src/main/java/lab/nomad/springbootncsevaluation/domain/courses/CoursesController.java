@@ -184,7 +184,7 @@ public class CoursesController {
     /* 과정 등록 페이지 */
     @GetMapping("/saveForm")
     public String saveForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
+            @PageableDefault(size = 20) Pageable pageable, @RequestParam(required = false) String searchValue,
             @RequestParam(required = false) String abilityUnitSearchValue) {
 
         // 사용자가 인증되지 않은 경우 처리

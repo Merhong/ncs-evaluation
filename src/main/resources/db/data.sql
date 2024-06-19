@@ -165,8 +165,6 @@ Insert INTO exam_paper_multiple_question_answers(exampapermultiplequestion_id, n
 VALUES (10, 5, '답안 E', false);
 
 
-
-
 /* CoursesAbilityUnits(과정 + 단위 능력 중간 테이블) */
 INSERT INTO courses_ability_units(course_id, abilityunit_id, createdate, updatedate)
 VALUES (1, 1, now(), now());
