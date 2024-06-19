@@ -4,6 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ExamResultMultipleItemsRepository extends JpaRepository<ExamResultMultipleItems, Long> {
 
@@ -15,4 +19,9 @@ public interface ExamResultMultipleItemsRepository extends JpaRepository<ExamRes
             Long userId);
 
     Page<ExamResultMultipleItems> findByExamResultId(Long resultId, Pageable pageable);
+   // @Meta(comment = "문제결과값 불러오기")
+   // List<ExamResultMultipleItems> findByExamResultId(Long examResultId);
+
+    @Query("SELECT eri FROM ExamResultMultipleItems eri WHERE eri.examResult.id = :examResultId")
+    List<ExamResultMultipleItems> findByExamResultId(@Param("examResultId") Long examResultId);
 }
