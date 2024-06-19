@@ -67,6 +67,23 @@
                     </tbody>
                 </table>
 
+                <table class="table table-bordered custom-table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>질문</th>
+                        <th>답변</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${examResults.examResultItems}">
+                        <td th:text="${item.examPaperQuestion.no}"></td>
+                        <td th:text="${item.examPaperQuestion.content} + ' (배점 ' + ${item.examPaperQuestion.point} + '점)'" class="question-point"></td>
+                        <td th:text="${item.examPaperMultipleQuestionAnswers.content}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
                 <!-- 총평 입력 영역 추가 -->
                 <form th:action="@{/exam_results/save}" method="post">
                     <input type="hidden" name="id" th:value="${examResults.id}" />

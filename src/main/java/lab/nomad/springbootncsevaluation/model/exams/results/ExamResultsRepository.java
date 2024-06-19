@@ -1,5 +1,6 @@
 package lab.nomad.springbootncsevaluation.model.exams.results;
 
+import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,10 @@ public interface ExamResultsRepository extends JpaRepository<ExamResults, Long> 
             "JOIN FETCH ep.abilityUnit " +
             "WHERE er.id = :id")
     Optional<ExamResults> findByIdWithFetch(@Param("id") Long id);
+
+    // 특정 시험 결과의 ID를 기반으로 시험 결과 항목 가져오기
+    @Query("SELECT item FROM ExamResultMultipleItems item " +
+            "JOIN FETCH item.examResult er " +
+            "WHERE er.id = :examResultId")
+    List<ExamResultMultipleItems> findItemsByExamResultId(@Param("examResultId") Long examResultId);
 }

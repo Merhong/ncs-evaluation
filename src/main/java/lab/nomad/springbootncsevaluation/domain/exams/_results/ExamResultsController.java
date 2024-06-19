@@ -7,11 +7,13 @@ import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.ExamPapers;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -35,13 +37,15 @@ public class ExamResultsController {
         }
         return "exam_results/listForm";
     }
-
-    //학생평가 상세보기페이지
+    // 학생평가 상세보기 페이지
     @GetMapping("oneForm/{id}")
     public String one(@PathVariable Long id, Model model) {
         ExamResults examResults = examResultsService.getExamResultById(id);
-        // 모델에 시험 결과 데이터를 추가합니다.
+        List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
+
+        // 모델에 시험 결과 데이터 추가
         model.addAttribute("examResults", examResults);
+        model.addAttribute("examResultItems", examResultItems);
 
         return "exam_results/oneForm";
     }

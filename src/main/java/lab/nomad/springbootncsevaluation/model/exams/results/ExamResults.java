@@ -3,6 +3,7 @@ package lab.nomad.springbootncsevaluation.model.exams.results;
 import jakarta.persistence.*;
 import lab.nomad.springbootncsevaluation.model.exams.Exams;
 import lab.nomad.springbootncsevaluation.model.exams.results._enums.ExamResultStatus;
+import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>exam_results 테이블과 매핑되는 Entity 클래스입니다.</p>
@@ -115,4 +117,14 @@ public class ExamResults {
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
+
+    // 시험 결과 항목 설정 메서드 추가
+    public void setExamResultItems(List<ExamResultMultipleItems> examResultItems) {
+        this.examResultItems = examResultItems;
+    }
+
+    // 시험 결과 항목 목록 필드 추가
+    @OneToMany(mappedBy = "examResult", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExamResultMultipleItems> examResultItems;
+
 }
