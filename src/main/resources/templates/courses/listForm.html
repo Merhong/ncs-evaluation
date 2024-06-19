@@ -6,11 +6,10 @@
 	<title>과정 목록</title>
 </head>
 
-
 <body>
 
-	<!-- Courses(과정) 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: coursesHeader}"></th:block>
+	<!-- 사이드바 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 
 	<main>
 
@@ -23,11 +22,10 @@
 			</div>
 		</div>
 
-
 		<!-- 과정 관리 테이블 -->
 		<div class="container">
-			<div class="row">
-				<div class="col">
+			<div class="row-cols-auto">
+				<div class="col-auto">
 					<table class="table table-bordered">
 						<thead>
 							<tr>
@@ -40,11 +38,10 @@
 							</tr>
 						</thead>
 						<tbody>
-
 							<!-- 데이터 출력 부분 -->
-							<p>
+							<div>
 								안녕하세요 <span th:text="${username}"></span>님!
-							</p>
+							</div>
 							<th:block th:each="course: ${coursesPage.course}">
 								<tr th:onclick="'goToDetailPage(' + ${course.id} + ')'">
 									<td th:text="${course.id}"></td>
@@ -55,43 +52,36 @@
 									<td th:text="${course.userDTO.name}"></td>
 								</tr>
 							</th:block>
-
 						</tbody>
 					</table>
-				</div>
-			</div>
-
-
-			<!-- 페이지네이션 -->
-			<div class="row justify-content-center">
-				<div class="col-auto">
-					<ul class="pagination">
-						<!-- 이전 버튼 -->
-						<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
-							<a class="page-link" th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">이전</a>
-						</li>
-
-						<!-- 페이지 번호 -->
-						<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
-						    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
-							<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}" th:text="${pageNum}">1</a>
-						</li>
-
-						<!-- 다음 버튼 -->
-						<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
-							<a class="page-link" th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">다음</a>
-						</li>
-					</ul>
 				</div>
 			</div>
 		</div>
 
 	</main>
 
+	<!-- 페이지네이션 -->
+	<div class="pagination-container">
+		<ul class="pagination">
+			<!-- 이전 버튼 -->
+			<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+				<a class="page-link" th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">이전</a>
+			</li>
+			<!-- 페이지 번호 -->
+			<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}" th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+				<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}" th:text="${pageNum}">1</a>
+			</li>
+			<!-- 다음 버튼 -->
+			<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+				<a class="page-link" th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'" tabindex="-1">다음</a>
+			</li>
+		</ul>
+	</div>
+
 	<script>
-		function goToDetailPage(id) {
+        function goToDetailPage(id) {
             location.href = '/courses/' + id;
-		}
+        }
 	</script>
 
 </body>

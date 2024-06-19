@@ -54,7 +54,7 @@
                 setCookie('refreshToken', data.response.token.refreshToken, 1); // 1일 후 만료
 
                 // 메인 페이지로 이동
-                location.href = '/courses';
+                location.href = '/';
             } else {
                 console.error('Invalid response format');
             }

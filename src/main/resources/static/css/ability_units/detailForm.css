@@ -173,10 +173,19 @@ th {
 }
 
 .label {
+    width: 150px;
+    font-weight: bold;
+    background-color: lightgray !important;
+    white-space: nowrap; /* 한 줄로 표시 */
+}
+
+.label2 {
     white-space: nowrap; /* 한 줄로 표시 */
 }
 
 .modal-label {
+    width: 150px;
+    background-color: lightgray !important;
     white-space: nowrap; /* 한 줄로 표시 */
 }
 
@@ -188,9 +197,13 @@ th {
 }
 
 .modal-content textarea {
-    height: 100px; /* 텍스트 영역의 높이를 설정합니다 */
+    height: 200px; /* 텍스트 영역의 높이를 설정합니다 */
 }
 
 td {
     text-align: center;
+}
+
+.td-left {
+    text-align: left !important;
 }

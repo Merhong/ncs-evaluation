@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/exams-results")
+@RequestMapping("/exam-results")
 @RequiredArgsConstructor
 public class ExamResultMultipleItemsController {
 
@@ -46,8 +46,6 @@ public class ExamResultMultipleItemsController {
                 customUserDetails.user());
         // AbilityUnit 조회
         AbilityUnitOneResponseDTO abilityUnitOneResponseDTO = abilityUnitsService.one(responseDTO.getItems().get(0).getExamResultDTO().getExamsDTO().getExamPapersDTO().getAbilityUnitDTO().getId());
-
-        System.out.println("능력단위 ID :" + responseDTO.getItems().get(0).getExamResultDTO().getExamsDTO().getExamPapersDTO().getAbilityUnitDTO().getId());
 
         // 모델에 필요한 데이터 추가
         model.addAttribute("ItemsPage", responseDTO);
