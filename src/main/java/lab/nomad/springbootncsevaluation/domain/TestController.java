@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/test")
 public class TestController {
 
-    @GetMapping
+    @GetMapping()
     public String test(Model model) {
-        model.addAttribute("test","테스트용 값입니다.");
+        model.addAttribute("test", "테스트용 값입니다.");
         return "test/test";
     }
 }

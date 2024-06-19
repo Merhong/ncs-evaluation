@@ -6,8 +6,8 @@
 	<title>능력 단위 상세보기</title>
 </head>
 <body>
-	<!-- AbilityUnits(능력 단위) 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: abilityUnitsHeader}"></th:block>
+	<!-- 사이드바 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 
 	<main>
 		<div class="title-container">
@@ -18,7 +18,7 @@
 				<h1>능력 단위 상세보기</h1>
 			</div>
 			<div class="title-item3">
-				<button type="button" class="btn btn-warning" onclick="openModal('unitModal')">능력 단위 수정</button>
+				<button type="button" class="btn btn-warning" style="color: white" onclick="openModal('unitModal')">능력 단위 수정</button>
 			</div>
 		</div>
 
@@ -45,7 +45,7 @@
 							</tr>
 							<tr>
 								<td class="label">능력 단위 정의</td>
-								<td class="value" th:text="${AbilityUnit.purpose}"></td>
+								<td class="value td-left" th:text="${AbilityUnit.purpose}"></td>
 							</tr>
 							<tr>
 								<td class="label">시험 종류</td>
@@ -59,12 +59,14 @@
 				</div>
 			</div>
 
+			<br>
+
 			<div class="title-container">
 				<div class="title-item4">
 					<h3>능력 단위 요소</h3>
 				</div>
 				<div class="title-item5">
-					<button type="button" class="btn btn-warning" onclick="openModal('elementModal')">요소 수정</button>
+					<button type="button" class="btn btn-warning" style="color: white" onclick="openModal('elementModal')">요소 수정</button>
 				</div>
 			</div>
 
@@ -78,10 +80,12 @@
 				</thead>
 				<tbody>
 					<tr th:each="element : ${AbilityUnitElementList}">
-						<td class="label" th:text="${element.code}"></td>
-						<td class="label" th:text="${element.name}"></td>
-						<td class="value">
-							<div th:each="item : ${element.abilityUnitElementItemList}" th:text="${item.content}"></div>
+						<td class="label2" th:text="${element.code}"></td>
+						<td class="label2" th:text="${element.name}"></td>
+						<td class="value td-left">
+							<ul>
+								<li th:each="item : ${element.abilityUnitElementItemList}" th:text="${item.content}"></li>
+							</ul>
 						</td>
 					</tr>
 				</tbody>
@@ -117,9 +121,11 @@
 						</tr>
 						<tr>
 							<td class="modal-label">능력 단위 정의</td>
-							<td><input type="text" id="purpose" th:value="${AbilityUnit.purpose}" name="purpose"
-							           required></td>
+							<td><textarea id="purpose" name="purpose" required
+							              th:text="${AbilityUnit.purpose}"></textarea>
+							</td>
 						</tr>
+
 						<tr>
 							<td class="modal-label">시험 종류</td>
 							<td>
@@ -165,7 +171,7 @@
 								<td class="modal-label">수행 준거</td>
 								<td>
                                     <textarea name="itemContents" required th:attr="data-element-id=${element.id}"><th:block th:each="item, itemStat :${element.abilityUnitElementItemList}" th:inline="text">[[${itemStat.index > 0 ? '
-                                        ' : ''}]] [[${item.content}]]</th:block></textarea>
+' : ''}]] [[${item.content}]]</th:block></textarea>
 								</td>
 							</tr>
 						</tbody>

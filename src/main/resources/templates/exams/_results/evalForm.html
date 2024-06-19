@@ -2,8 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
-	<link rel="stylesheet" href="/css/exams/_result/_multiple_items/detailForm.css">
-	<title th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 채점지'"></title>
+	<link rel="stylesheet" href="/css/exams/_result/evalForm.css">
+	<title>화면 구현(평가지명) - 평가지</title>
 </head>
 <body>
 	<!-- 사이드바 헤더 불러오기 -->
@@ -18,7 +18,7 @@
 				<tr>
 					<td class="empty-space" rowspan="2"></td>
 					<td class="title" rowspan="2"
-					    th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 채점지'"></td>
+					    th:text="${ItemList.get(0).examResultDTO.examsDTO.examPapersDTO.name} +' - 평가지'"></td>
 					<td class="signature-title" rowspan="2">결재</td>
 					<td class="approval-title">담당자</td>
 					<td class="approval-title">팀장</td>
@@ -97,14 +97,14 @@
 		</div>
 
 
-		<!-- 평가 기준 테이블 -->
+		<!-- 문제 + 답안 테이블 -->
 		<div class="container">
 			<div class="row">
 				<div class="col">
 					<table class="table table-bordered full-width-table">
 						<thead>
 							<tr>
-								<th>평가 기준(평가시 고려 사항)</th>
+								<th>문제 + 답안</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -120,39 +120,7 @@
 			</div>
 		</div>
 
-		<!-- 평가 내용 테이블 -->
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<table class="table table-bordered full-width-table">
-						<thead>
-							<tr>
-								<th class="centered" rowspan="2">평가 내용</th>
-								<th colspan="3">평가결과</th>
-							</tr>
-							<tr>
-								<th>배점</th>
-								<th class="equal-width">예</th>
-								<th class="equal-width">아니오</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- 데이터 출력 부분 -->
-							<th:block th:each="item: ${ItemList}">
-								<th:block th:each="question : ${item.questionDTO}">
-									<tr>
-										<td class="td-left" th:text="${question.comment}">N/A</td>
-										<td class="td-center" th:text="${question.point}">N/A</td>
-										<td class="td-center" th:text="${item.point != 0 ? '✔' : ''}"></td>
-										<td class="td-center" th:text="${item.point == 0 ? '✔' : ''}"></td>
-									</tr>
-								</th:block>
-							</th:block>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+
 
 		<!-- 능력 단위 요소 테이블 -->
 		<div class="container">
@@ -192,19 +160,32 @@
 					<table class="table table-bordered full-width-table">
 						<thead>
 							<tr>
-								<th>총평</th>
+								<th class="centered" rowspan="2">성취기준</th>
+								<th colspan="6">점수 구간</th>
+							</tr>
+							<tr>
+								<th>90~100</th>
+								<th>80~89</th>
+								<th>70~79</th>
+								<th>69~60</th>
+								<th>60미만</th>
 							</tr>
 						</thead>
 						<tbody>
-							<!-- 데이터 출력 부분 -->
-							<tr th:object="${ItemList[0].examResultDTO}">
-								<td class="td-left" th:text="*{comment}"></td>
+							<tr>
+								<td style="background-color: #f3f3f3; font-weight: bold">성취수준 환산</td>
+								<td>5</td>
+								<td>4</td>
+								<td>3</td>
+								<td>2</td>
+								<td>1</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
+
 	</main>
 </body>
 </html>
