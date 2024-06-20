@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+	<!-- 사이드바 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+
 	<link rel="stylesheet" type="text/css" href="/css/students/listForm.css"/>
 	<title>학생리스트</title>
 </head>
 
 <body>
-	<!-- 사이드바 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 
 	<main>
 		<div class="title-container">
