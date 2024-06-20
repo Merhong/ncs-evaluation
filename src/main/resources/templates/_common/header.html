@@ -29,23 +29,54 @@
 	<!-- BootStrap JS  -->
 	<script>
         window.addEventListener('DOMContentLoaded', event => {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const wrapper = document.getElementById('wrapper');
 
-            // Toggle the side navigation
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
-                // Uncomment Below to persist sidebar toggle between refreshes
-                // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-                //     document.body.classList.toggle('sb-sidenav-toggled');
-                // }
                 sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
-            }
+                    wrapper.classList.toggle('toggled');
 
+                    if (wrapper.classList.contains('toggled')) {
+                        sidebarToggle.textContent = '>>';
+                    } else {
+                        sidebarToggle.textContent = '<<';
+                    }
+
+                    // 저장 상태 업데이트
+                    localStorage.setItem('sb|sidebar-toggle', wrapper.classList.contains('toggled'));
+                });
+
+                // 초기 로드 시 저장된 상태 복원
+                if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+                    wrapper.classList.add('toggled');
+                    sidebarToggle.textContent = '>>';
+                } else {
+                    sidebarToggle.textContent = '<<';
+                }
+            }
         });
+
+        function printPage(){
+            window.print();
+        }
 	</script>
+
+	<style>
+        #wrapper.toggled #sidebar-wrapper {
+            display: none;
+        }
+
+        /* Print styles */
+        @media print {
+            #sidebar-wrapper,
+            .btn,
+            .navbar,
+            .header-div {
+                display: none !important;
+            }
+        }
+	</style>
 
 </th:block>
 
@@ -158,7 +189,6 @@
 				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/courses/1/students">학생</a>
 				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/users/list">직원</a>
 				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/exam/saveForm/1">시험</a>
-				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/logout">로그아웃</a>
 			</div>
 		</div>
 		<!-- Page content wrapper-->
@@ -170,11 +200,10 @@
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav ms-auto mt-2 mt-lg-0"><li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-							<li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
 							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+								<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
 								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-									<a class="dropdown-item" href="#!">Action</a>
+									<a class="dropdown-item print" onclick="printPage()">프린트</a>
 									<a class="dropdown-item" href="#!">Another action</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="/logout">로그아웃</a>

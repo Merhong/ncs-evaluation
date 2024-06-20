@@ -138,18 +138,23 @@
 						</thead>
 						<tbody>
 							<!-- 데이터 출력 부분 -->
-							<th:block th:each="item: ${ItemList}">
+							<th:block th:each="item : ${ItemList}">
 								<th:block th:each="question : ${item.questionDTO}">
 									<tr>
 										<td class="td-left" th:text="${question.comment}">N/A</td>
 										<td class="td-center" th:text="${question.point}">N/A</td>
-										<td class="td-center" th:text="${item.point != 0 ? '✔' : ''}"></td>
-										<td class="td-center" th:text="${item.point == 0 ? '✔' : ''}"></td>
+										<td class="td-center">
+											<span th:if="${item.answerDTO[0].isCorrect == true}">✔</span>
+										</td>
+										<td class="td-center">
+											<span th:if="${item.answerDTO[0].isCorrect == false}">✔</span>
+										</td>
 									</tr>
 								</th:block>
 							</th:block>
 						</tbody>
 					</table>
+
 				</div>
 			</div>
 		</div>
