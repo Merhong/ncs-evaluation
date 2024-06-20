@@ -70,8 +70,6 @@
                     </tbody>
                 </table>
 
-
-
                 <table class="table table-bordered custom-table">
                     <thead>
                     <tr>
@@ -98,9 +96,8 @@
                     </tbody>
                 </table>
 
-
                 <!-- 총평 입력 영역 추가 -->
-                <form th:action="@{/exam-results/save}" method="post" onsubmit="return moveCourses();">
+                <form th:action="@{/exam-results/save}" method="post">
                     <input type="hidden" name="id" th:value="${examResults.id}" />
                     <table class="table table-bordered one-table">
                         <tbody>
@@ -122,15 +119,5 @@
         </div>
     </div>
 </main>
-
-<script>
-    function moveCourses() {
-        // 폼이 정상적으로 제출되면
-        setTimeout(function() {
-            window.location.href = '/courses';
-        }, 1000); // 1초 후에 페이지 이동
-        return true; // 폼 제출을 계속 진행
-    }
-</script>
 </body>
 </html>

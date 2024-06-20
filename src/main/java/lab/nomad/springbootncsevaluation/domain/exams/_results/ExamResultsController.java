@@ -99,7 +99,7 @@ public class ExamResultsController {
     @PostMapping("/save")
     public String updateComment(@RequestParam Long id, @RequestParam String comment) {
         examResultsService.updateComment(id, comment);
-        return "redirect:/exam-results/oneForm/" + id;
+        return "redirect:/courses";
     }
 
 }
