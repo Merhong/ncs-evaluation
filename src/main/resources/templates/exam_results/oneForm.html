@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="/css/exam_results/one.css">
 </head>
 <body>
+<!-- 사이드바 헤더 불러오기 -->
+<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 <th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 <main>
     <div class="title-container">
@@ -97,7 +100,7 @@
 
 
                 <!-- 총평 입력 영역 추가 -->
-                <form th:action="@{/exam_results/save}" method="post">
+                <form th:action="@{/exam-results/save}" method="post">
                     <input type="hidden" name="id" th:value="${examResults.id}" />
                     <table class="table table-bordered one-table">
                         <tbody>

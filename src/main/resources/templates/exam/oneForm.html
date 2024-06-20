@@ -6,8 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선다형평가</title>
     <link rel="stylesheet" href="/css/exam/one.css">
+
 </head>
 <body>
+<!-- 사이드바 헤더 불러오기 -->
+<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 <th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 <main>
     <div class="title-container">
@@ -72,15 +76,15 @@
                         <td th:text="${question.no}"></td>
                         <td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'" class="question-point"></td>
                         <td>
-                            <table>
-                                <tbody>
-                                <tr th:each="answer : ${answers}">
-                                    <td th:if="${answer.examPaperMultipleQuestion.id == question.id}">
-                                        <input type="radio" th:id="'option' + ${answer.no}" th:name="'version_control_' + ${question.no}" th:value="${answer.id}" th:data-question-id="${question.id}" th:data-point="${question.point}" th:data-comment="${question.comment}">
-                                        <label th:for="'option' + ${answer.no}" th:text="${answer.content}"></label>
-                                    </td>
-                                </tr>
-                                </tbody>
+                            <div class="answers-container">
+                                <div th:each="answer : ${answers}" th:if="${answer.examPaperMultipleQuestion.id == question.id}">
+                                    <input type="radio" th:id="'option' + ${answer.no}" th:name="'version_control_' + ${question.no}" th:value="${answer.id}" th:data-question-id="${question.id}" th:data-point="${question.point}" th:data-comment="${question.comment}">
+                                    <label th:for="'option' + ${answer.no}" th:text="${answer.content}"></label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
                             </table>
                         </td>
                     </tr>
@@ -97,7 +101,7 @@
             <input type="hidden" id="answerId" value="">
             <input type="hidden" id="point" value="">
             <input type="hidden" id="comment" value="">
-            <button type="button" class="btn btn-primary" onclick="submitExam()">
+            <button type="button" class="btn btn-primary" onclick="submitExams()">
                 제출
             </button>
         </form>
@@ -144,7 +148,7 @@
         });
     }
 
-    function submitExam() {
+    function submitExams() {
         const form = document.getElementById('saveForm');
         const examsId = form.getAttribute('data-exams-id'); // 시험 ID 가져오기
 

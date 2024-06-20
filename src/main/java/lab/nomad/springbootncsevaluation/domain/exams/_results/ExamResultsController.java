@@ -74,7 +74,7 @@ public class ExamResultsController {
         } else {
             throw new IllegalArgumentException("Invalid course ID: " + id);
         }
-        return "exam_results/listForm";
+        return "/exam_results/listForm";
     }
 
     // 학생평가 상세보기 페이지
@@ -92,14 +92,14 @@ public class ExamResultsController {
         model.addAttribute("examResults", examResults);
         model.addAttribute("examResultItems", examResultItems);
 
-        return "exam_results/oneForm";
+        return "/exam_results/oneForm";
     }
 
     // 총평 업데이트 페이지
     @PostMapping("/save")
     public String updateComment(@RequestParam Long id, @RequestParam String comment) {
         examResultsService.updateComment(id, comment);
-        return "redirect:/exam_results/oneForm/" + id;
+        return "redirect:/exam-results/oneForm/" + id;
     }
 
 }

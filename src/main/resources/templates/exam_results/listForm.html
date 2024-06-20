@@ -13,7 +13,9 @@
 
 
 <body>
-<!-- 헤더 위치 -->
+<!-- 사이드바 헤더 불러오기 -->
+<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 <!-- 헤더 위치 -->
 <th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 
@@ -84,7 +86,7 @@
                         <td th:style="'color:' + ${result.color}" th:text="${result.status}"></td>
                         <td>
                             <button class="btn btn-primary"
-                                    th:onclick="|location.href='/exam_results/oneForm/' + ${result.id} + ''|">
+                                    th:onclick="|location.href='/exam-results/oneForm/' + ${result.id} + ''|">
                                 상세보기
                             </button>
                         </td>
@@ -99,7 +101,7 @@
     </div>
 
     <div class="title-item2">
-        <form id="saveForm" th:action="@{/api/v1/courses/${courseId}/students}" method="POST">
+        <form id="saveForm"  method="POST">
             <button type="submit" class="btn btn-primary">
                 전체인쇄
             </button>

@@ -141,4 +141,13 @@ td {
     width: 30px !important; /* 1열의 넓이를 줄임 */
 
 }
+/* answers-container 스타일 추가 */
+.answers-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px; /* 선택지 사이 간격 조절 */
+}
+.answers-container label {
+    margin-right: 15px; /* 선택지와 라벨 사이 간격 조절 */
+}
 

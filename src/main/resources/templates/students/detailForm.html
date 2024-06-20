@@ -2,6 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
+	<!-- 사이드바 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>학생 상세 페이지</title>
@@ -9,8 +11,7 @@
 </head>
 
 <body>
-	<!-- 사이드바 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
+
 
 	<main>
 		<div class="title-container">
