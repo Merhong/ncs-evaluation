@@ -22,6 +22,7 @@
 				<div class="col">
 					<form id="detailForm" th:action="@{/api/v1/courses/${id}}" th:object="${CoursesOneResponseDTO}"
 					      method="post">
+						<input type="hidden" name="id" th:value="${CoursesOneResponseDTO?.course?.id}">
 						<table class="table table-bordered">
 							<tbody>
 								<tr>
@@ -62,9 +63,14 @@
 							</table>
 						</div>
 						<div class="d-flex justify-content-center submit-item">
-							<button type="button" class="btn btn-primary" style="margin-right: 20px"  onclick="openModal('courseModal')">과정 수정
+							<button type="button" class="btn btn-primary" style="margin-right: 20px"
+							        onclick="openModal('courseModal')">과정 수정
 							</button>
-							<button type="button" class="btn btn-warning" style="color: white" th:onclick="'location.href=\'/courses/'+${id}+'/students\''">학생 목록
+							<button type="button" class="btn btn-danger" style="color: white; margin-right: 20px"
+							        id="deleteCourseBtn">과정 삭제
+							</button>
+							<button type="button" class="btn btn-warning" style="color: white"
+							        th:onclick="'location.href=\'/courses/'+${id}+'/students\''">학생 목록
 							</button>
 							<button type="button" class="btn btn-warning" style="color: white" th:onclick="'location.href=\'/exam-results/listForm/'+${id}+'\''">평가결과
 							</button>
@@ -155,6 +161,27 @@
                 })
                 .catch(error => console.error('Error:', error));
         });
+
+        // 과정 삭제 처리
+        document.getElementById('deleteCourseBtn').addEventListener('click', function () {
+            const formData = new FormData(document.getElementById('detailForm'));
+            const id = formData.get('id'); // 폼 데이터에서 'id' 값을 추출
+            const deleteUrl = `/api/v1/courses/${id}`;
+
+            if (confirm('정말로 이 과정을 삭제하시겠습니까?')) {
+                fetch(deleteUrl, {
+                    method: 'DELETE'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('과정이 삭제되었습니다.');
+                        window.location.href = '/courses';
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
+
 	</script>
 </body>
 </html>
