@@ -100,7 +100,7 @@
 
 
                 <!-- 총평 입력 영역 추가 -->
-                <form th:action="@{/exam-results/save}" method="post">
+                <form th:action="@{/exam-results/save}" method="post" onsubmit="return moveCourses();">
                     <input type="hidden" name="id" th:value="${examResults.id}" />
                     <table class="table table-bordered one-table">
                         <tbody>
@@ -124,7 +124,13 @@
 </main>
 
 <script>
-
+    function moveCourses() {
+        // 폼이 정상적으로 제출되면
+        setTimeout(function() {
+            window.location.href = '/courses';
+        }, 1000); // 1초 후에 페이지 이동
+        return true; // 폼 제출을 계속 진행
+    }
 </script>
 </body>
 </html>

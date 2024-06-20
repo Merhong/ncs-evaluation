@@ -9,10 +9,7 @@
 
 </head>
 <body>
-<!-- 사이드바 헤더 불러오기 -->
-<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 
-<th:block th:replace="~{_common/header.html :: studentHeader}"></th:block>
 <main>
     <div class="title-container">
         <div class="title-item1">
@@ -222,7 +219,8 @@
 
         Promise.all(requests)
             .then(results => {
-                alert('추가 데이터 전송이 완료되었습니다.');
+                alert('시험이 완료되었습니다. 창을 닫아주세요.');
+
             })
             .catch(error => {
                 alert('추가 데이터 전송 중 오류가 발생했습니다.');
