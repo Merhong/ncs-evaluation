@@ -63,9 +63,15 @@
 							</table>
 						</div>
 						<div class="d-flex justify-content-center submit-item">
-							<button type="button" class="btn btn-primary" style="margin-right: 20px" onclick="openModal('courseModal')">과정 수정</button>
-							<button type="button" class="btn btn-warning" style="color: white; margin-right: 20px" th:onclick="'location.href=\'/courses/'+${id}+'/students\''">학생 목록</button>
-							<button type="button" class="btn btn-danger" style="color: white" id="deleteCourseBtn">과정 삭제</button>
+							<button type="button" class="btn btn-primary" style="margin-right: 20px"
+							        onclick="openModal('courseModal')">과정 수정
+							</button>
+							<button type="button" class="btn btn-danger" style="color: white; margin-right: 20px"
+							        id="deleteCourseBtn">과정 삭제
+							</button>
+							<button type="button" class="btn btn-warning" style="color: white"
+							        th:onclick="'location.href=\'/courses/'+${id}+'/students\''">학생 목록
+							</button>
 						</div>
 
 					</form>
