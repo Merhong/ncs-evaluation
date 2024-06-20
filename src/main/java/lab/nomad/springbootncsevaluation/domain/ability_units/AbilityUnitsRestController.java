@@ -21,7 +21,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,6 +72,13 @@ public class AbilityUnitsRestController {
         return ResponseEntity.ok(APIUtils.success(responseDTO));
     }
 
+    @GetMapping("/check-code")
+    public ResponseEntity<Map<String, Boolean>> checkCodeUnique(@RequestParam("code") String code) {
+        boolean isUnique = abilityUnitsService.isCodeUnique(code);
+        Map<String, Boolean> responseDTO = new HashMap<>();
+        responseDTO.put("isUnique", isUnique);
+        return ResponseEntity.ok(responseDTO);
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid AbilityUnitSaveRequestDTO requestDTO,

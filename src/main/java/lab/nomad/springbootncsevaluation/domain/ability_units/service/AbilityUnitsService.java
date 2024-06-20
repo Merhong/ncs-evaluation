@@ -29,6 +29,10 @@ public class AbilityUnitsService {
     private final AbilityUnitElementsRepository abilityUnitElementsRepository;
     private final AbilityUnitElementItemsRepository abilityUnitElementItemsRepository;
 
+    public boolean isCodeUnique(String code) {
+        return !abilityUnitsRepository.existsByCode(code);
+    }
+
     @Transactional
     public AbilityUnitSaveResponseDTO save(AbilityUnitSaveRequestDTO requestDTO) {
 

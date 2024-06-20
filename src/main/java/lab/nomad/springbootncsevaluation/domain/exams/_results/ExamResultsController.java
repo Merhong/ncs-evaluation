@@ -9,20 +9,27 @@ import lab.nomad.springbootncsevaluation.domain.exams._results._multiple_items.s
 import lab.nomad.springbootncsevaluation.domain.exams._results.service.ExamResultsService;
 import lab.nomad.springbootncsevaluation.model.courses.Courses;
 import lab.nomad.springbootncsevaluation.model.courses.CoursesRepository;
+import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestionsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswers;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswersRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/exam-results")
@@ -33,12 +40,15 @@ public class ExamResultsController {
     private final ExamResultsService examResultsService;
     private final ExamResultMultipleItemsService itemsService;
     private final AbilityUnitsService abilityUnitsService;
-
+    private final ExamsRepository examsRepository;
+    private final ExamPaperMultipleQuestionsRepository examPaperMultipleQuestionsRepository;
+    private final ExamPaperMultipleQuestionAnswersRepository examPaperMultipleQuestionAnswersRepository;
 
     // 시험지를 평가한 페이지 (시험지 - 평가지)
     @GetMapping("/paper/{id}")
-    public String evalForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails, @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
-            @PathVariable Long id)  {
+    public String evalForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
+            @PathVariable Long id) {
 
         // 사용자가 인증되지 않은 경우 처리
         if (customUserDetails == null) {
@@ -51,7 +61,36 @@ public class ExamResultsController {
         ExamResultMultipleItemsPageResponseDTO responseDTO = itemsService.page(id, pageable, searchValue,
                 customUserDetails.user());
         // AbilityUnit 조회
-        AbilityUnitOneResponseDTO abilityUnitOneResponseDTO = abilityUnitsService.one(responseDTO.getItems().get(0).getExamResultDTO().getExamsDTO().getExamPapersDTO().getAbilityUnitDTO().getId());
+        AbilityUnitOneResponseDTO abilityUnitOneResponseDTO = abilityUnitsService.one(responseDTO.getItems()
+                .get(0)
+                .getExamResultDTO()
+                .getExamsDTO()
+                .getExamPapersDTO()
+                .getAbilityUnitDTO()
+                .getId());
+
+        // ExamPaperMultipleQuestions 가져오기
+        List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(
+                responseDTO.getItems()
+                        .get(0)
+                        .getExamResultDTO()
+                        .getExamsDTO()
+                        .getExamPapersDTO()
+                        .getId());
+        List<ExamPaperMultipleQuestionAnswers> answers = examPaperMultipleQuestionAnswersRepository.findByExamPaperMultipleQuestionIdIn(
+                questions.stream()
+                        .map(ExamPaperMultipleQuestions::getId)
+                        .collect(Collectors.toList()));
+
+        // 선택된 답안 정보를 저장하는 Map 생성
+        Map<Long, Long> checkedAnswers = responseDTO.getItems().stream()
+                .flatMap(item -> item.getQuestionDTO().stream()
+                        .flatMap(question -> item.getAnswerDTO().stream()
+                                .map(answer -> Map.entry(question.getId(), answer.getId()))
+                        )
+                )
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
 
         // 모델에 필요한 데이터 추가
         model.addAttribute("ItemsPage", responseDTO);
@@ -59,6 +98,9 @@ public class ExamResultsController {
         model.addAttribute("pageable", responseDTO.getPageable());
         model.addAttribute("AbilityUnit", abilityUnitOneResponseDTO.getAbilityUnit());
         model.addAttribute("AbilityUnitElementList", abilityUnitOneResponseDTO.getAbilityUnit());
+        model.addAttribute("questions", questions);
+        model.addAttribute("answers", answers);
+        model.addAttribute("checkedAnswers", checkedAnswers);
 
         return "/exams/_results/evalForm";
     }
@@ -85,7 +127,8 @@ public class ExamResultsController {
 
         // 각 시험 문제에 대한 모든 답변을 초기화
         for (ExamResultMultipleItems item : examResults.getExamResultItems()) {
-            Hibernate.initialize(item.getExamPaperQuestion().getAnswers());
+            Hibernate.initialize(item.getExamPaperQuestion()
+                    .getAnswers());
         }
 
         // 모델에 시험 결과 데이터 추가
