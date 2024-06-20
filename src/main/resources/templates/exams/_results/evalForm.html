@@ -104,88 +104,97 @@
 					<table class="table table-bordered full-width-table">
 						<thead>
 							<tr>
-								<th>문제 + 답안</th>
+								<th>번호</th>
+								<th>질문</th>
+								<th>답변</th>
 							</tr>
 						</thead>
 						<tbody>
-							<!-- 데이터 출력 부분 -->
-							<th:block th:object="${AbilityUnit}">
-								<tr>
-									<td class="td-left" th:text="*{purpose}"></td>
-								</tr>
-							</th:block>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-
-
-		<!-- 능력 단위 요소 테이블 -->
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<table class="table table-bordered full-width-table">
-						<thead>
-							<tr>
-								<th>능력 단위 요소 번호</th>
-								<th>능력 단위 요소</th>
-								<th class="centered">수행 준거</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- 데이터 출력 부분 -->
-							<th:block th:each="element : ${AbilityUnit.abilityUnitElementList}">
-								<tr>
-									<td th:text="${element.code}"></td>
-									<td th:text="${element.name}"></td>
-									<td class="value td-left">
-										<div th:each="item : ${element.abilityUnitElementItemList}">
-											<p th:text="${item.content}"></p>
+							<tr th:each="question : ${questions}">
+								<td th:text="${question.no}"></td>
+								<td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'"></td>
+								<td>
+									<div class="answers-container">
+										<div th:each="answer : ${answers}" th:if="${answer.examPaperMultipleQuestion.id == question.id}">
+											<input type="radio" th:id="'option' + ${answer.id}"
+											       th:name="'question_' + ${question.id}" th:value="${answer.id}"
+											       th:checked="${checkedAnswers[question.id] == answer.id}">
+											<label th:for="'option' + ${answer.id}" th:text="${answer.content}"></label>
 										</div>
-									</td>
-								</tr>
-							</th:block>
-						</tbody>
+										</div>
+								</td>
+							</tr>
 					</table>
 				</div>
 			</div>
-		</div>
+			<div>
 
-		<!-- 총평 테이블 -->
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<table class="table table-bordered full-width-table">
-						<thead>
-							<tr>
-								<th class="centered" rowspan="2">성취기준</th>
-								<th colspan="6">점수 구간</th>
-							</tr>
-							<tr>
-								<th>90~100</th>
-								<th>80~89</th>
-								<th>70~79</th>
-								<th>69~60</th>
-								<th>60미만</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td style="background-color: #f3f3f3; font-weight: bold">성취수준 환산</td>
-								<td>5</td>
-								<td>4</td>
-								<td>3</td>
-								<td>2</td>
-								<td>1</td>
-							</tr>
-						</tbody>
-					</table>
+				<!-- 능력 단위 요소 테이블 -->
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<table class="table table-bordered full-width-table">
+								<thead>
+									<tr>
+										<th>능력 단위 요소 번호</th>
+										<th>능력 단위 요소</th>
+										<th class="centered">수행 준거</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- 데이터 출력 부분 -->
+									<th:block th:each="element : ${AbilityUnit.abilityUnitElementList}">
+										<tr>
+											<td th:text="${element.code}"></td>
+											<td th:text="${element.name}"></td>
+											<td class="value td-left">
+												<div th:each="item : ${element.abilityUnitElementItemList}">
+													<p th:text="${item.content}"></p>
+												</div>
+											</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<!-- 총평 테이블 -->
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<table class="table table-bordered full-width-table">
+								<thead>
+									<tr>
+										<th class="centered" rowspan="2">성취기준</th>
+										<th colspan="6">점수 구간</th>
+									</tr>
+									<tr>
+										<th>90~100</th>
+										<th>80~89</th>
+										<th>70~79</th>
+										<th>69~60</th>
+										<th>60미만</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td style="background-color: #f3f3f3; font-weight: bold">성취수준 환산</td>
+										<td>5</td>
+										<td>4</td>
+										<td>3</td>
+										<td>2</td>
+										<td>1</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-
 	</main>
+
 </body>
 </html>
