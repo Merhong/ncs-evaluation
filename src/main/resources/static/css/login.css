@@ -89,3 +89,10 @@
 .login-input:focus {
     outline: none;
 }
+
+/* 버튼들을 정렬하기 위한 클래스 추가 */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+}
