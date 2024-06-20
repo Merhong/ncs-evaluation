@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.Meta;
 
 public interface AbilityUnitsRepository extends JpaRepository<AbilityUnits, Long> {
 
+    boolean existsByCode(String code);
+
     Page<AbilityUnits> findAllByNameContains(Pageable pageable, String name);
 }

@@ -41,6 +41,7 @@ public class AbilityUnits {
      * <p>능력단위코드를 저장합니다.</p>
      * <p>해당 필드의 타입은 {@link String} 타입입니다.</p>
      */
+    @Column(unique = true, nullable = false)
     private String code;
 
     /**
