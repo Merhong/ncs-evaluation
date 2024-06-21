@@ -250,10 +250,10 @@ INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exam
 VALUES (2, 3, 11, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (2, 3, 16, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
+VALUES (2, 4, 16, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (2, 3, 21, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
+VALUES (2, 5, 21, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 -- 학생 3의 국어 시험 채점
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
@@ -266,7 +266,7 @@ INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exam
 VALUES (3, 3, 11, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (3, 3, 16, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
+VALUES (3, 4, 16, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
 INSERT INTO exam_result_multiple_items(examresult_id, exampaperquestion_id, exampapermultiplequestionanswers_id, point,
                                        comment, createdate, updatedate)
-VALUES (3, 3, 21, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
+VALUES (3, 5, 21, 20, '설계된 화면과 폼의 흐름을 확인하고... 확인할 수 있다.', now(), now());
