@@ -6,8 +6,8 @@
 	<title>평가지 등록</title>
 </head>
 <body>
-	<!-- ExamPapers(평가지) 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: examPaperHeader}"></th:block>
+	<!-- 사이드바 헤더 불러오기 -->
+	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 
 	<main>
 		<div class="title-container">
@@ -79,39 +79,41 @@
 						</div>
 
 						<!-- EPMQ -->
-						<div id="EPMQContainer" style="justify-content: center">
-							<div class="title-item3">
-								<h3>선다형 시험지 문제</h3>
+						<div class="container">
+							<div id="EPMQContainer" style="justify-content: center">
+								<div class="title-item3">
+									<h3 class="title">선다형 시험지 문제</h3>
+								</div>
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>번호</th>
+											<th>평가 항목</th>
+											<th>점수 배점</th>
+											<th>평가 내용</th>
+											<th>정답</th>
+											<th>오답 1</th>
+											<th>오답 2</th>
+											<th>오답 3</th>
+											<th>오답 4</th>
+										</tr>
+									</thead>
+									<tbody id="questionsContainer">
+										<tr>
+											<td>1</td>
+											<td><input type="text" class="question-content" required></td>
+											<td><input type="number" class="question-point" required></td>
+											<td><input type="text" class="question-comment" required></td>
+											<td><input type="text" class="answer-content correct-answer" required></td>
+											<td><input type="text" class="answer-content" required></td>
+											<td><input type="text" class="answer-content" required></td>
+											<td><input type="text" class="answer-content" required></td>
+											<td><input type="text" class="answer-content" required></td>
+										</tr>
+									</tbody>
+								</table>
+								<button type="button" class="nav-btn" onclick="addQuestion()">문제 추가</button>
 							</div>
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>번호</th>
-										<th>평가 항목</th>
-										<th>점수 배점</th>
-										<th>평가 내용</th>
-										<th>정답</th>
-										<th>오답 1</th>
-										<th>오답 2</th>
-										<th>오답 3</th>
-										<th>오답 4</th>
-									</tr>
-								</thead>
-								<tbody id="questionsContainer">
-									<tr>
-										<td>1</td>
-										<td><input type="text" class="question-content" required></td>
-										<td><input type="number" class="question-point" required></td>
-										<td><input type="text" class="question-comment" required></td>
-										<td><input type="text" class="answer-content correct-answer" required></td>
-										<td><input type="text" class="answer-content" required></td>
-										<td><input type="text" class="answer-content" required></td>
-										<td><input type="text" class="answer-content" required></td>
-										<td><input type="text" class="answer-content" required></td>
-									</tr>
-								</tbody>
-							</table>
-							<button type="button" onclick="addQuestion()">문제 추가</button>
 						</div>
 
 						<div class="title-item3">

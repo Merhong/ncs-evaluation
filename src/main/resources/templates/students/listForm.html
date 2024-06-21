@@ -15,7 +15,7 @@
 		<div class="title-item1">
 			<h1>
 				<th:block th:if="${not #lists.isEmpty(studentsPage.student)}" th:text="${studentsPage.student.get(0).getCoursesDTO().name}"></th:block>
-				<th:block th:if="${#lists.isEmpty(studentsPage.student)}">No Course</th:block>
+				<th:block th:if="${#lists.isEmpty(studentsPage.student)}" th:text="${courseName}"></th:block>
 			</h1>
 		</div>
 		<div class="title-item3">

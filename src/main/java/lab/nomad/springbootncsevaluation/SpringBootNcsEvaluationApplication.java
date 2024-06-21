@@ -65,4 +65,48 @@ public class SpringBootNcsEvaluationApplication {
 
         }); // return
     }
+
+    @Bean
+    @Profile("prod")
+    public CommandLineRunner initProd(DataSource dataSource, InitData initData) {
+
+        return (args -> {
+
+            // User 데이터 생성
+            initData.initUser();
+
+            // 능력 단위(AbilityUnit) 데이터 생성
+            initData.initAbilityUnit();
+
+            initData.initAbilityUnitElement();
+
+            initData.initAbilityUnitElementItem();
+
+            // Course 데이터 생성
+            initData.initCourse();
+
+            // Student 데이터 생성
+            initData.initStudent();
+
+            // // 선다형 시험지(ExamPapers) 데이터 생성
+            // initData.initExamPaper();
+
+            // // 시험지 문제(ExamPaperMultipleQuestions) 데이터 생성
+            // initData.initExamPaperMultipleQuestion();
+
+            // // 시험지 문제 답안(ExamPaperMultipleQuestionAnswers) 데이터 생성
+            // initData.initExamPaperMultipleQuestionAnswer();
+
+
+            // 원래 실행 순서 : data.sql -> CommandLineRunner 순으로 데이터 초기화
+            // CommandLineRunner -> data.sql 순서로 데이터 초기화 시키기 위한 코드
+            Resource resource = new ClassPathResource("db/data.sql");
+            try {
+                ScriptUtils.executeSqlScript(dataSource.getConnection(), resource);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }); // return
+    }
 }

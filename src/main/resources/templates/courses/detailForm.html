@@ -24,13 +24,15 @@
 					      method="post">
 						<input type="hidden" name="id" th:value="${CoursesOneResponseDTO?.course?.id}">
 						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>과정명</th>
+									<th>학원명</th>
+								</tr>
+							</thead>
 							<tbody>
 								<tr>
-									<td>과정명</td>
 									<td id="courseNameDetail" th:text="*{course?.name}">과정명</td>
-								</tr>
-								<tr>
-									<td>학원명</td>
 									<td id="academyNameDetail" th:text="*{course?.academyName}">학원명</td>
 								</tr>
 							</tbody>
@@ -69,7 +71,7 @@
 							<button type="button" class="btn btn-danger" style="color: white; margin-right: 20px"
 							        id="deleteCourseBtn">과정 삭제
 							</button>
-							<button type="button" class="btn btn-warning" style="color: white"
+							<button type="button" class="btn btn-warning" style="color: white; margin-right: 20px"
 							        th:onclick="'location.href=\'/courses/'+${id}+'/students\''">학생 목록
 							</button>
 							<button type="button" class="btn btn-warning" style="color: white" th:onclick="'location.href=\'/exam-results/listForm/'+${id}+'\''">평가결과
