@@ -49,24 +49,30 @@ public class CoursesController {
     /* 과정 학생 목록 페이지 */
     @GetMapping("/{courseId}/students")
     public String listForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
-            @PathVariable Long courseId) {
+                           @PageableDefault(size = 5) Pageable pageable, @RequestParam(required = false) String searchValue,
+                           @PathVariable Long courseId) {
 
-        // 사용자가 인증되지 않은 경우 처리
-        if (customUserDetails == null) {
-            System.out.println("사용자가 인증되지 않았습니다.");
-            return "redirect:/login";
+        try {
+            // 사용자가 인증되지 않은 경우 처리
+            if (customUserDetails == null) {
+                System.out.println("사용자가 인증되지 않았습니다.");
+                return "redirect:/login";
+            }
+
+            // 서비스 호출
+            StudentsPageResponseDTO responseDTO = studentsService.page(courseId, pageable, searchValue, customUserDetails.user());
+
+            // 모델에 필요한 데이터 추가
+            model.addAttribute("studentsPage", responseDTO);
+            model.addAttribute("pageable", responseDTO.getPageable());
+
+            return "students/listForm";
+        } catch (Exception e) {
+            // 예외 발생 시 로그 출력
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "학생 목록을 불러오는 중 오류가 발생했습니다.");
+            return "error";
         }
-
-        // 서비스 호출
-        StudentsPageResponseDTO responseDTO = studentsService.page(courseId, pageable, searchValue,
-                customUserDetails.user());
-
-        // 모델에 필요한 데이터 추가
-        model.addAttribute("studentsPage", responseDTO);
-        model.addAttribute("pageable", responseDTO.getPageable());
-
-        return "students/listForm";
     }
 
     /* 과정 학생 상세보기 페이지 */

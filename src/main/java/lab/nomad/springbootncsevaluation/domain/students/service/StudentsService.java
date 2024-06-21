@@ -99,16 +99,14 @@ public class StudentsService {
 
         // 검색어가 있는 경우
         if (searchValue != null && !searchValue.isEmpty()) {
-            pageStudents = studentsRepository.findByNameContainsAndCourseIdAndDeleteDateIsNull(searchValue, courseId,
-                    pageable);
-        } else { // 검색어가 없는 경우,전체조회
+            pageStudents = studentsRepository.findByNameContainsAndCourseIdAndDeleteDateIsNull(searchValue, courseId, pageable);
+        } else { // 검색어가 없는 경우, 전체 조회
             pageStudents = studentsRepository.findByCourseIdAndDeleteDateIsNull(courseId, pageable);
         }
 
         // StudentsPageResponseDTO 페이지로 변환하여 반환
         return new StudentsPageResponseDTO(pageStudents);
     }
-
     // 학생수정
     @Transactional
     public StudentsUpdateResponseDTO update(Long courseId, Long id, Users user, StudentsSaveRequestDTO requestDTO) {
