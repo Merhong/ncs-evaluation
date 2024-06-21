@@ -45,12 +45,12 @@
 							<td th:text="${student.id}"></td>
 							<td th:text="${student.name}"></td>
 							<td th:text="${student.tel}"></td>
-							<td th:text="${student.status}"></td>
+							<td th:text="${student.status.value}"></td>
 						</tr>
 					</th:block>
 					<th:block th:if="${#lists.isEmpty(studentsPage.student)}">
 						<tr>
-							<td colspan="4">No students found.</td>
+							<td colspan="4">학생을 등록 해주세요.</td>
 						</tr>
 					</th:block>
 					</tbody>
