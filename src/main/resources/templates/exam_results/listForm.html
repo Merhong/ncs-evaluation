@@ -74,6 +74,8 @@
                         <th>평가 점수</th>
                         <th>상태</th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -88,6 +90,18 @@
                             <button class="btn btn-primary"
                                     th:onclick="|location.href='/exam-results/oneForm/' + ${result.id} + ''|">
                                 상세보기
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning"
+                                    th:onclick="|location.href='/exam-results/item/' + ${result.id} + ''|">
+                                채점지
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success"
+                                    th:onclick="|location.href='/exam-results/paper/' + ${result.id} + ''|">
+                                평가지
                             </button>
                         </td>
                     </tr>

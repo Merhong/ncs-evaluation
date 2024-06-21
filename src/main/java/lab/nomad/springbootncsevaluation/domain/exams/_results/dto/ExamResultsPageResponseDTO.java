@@ -2,17 +2,18 @@ package lab.nomad.springbootncsevaluation.domain.exams._results.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
-public class ExamResultsPageRequestDTO {
+public class ExamResultsPageResponseDTO {
     private Long id;
     private String studentName;
     private String tel;
-    private int grade;
-    private int totalPoint;
+    private Integer grade;
+    private Integer totalPoint;
     private String status;
     private String color;
-    private Long itemId;
-    private Long paperId;
+
 }
