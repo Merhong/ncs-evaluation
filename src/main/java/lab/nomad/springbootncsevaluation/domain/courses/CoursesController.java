@@ -61,10 +61,12 @@ public class CoursesController {
 
             // 서비스 호출
             StudentsPageResponseDTO responseDTO = studentsService.page(courseId, pageable, searchValue, customUserDetails.user());
+            CoursesOneResponseDTO coursesOneResponseDTO = coursesService.one(courseId, customUserDetails.user());
 
             // 모델에 필요한 데이터 추가
             model.addAttribute("studentsPage", responseDTO);
             model.addAttribute("pageable", responseDTO.getPageable());
+            model.addAttribute("courseName",coursesOneResponseDTO.getCourse().getName());
 
             return "students/listForm";
         } catch (Exception e) {
