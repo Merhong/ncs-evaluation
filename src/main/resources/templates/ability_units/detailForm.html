@@ -26,71 +26,84 @@
 			<div class="row">
 				<div class="col">
 					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>능력 단위 코드</th>
+								<th>능력 단위 명</th>
+								<th>능력 단위 수준</th>
+								<th>훈련 시간</th>
+								<th>시험 종류</th>
+							</tr>
+						</thead>
 						<tbody>
 							<tr>
-								<td class="label">능력 단위 코드</td>
-								<td class="value" th:text="${AbilityUnit.code}"></td>
-							</tr>
-							<tr>
-								<td class="label">능력 단위명</td>
-								<td class="value" th:text="${AbilityUnit.name}"></td>
-							</tr>
-							<tr>
-								<td class="label">능력 단위 수준</td>
-								<td class="value" th:text="${AbilityUnit.grade}"></td>
-							</tr>
-							<tr>
-								<td class="label">훈련 시간</td>
-								<td class="value" th:text="${AbilityUnit.totalTime}"></td>
-							</tr>
-							<tr>
-								<td class="label">능력 단위 정의</td>
-								<td class="value td-left" th:text="${AbilityUnit.purpose}"></td>
-							</tr>
-							<tr>
-								<td class="label">시험 종류</td>
+								<td class="value" th:text="${AbilityUnit.code}">능력 단위 코드</td>
+								<td class="value" th:text="${AbilityUnit.name}">능력 단위 명</td>
+								<td class="value" th:text="${AbilityUnit.grade}">능력 단위 수준</td>
+								<td class="value" th:text="${AbilityUnit.totalTime}">훈련 시간</td>
 								<td class="value">
-                                    <span th:each="examType, examTypeStat : ${AbilityUnit.examTypeList}"
-                                          th:text="${examType} + ${examTypeStat.last ? '' : ', '}"></span>
+									<span th:each="examType, examTypeStat : ${AbilityUnit.examTypeList}">
+										<span th:if="${examType == 'MULTIPLE_CHOICE'}" th:text="'선다형'"></span>
+										<span th:if="${examType == 'TASK'}" th:text="'포트폴리오형'"></span>
+										<span th:if="${!examTypeStat.last}">,</span>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+
+						<thead>
+							<tr>
+								<th colspan="5">능력 단위 정의</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="5" class="value td-left" th:text="${AbilityUnit.purpose}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<br>
+
+		<div class="title-container">
+			<div class="title-item4">
+				<h3>능력 단위 요소</h3>
+			</div>
+			<div class="title-item5">
+				<button type="button" class="btn btn-warning" style="color: white" onclick="openModal('elementModal')">요소 수정</button>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered" id="elementsList">
+						<thead>
+							<tr>
+								<th>능력 단위 요소 번호</th>
+								<th>능력 단위 요소</th>
+								<th>수행 준거</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="element : ${AbilityUnitElementList}">
+								<td class="label2" th:text="${element.code}"></td>
+								<td class="label2" th:text="${element.name}"></td>
+								<td class="value td-left">
+									<ul>
+										<li th:each="item : ${element.abilityUnitElementItemList}" th:text="${item.content}"></li>
+									</ul>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-
-			<br>
-
-			<div class="title-container">
-				<div class="title-item4">
-					<h3>능력 단위 요소</h3>
-				</div>
-				<div class="title-item5">
-					<button type="button" class="btn btn-warning" style="color: white" onclick="openModal('elementModal')">요소 수정</button>
-				</div>
-			</div>
-
-			<table class="table table-bordered" id="elementsList">
-				<thead>
-					<tr>
-						<th>능력 단위 요소 번호</th>
-						<th>능력 단위 요소</th>
-						<th>수행 준거</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="element : ${AbilityUnitElementList}">
-						<td class="label2" th:text="${element.code}"></td>
-						<td class="label2" th:text="${element.name}"></td>
-						<td class="value td-left">
-							<ul>
-								<li th:each="item : ${element.abilityUnitElementItemList}" th:text="${item.content}"></li>
-							</ul>
-						</td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
+
 	</main>
 
 	<!-- 능력 단위 수정 모달 -->
@@ -111,36 +124,28 @@
 						</tr>
 						<tr>
 							<td class="modal-label">능력 단위 수준</td>
-							<td><input type="number" id="grade" th:value="${AbilityUnit.grade}" name="grade" required
-							           min="0" step="1"></td>
+							<td><input type="number" id="grade" th:value="${AbilityUnit.grade}" name="grade" required min="0" step="1"></td>
 						</tr>
 						<tr>
 							<td class="modal-label">훈련 시간</td>
-							<td><input type="number" id="totalTime" th:value="${AbilityUnit.totalTime}" name="totalTime"
-							           required min="0" step="1"></td>
+							<td><input type="number" id="totalTime" th:value="${AbilityUnit.totalTime}" name="totalTime" required min="0" step="1"></td>
 						</tr>
 						<tr>
 							<td class="modal-label">능력 단위 정의</td>
-							<td><textarea id="purpose" name="purpose" required
-							              th:text="${AbilityUnit.purpose}"></textarea>
-							</td>
+							<td><textarea id="purpose" name="purpose" required th:text="${AbilityUnit.purpose}"></textarea></td>
 						</tr>
-
 						<tr>
 							<td class="modal-label">시험 종류</td>
 							<td>
-								<input type="checkbox" id="multipleChoiceCheckbox" name="examTypeList"
-								       value="MULTIPLE_CHOICE"
-								       th:checked="${#lists.contains(AbilityUnit.examTypeList, 'MULTIPLE_CHOICE')}">
+								<input type="checkbox" id="multipleChoiceCheckbox" name="examTypeList" value="MULTIPLE_CHOICE" th:checked="${#lists.contains(AbilityUnit.examTypeList, 'MULTIPLE_CHOICE')}">
 								<label for="multipleChoiceCheckbox">선다형 선택</label>
-								<input type="checkbox" id="taskCheckbox" name="examTypeList" value="TASK"
-								       th:checked="${#lists.contains(AbilityUnit.examTypeList, 'TASK')}">
-								<label for="taskCheckbox">주관식 선택</label>
+								<input type="checkbox" id="taskCheckbox" name="examTypeList" value="TASK" th:checked="${#lists.contains(AbilityUnit.examTypeList, 'TASK')}">
+								<label for="taskCheckbox">포트폴리오형 선택</label>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<div class="d-flex justify-content-center submit-item">
+				<div class="submit-item">
 					<button type="button" class="btn btn-primary" id="unitSubmitBtn">수정</button>
 				</div>
 			</form>
@@ -153,9 +158,7 @@
 			<span class="close" onclick="closeModal('elementModal')">&times;</span>
 			<h2>능력 단위 요소 수정</h2>
 			<div id="elementFormContainer" th:each="element, elementStat : ${AbilityUnitElementList}">
-				<form id="elementForm"
-				      th:action="@{/api/v1/ability-units/{unitId}/elements/{elementId}(unitId=${AbilityUnit?.id}, elementId=${element.id})}"
-				      method="post">
+				<form id="elementForm" th:action="@{/api/v1/ability-units/{unitId}/elements/{elementId}(unitId=${AbilityUnit?.id}, elementId=${element.id})}" method="post">
 					<h3 th:text="'요소: ' + ${element.name}"></h3>
 					<table class="table table-bordered">
 						<tbody>
@@ -170,16 +173,14 @@
 							<tr>
 								<td class="modal-label">수행 준거</td>
 								<td>
-                                    <textarea name="itemContents" required th:attr="data-element-id=${element.id}"><th:block th:each="item, itemStat :${element.abilityUnitElementItemList}" th:inline="text">[[${itemStat.index > 0 ? '
+									<textarea name="itemContents" required th:attr="data-element-id=${element.id}"><th:block th:each="item, itemStat :${element.abilityUnitElementItemList}" th:inline="text">[[${itemStat.index > 0 ? '
 ' : ''}]] [[${item.content}]]</th:block></textarea>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<div class="d-flex justify-content-center submit-item">
-						<button type="button" class="btn btn-primary elementSubmitBtn"
-						        th:attr="data-element-id=${element.id}">수정
-						</button>
+					<div class="submit-item">
+						<button type="button" class="btn btn-primary elementSubmitBtn" th:attr="data-element-id=${element.id}">수정</button>
 					</div>
 				</form>
 			</div>
