@@ -74,6 +74,8 @@
                         <th>평가 점수</th>
                         <th>상태</th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -90,6 +92,18 @@
                                 상세보기
                             </button>
                         </td>
+                        <td>
+                            <button class="btn btn-warning"
+                                    th:onclick="|location.href='/exam-results/item/' + ${result.id} + ''|">
+                                채점지
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success"
+                                    th:onclick="|location.href='/exam-results/paper/' + ${result.id} + ''|">
+                                평가지
+                            </button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -101,11 +115,7 @@
     </div>
 
     <div class="title-item2">
-        <form id="saveForm"  method="POST">
-            <button type="submit" class="btn btn-primary">
-                전체인쇄
-            </button>
-        </form>
+
     </div>
 </main>
 

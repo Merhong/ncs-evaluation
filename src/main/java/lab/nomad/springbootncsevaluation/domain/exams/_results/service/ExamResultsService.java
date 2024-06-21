@@ -121,6 +121,11 @@ public class ExamResultsService {
         String color = examResult.getStatus() == ExamResultStatus.WAIT ? "orange" : "green";
         int grade = calculateGrade(examResult.getTotalPoint());
 
+        // itemId와 paperId를 가져오기 위한 로직
+        List<ExamResultMultipleItems> resultItems = examResultMultipleItemsRepository.findByExamResultId(examResult.getId());
+        Long itemId = resultItems.isEmpty() ? null : resultItems.get(0).getId();  // 예시로 첫 번째 항목의 ID를 사용
+        Long paperId = examResult.getExam().getExamPaper().getId();
+
         return ExamResultsPageRequestDTO.builder()
                 .id(examResult.getId())
                 .studentName(examResult.getExam().getStudent().getName())
