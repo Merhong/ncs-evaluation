@@ -79,16 +79,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="item : ${examResults.examResultItems}">
-                        <td th:text="${item.examPaperQuestion.no}"></td>
-                        <td th:text="${item.examPaperQuestion.content} + ' (배점 ' + ${item.examPaperQuestion.point} + '점)'" class="question-point"></td>
+                    <tr th:each="item, iterStat : ${examResultItems}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${item.examPaperQuestion.content} + ' (배점 ' + ${item.point} + '점)'" class="question-point"></td>
                         <td>
                             <ul>
-                                <li th:each="answer : ${item.examPaperQuestion.answers}">
+                                <li th:each="answer : ${answers}" th:if= " ${answer.examPaperMultipleQuestion.id==item.id}">
                                     <input type="radio"
+
                                            th:attr="name=${item.examPaperQuestion.id}"
-                                           th:checked="${answer.id == item.examPaperMultipleQuestionAnswers.id}">
-                                    <label th:text="${answer.content}"></label>
+                                           th:checked="${answer.id == item.examPaperMultipleQuestionAnswers.id}"/>
+                                    <label
+                                            th:text="${answer.content}"></label>
+
                                 </li>
                             </ul>
                         </td>

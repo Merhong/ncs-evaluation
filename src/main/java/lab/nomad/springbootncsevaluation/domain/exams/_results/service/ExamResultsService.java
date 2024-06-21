@@ -1,5 +1,7 @@
 package lab.nomad.springbootncsevaluation.domain.exams._results.service;
 
+import lab.nomad.springbootncsevaluation._core.exception.Exception400;
+import lab.nomad.springbootncsevaluation._core.exception.ExceptionMessage;
 import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsPageRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsSaveRequestDTO;
 import lab.nomad.springbootncsevaluation.domain.exams._results.dto.ExamResultsSaveResponseDTO;
@@ -8,6 +10,7 @@ import lab.nomad.springbootncsevaluation.model.exams.Exams;
 import lab.nomad.springbootncsevaluation.model.exams.ExamsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestions;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.ExamPaperMultipleQuestionsRepository;
+import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswers;
 import lab.nomad.springbootncsevaluation.model.exams.papers.multiple_questions.answers.ExamPaperMultipleQuestionAnswersRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
@@ -145,45 +148,33 @@ public class ExamResultsService {
         return 1;
     }
 
-    // 시험 결과 ID를 통해 데이터를 가져오는 메서드
+    // 시험 결과 ID를 통해 데이터를 가져오는 메서드 시험결과상세보기
     @Transactional
     public ExamResults getExamResultById(Long id) {
-        ExamResults examResults = examResultsRepository.findById(id).orElse(null);
-        if (examResults != null) {
-            Hibernate.initialize(examResults.getExam());
-            Hibernate.initialize(examResults.getExam().getExamPaper());
+        return examResultsRepository.findById(id)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_EXAM_PAPER.getMessage()));
+    }
 
-            if (examResults.getExam().getStudent() != null) {
-                Hibernate.initialize(examResults.getExam().getStudent());
-                if (examResults.getExam().getStudent().getCourse() != null) {
-                    Hibernate.initialize(examResults.getExam().getStudent().getCourse());
-                }
-            }
+   // public List<ExamResultMultipleItems> getExamResultItemsByExamResultId(Long examResultId) {
+       // return examResultMultipleItemsRepository.findByExamResultId(examResultId);
+   // }
 
-            if (examResults.getExam().getExamPaper().getAbilityUnit() != null) {
-                Hibernate.initialize(examResults.getExam().getExamPaper().getAbilityUnit());
-            }
+    public List<ExamPaperMultipleQuestions> getQuestionsByExamPaperId(Long examPaperId) {
+        return examPaperMultipleQuestionsRepository.findByExamPaperId(examPaperId);
+    }
 
-            List<ExamPaperMultipleQuestions> multipleQuestions = examPaperMultipleQuestionsRepository.findByExamPaperId(examResults.getExam().getExamPaper().getId());
-            multipleQuestions.forEach(question -> {
-                Hibernate.initialize(question);
-                // 추가된 부분: 각 질문에 대한 답변을 초기화합니다.
-                Hibernate.initialize(question.getAnswers());
-            });
+    public List<ExamPaperMultipleQuestionAnswers> getAnswersByQuestionIds(List<Long> questionIds) {
+        return examPaperMultipleQuestionAnswersRepository.findByExamPaperMultipleQuestionIdIn(questionIds);
+    }
 
-            List<ExamResultMultipleItems> examResultItems = examResultMultipleItemsRepository.findByExamResultId(examResults.getId());
-            examResultItems.forEach(item -> {
-                Hibernate.initialize(item.getExamPaperQuestion());
-                Hibernate.initialize(item.getExamPaperMultipleQuestionAnswers());
-            });
-
-            examResults.setExamResultItems(examResultItems);
-        }
-        return examResults;
+    public List<ExamPaperMultipleQuestionAnswers> getAnswersByExamPaperId(Long examPaperId) {
+        List<ExamPaperMultipleQuestions> questions = getQuestionsByExamPaperId(examPaperId);
+        List<Long> questionIds = questions.stream().map(ExamPaperMultipleQuestions::getId).collect(Collectors.toList());
+        return getAnswersByQuestionIds(questionIds);
     }
 
     // 학생이 선택한 답변을 가져오는 메서드 추가
-    public List<ExamResultMultipleItems> getExamResultItemsByExamResultId(Long examResultId) {
-        return examResultsRepository.findItemsByExamResultId(examResultId);
+   public List<ExamResultMultipleItems> getExamResultItemsByExamResultId(Long examResultId) {
+       return examResultsRepository.findItemsByExamResultId(examResultId);
     }
 }

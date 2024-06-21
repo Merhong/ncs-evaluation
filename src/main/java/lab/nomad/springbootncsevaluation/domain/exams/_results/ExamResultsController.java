@@ -123,20 +123,23 @@ public class ExamResultsController {
     // 학생평가 상세보기 페이지
     @GetMapping("oneForm/{id}")
     public String one(@PathVariable Long id, Model model) {
+        // 서비스 메서드를 호출하여 ID로 ExamResults 객체를 가져옴
         ExamResults examResults = examResultsService.getExamResultById(id);
+        // 서비스 메서드를 호출하여 ID로 ExamResultItems 리스트를 가져옴
         List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
 
-        // 각 시험 문제에 대한 모든 답변을 초기화
-        for (ExamResultMultipleItems item : examResults.getExamResultItems()) {
-            Hibernate.initialize(item.getExamPaperQuestion()
-                    .getAnswers());
-        }
+        List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(examResults.getExam().getExamPaper().getId());
+        List<ExamPaperMultipleQuestionAnswers> answers = examPaperMultipleQuestionAnswersRepository.findByExamPaperMultipleQuestionIdIn(
+                questions.stream().map(ExamPaperMultipleQuestions::getId).collect(Collectors.toList())
+        );
+        // 각 ExamResultItems 객체의 ExamPaperQuestion의 답변들을 초기화
 
-        // 모델에 시험 결과 데이터 추가
-        model.addAttribute("examResults", examResults);
+            model.addAttribute("examResults", examResults);
+            model.addAttribute("questions", questions);
+            model.addAttribute("answers", answers);
         model.addAttribute("examResultItems", examResultItems);
 
-        return "/exam_results/oneForm";
+        return "/exam_results/oneForm";  // 뷰 이름 반환
     }
 
     // 총평 업데이트 페이지

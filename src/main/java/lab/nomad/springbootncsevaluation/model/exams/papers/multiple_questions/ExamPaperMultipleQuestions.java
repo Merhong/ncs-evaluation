@@ -83,8 +83,7 @@ public class ExamPaperMultipleQuestions {
      */
     @LastModifiedDate
     private LocalDateTime updateDate;
-    @OneToMany(mappedBy = "examPaperMultipleQuestion", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ExamPaperMultipleQuestionAnswers> answers;
+
 
 
     /**
@@ -93,7 +92,7 @@ public class ExamPaperMultipleQuestions {
      */
     @Builder
     public ExamPaperMultipleQuestions(Long id, Integer no, String content, Integer point, String comment,
-                                      ExamPapers examPaper, LocalDateTime createDate, LocalDateTime updateDate, List<ExamPaperMultipleQuestionAnswers> answers) {
+                                      ExamPapers examPaper, LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.no = no;
         this.content = content;
@@ -102,6 +101,9 @@ public class ExamPaperMultipleQuestions {
         this.examPaper = examPaper;
         this.createDate = createDate;
         this.updateDate = updateDate;
-        this.answers = answers;
+
     }
+
+    // setAnswers 메서드
+
 }
