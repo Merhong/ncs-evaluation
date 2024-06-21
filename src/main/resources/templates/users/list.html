@@ -29,7 +29,7 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th></th>
+                        <!-- <th></th> -->
                         <th>NO.</th>
                         <th>구분</th>
                         <th>이름</th>
@@ -41,9 +41,9 @@
                     <tbody>
                     <!-- 데이터를 동적으로 추가 -->
                     <tr th:each="user : ${users}">
-                        <td>
-                            <button class="btn btn-danger btn-sm" th:onclick="'deleteRow(this, \'' + ${user.id} + '\')'">-</button>
-                        </td>
+                        <!-- <td> -->
+                        <!--     <button class="btn btn-danger btn-sm" th:onclick="'deleteRow(this, \'' + ${user.id} + '\')'">-</button> -->
+                        <!-- </td> -->
                         <td th:text="${user.id}"></td>
                         <td th:text="${user.role.getText()}"></td>
                         <td><a th:href="@{/users/one/{id}(id=${user.id})}" th:text="${user.name}"></a></td>
