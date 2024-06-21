@@ -18,14 +18,12 @@ import lab.nomad.springbootncsevaluation.model.exams.results.ExamResults;
 import lab.nomad.springbootncsevaluation.model.exams.results.ExamResultsRepository;
 import lab.nomad.springbootncsevaluation.model.exams.results.multiple_items.ExamResultMultipleItems;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -82,15 +80,7 @@ public class ExamResultsController {
                 questions.stream()
                         .map(ExamPaperMultipleQuestions::getId)
                         .collect(Collectors.toList()));
-
-        // 선택된 답안 정보를 저장하는 Map 생성
-        Map<Long, Long> checkedAnswers = responseDTO.getItems().stream()
-                .flatMap(item -> item.getQuestionDTO().stream()
-                        .flatMap(question -> item.getAnswerDTO().stream()
-                                .map(answer -> Map.entry(question.getId(), answer.getId()))
-                        )
-                )
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
 
 
         // 모델에 필요한 데이터 추가
@@ -101,7 +91,7 @@ public class ExamResultsController {
         model.addAttribute("AbilityUnitElementList", abilityUnitOneResponseDTO.getAbilityUnit());
         model.addAttribute("questions", questions);
         model.addAttribute("answers", answers);
-        model.addAttribute("checkedAnswers", checkedAnswers);
+        model.addAttribute("examResultItems", examResultItems);
 
         return "/exams/_results/evalForm";
     }
@@ -128,15 +118,19 @@ public class ExamResultsController {
         // 서비스 메서드를 호출하여 ID로 ExamResultItems 리스트를 가져옴
         List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
 
-        List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(examResults.getExam().getExamPaper().getId());
+        List<ExamPaperMultipleQuestions> questions = examPaperMultipleQuestionsRepository.findByExamPaperId(
+                examResults.getExam()
+                        .getExamPaper()
+                        .getId());
         List<ExamPaperMultipleQuestionAnswers> answers = examPaperMultipleQuestionAnswersRepository.findByExamPaperMultipleQuestionIdIn(
-                questions.stream().map(ExamPaperMultipleQuestions::getId).collect(Collectors.toList())
-        );
+                questions.stream()
+                        .map(ExamPaperMultipleQuestions::getId)
+                        .collect(Collectors.toList()));
         // 각 ExamResultItems 객체의 ExamPaperQuestion의 답변들을 초기화
 
-            model.addAttribute("examResults", examResults);
-            model.addAttribute("questions", questions);
-            model.addAttribute("answers", answers);
+        model.addAttribute("examResults", examResults);
+        model.addAttribute("questions", questions);
+        model.addAttribute("answers", answers);
         model.addAttribute("examResultItems", examResultItems);
 
         return "/exam_results/oneForm";  // 뷰 이름 반환

@@ -101,7 +101,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col">
-					<table class="table table-bordered full-width-table">
+					<table class="table table-bordered custom-table">
 						<thead>
 							<tr>
 								<th>번호</th>
@@ -110,20 +110,23 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="question : ${questions}">
-								<td th:text="${question.no}"></td>
-								<td th:text="${question.content} + ' (배점 ' + ${question.point} + '점)'"></td>
+							<tr th:each="item, iterStat : ${examResultItems}">
+								<td th:text="${iterStat.index + 1}"></td>
+								<td th:text="${item.examPaperQuestion.content} + ' (배점 ' + ${item.point} + '점)'" class="question-point"></td>
 								<td>
-									<div class="answers-container">
-										<div th:each="answer : ${answers}" th:if="${answer.examPaperMultipleQuestion.id == question.id}">
-											<input type="radio" th:id="'option' + ${answer.id}"
-											       th:name="'question_' + ${question.id}" th:value="${answer.id}"
-											       th:checked="${checkedAnswers[question.id] == answer.id}">
-											<label th:for="'option' + ${answer.id}" th:text="${answer.content}"></label>
-										</div>
-										</div>
+									<ul>
+										<li th:each="answer : ${answers}" th:if= " ${answer.examPaperMultipleQuestion.id==item.id}">
+											<input type="radio"
+
+											       th:attr="name=${item.examPaperQuestion.id}"
+											       th:checked="${answer.id == item.examPaperMultipleQuestionAnswers.id}"/>
+											<label
+												th:text="${answer.content}"></label>
+										</li>
+									</ul>
 								</td>
 							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
