@@ -16,7 +16,9 @@
 				<h1>능력 단위 목록</h1>
 			</div>
 			<div class="title-item2">
-				<button type="button" class="btn btn-primary btn-sm" onclick="location.href='/ability-units/saveForm'">등록</button>
+				<button type="button" class="btn btn-primary btn-sm" onclick="location.href='/ability-units/saveForm'">
+					등록
+				</button>
 			</div>
 		</div>
 
@@ -32,6 +34,7 @@
 								<th>능력 단위 코드</th>
 								<th>능력 단위 수준</th>
 								<th>훈련시간</th>
+								<th></th> <!-- 버튼을 위한 헤더 추가 -->
 							</tr>
 						</thead>
 						<tbody>
@@ -40,12 +43,20 @@
 								안녕하세요 <span th:text="${username}"></span>님!
 							</div>
 							<th:block th:each="abilityUnit: ${abilityUnitPage.getAbilityUnit()}">
-								<tr th:onclick="'goToDetailPage(' + ${abilityUnit.id} + ')'">
+								<tr>
 									<td th:text="${abilityUnit.id}"></td>
-									<td th:text="${abilityUnit.name}"></td>
+									<td class="course-name" th:text="${abilityUnit.name}" th:onclick="'goToDetailPage(' + ${abilityUnit.id} + ')'"></td>
 									<td th:text="${abilityUnit.code}"></td>
 									<td th:text="${abilityUnit.grade}"></td>
 									<td th:text="${abilityUnit.totalTime}"></td>
+									<td>
+										<!-- 버튼 추가, th:onclick 이벤트가 영향을 미치지 않도록 이벤트 버블링 방지 -->
+										<button type="button" class="btn btn-sm btn-success"
+										        onclick="event.stopPropagation(); handleButtonClick(${abilityUnit.id});"
+										        th:onclick="'goToExamPaperSavePage(' + ${abilityUnit.id} + ')'">
+											평가지 등록
+										</button>
+									</td>
 								</tr>
 							</th:block>
 						</tbody>
@@ -53,6 +64,8 @@
 				</div>
 			</div>
 		</div>
+
+
 	</main>
 
 	<!-- 페이지네이션 -->
@@ -83,9 +96,16 @@
 	</div>
 
 	<script>
+
         function goToDetailPage(id) {
             location.href = '/ability-units/' + id;
         }
+
+        function goToExamPaperSavePage(id) {
+            location.href = '/ability-units/' + id + '/exam-paper/saveForm';
+        }
+
+
 	</script>
 
 </body>

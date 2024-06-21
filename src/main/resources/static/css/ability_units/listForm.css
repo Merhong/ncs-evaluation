@@ -64,11 +64,11 @@ td {
     text-align: center;
 }
 
-tr:hover {
+.course-name:hover {
     cursor: pointer;
 }
 
-tr:active {
+.course-name:active {
     font-size: 10px;
 }
 

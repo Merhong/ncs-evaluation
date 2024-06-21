@@ -1,4 +1,3 @@
-
 /*헤더*/
 .body {
     display: flex;
@@ -56,23 +55,27 @@
     justify-content: flex-start;
     flex-grow: 1;
 }
+
 .title-item3 {
     display: flex;
     justify-content: center;
     flex-grow: 1;
 }
 
-td,th {
+td, th {
     text-align: center;
 }
 
 th {
+    white-space: nowrap;
     background-color: lightgray !important;
 }
+
 td {
     font-size: 0.9em;
     font-weight: normal;
 }
+
 /* 첫 번째 열에 배경색을 주는 CSS */
 .table-bordered tbody tr td:first-child {
     background-color: lightgray;
@@ -84,21 +87,21 @@ input[type="email"],
 input[type="number"],
 select,
 textarea {
-    width: 80%;
-    padding: 5px;
+    width: 100%; /* 너비를 100%로 설정 */
+    padding: 10px; /* 패딩을 늘림 */
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
 }
+
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .table {
-    width: 700px; /* 테이블의 너비를 조정 */
+    width: 100%; /* 테이블의 너비를 100%로 설정 */
+    max-width: 1200px; /* 최대 너비를 1200px로 설정 */
     height: auto;
 }
-
