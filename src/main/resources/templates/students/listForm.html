@@ -3,7 +3,6 @@
 <head>
 	<!-- 사이드바 헤더 불러오기 -->
 	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
-
 	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
 
 	<link rel="stylesheet" type="text/css" href="/css/students/listForm.css"/>
@@ -11,86 +10,88 @@
 </head>
 
 <body>
-
-
-	<main>
-		<div class="title-container">
-			<div class="title-item1">
-				<h1>
-					<th:block th:text="${studentsPage.student.get(0).getCoursesDTO().name}"/>
-				</h1>
-			</div>
-			<div class="title-item3">
-				<button type="button" class="btn btn-primary btn-sm" id="registerButton" th:onclick="'location.href=\'/courses/' + ${courseId} + '/students/saveForm\''">
-					학생추가
-				</button>
-			</div>
-
+<main>
+	<div class="title-container">
+		<div class="title-item1">
+			<h1>
+				<th:block th:if="${not #lists.isEmpty(studentsPage.student)}" th:text="${studentsPage.student.get(0).getCoursesDTO().name}"></th:block>
+				<th:block th:if="${#lists.isEmpty(studentsPage.student)}">No Course</th:block>
+			</h1>
 		</div>
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>NO.</th>
-								<th>학생명</th>
-								<th>연락처</th>
-								<th>수강 상태</th>
-							</tr>
-						</thead>
-						<tbody>
-
-							<!-- 데이터 출력 부분 -->
-							<th:block th:each="student: ${studentsPage.student}">
-								<tr th:onclick="'goToDetailPage('+ ${student.coursesDTO.id}  +',' + ${student.id} + ')'">
-									<td th:text="${student.id}"></td>
-									<td th:text="${student.name}"></td>
-									<td th:text="${student.tel}"></td>
-									<td th:text="${student.status}"></td>
-								</tr>
-							</th:block>
-						</tbody>
-					</table>
-				</div>
-			</div>
+		<div class="title-item3">
+			<button type="button" class="btn btn-primary btn-sm" id="registerButton"
+					th:onclick="'location.href=\'/courses/' + ${courseId} + '/students/saveForm\''">
+				학생추가
+			</button>
 		</div>
+	</div>
 
-		<!-- 페이지네이션 -->
-		<div class="row justify-content-center">
-			<div class="col-auto">
-				<ul class="pagination">
-					<!-- 이전 버튼 -->
-					<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
-						<a class="page-link"
-						   th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'"
-						   tabindex="-1">이전</a>
-					</li>
-
-					<!-- 페이지 번호 -->
-					<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
-					    th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
-						<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}"
-						   th:text="${pageNum}">1</a>
-					</li>
-
-					<!-- 다음 버튼 -->
-					<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
-						<a class="page-link"
-						   th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'"
-						   tabindex="-1">다음</a>
-					</li>
-				</ul>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<table class="table table-bordered">
+					<thead>
+					<tr>
+						<th>NO.</th>
+						<th>학생명</th>
+						<th>연락처</th>
+						<th>수강 상태</th>
+					</tr>
+					</thead>
+					<tbody>
+					<!-- 데이터 출력 부분 -->
+					<th:block th:if="${not #lists.isEmpty(studentsPage.student)}" th:each="student: ${studentsPage.student}">
+						<tr th:onclick="'goToDetailPage(' + ${student.coursesDTO.id} + ',' + ${student.id} + ')'">
+							<td th:text="${student.id}"></td>
+							<td th:text="${student.name}"></td>
+							<td th:text="${student.tel}"></td>
+							<td th:text="${student.status.value}"></td>
+						</tr>
+					</th:block>
+					<th:block th:if="${#lists.isEmpty(studentsPage.student)}">
+						<tr>
+							<td colspan="4">학생을 등록 해주세요.</td>
+						</tr>
+					</th:block>
+					</tbody>
+				</table>
 			</div>
 		</div>
+	</div>
 
-	</main>
+	<!-- 페이지네이션 -->
+	<div class="row justify-content-center">
+		<div class="col-auto">
+			<ul class="pagination">
+				<!-- 이전 버튼 -->
+				<li th:classappend="${pageable.pageNumber == 0} ? 'disabled'">
+					<a class="page-link"
+					   th:href="${pageable.pageNumber > 0} ? @{'?page=' + ${pageable.pageNumber - 1} + '&size=' + ${pageable.pageSize}} : '#'"
+					   tabindex="-1">이전</a>
+				</li>
 
-	<script>
-        function goToDetailPage(courseId, id) {
-            location.href = '/courses/' + courseId + '/students/' + id;
-        }
-	</script>
+				<!-- 페이지 번호 -->
+				<li th:each="pageNum : ${#numbers.sequence(1, pageable.totalPages)}"
+					th:classappend="${pageNum == pageable.pageNumber + 1} ? 'active'">
+					<a class="page-link" th:href="@{'?page=' + ${pageNum - 1} + '&size=' + ${pageable.pageSize}}"
+					   th:text="${pageNum}">1</a>
+				</li>
 
+				<!-- 다음 버튼 -->
+				<li th:classappend="${pageable.pageNumber + 1 == pageable.totalPages} ? 'disabled'">
+					<a class="page-link"
+					   th:href="${pageable.pageNumber + 1 < pageable.totalPages} ? @{'?page=' + ${pageable.pageNumber + 1} + '&size=' + ${pageable.pageSize}} : '#'"
+					   tabindex="-1">다음</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</main>
+
+<script>
+	function goToDetailPage(courseId, id) {
+		location.href = '/courses/' + courseId + '/students/' + id;
+	}
+</script>
 </body>
 </html>

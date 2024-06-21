@@ -306,9 +306,12 @@
                 }
             }
 
-            // 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력
-            alert('시험지가 성공적으로 등록되었습니다.');
-        }
+			// 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력 및 링크 제공
+			const link = `/exam/saveForm/${examPaperId}`;
+			await navigator.clipboard.writeText(link);
+			alert(`시험지가 성공적으로 등록되었습니다. 링크가 클립보드에 복사되었습니다: ${link}`);
+			window.location.href = link;
+		}
 
 	</script>
 </body>

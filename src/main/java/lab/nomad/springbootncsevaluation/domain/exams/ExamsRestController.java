@@ -45,7 +45,7 @@ public class ExamsRestController {
 
     //시험생성
     @PostMapping("/{id}")
-    public ResponseEntity<?> save(@PathVariable Long id,@AuthenticationPrincipal CustomUserDetails customUserDetails,
+    public ResponseEntity<?> save(@PathVariable Long id,
                                    @RequestBody ExamsSaveRequestDTO requestDTO){
 
         ExamsSaveResponseDTO responseDTO = examsService.save(id,requestDTO);
