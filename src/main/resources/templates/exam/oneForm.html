@@ -144,6 +144,8 @@
         });
     }
 
+
+
     function submitExams() {
         const form = document.getElementById('saveForm');
         const examsId = form.getAttribute('data-exams-id'); // 시험 ID 가져오기
@@ -179,7 +181,9 @@
             const examResultId = data.response.examresults ? data.response.examresults.id : data.response.id;
             console.log('Exam Result ID:', examResultId);
 
-            saveExamItems(examResultId, selectedAnswers);
+            return saveExamItems(examResultId, selectedAnswers); // saveExamItems 호출 후 반환
+        }).then(() => {
+            alert('시험이 완료되었습니다. 창을 닫아주세요.');
         }).catch(error => {
             alert('제출 중 오류가 발생했습니다.');
             console.error('Error:', error);
@@ -187,39 +191,40 @@
     }
 
     function saveExamItems(examResultId, selectedAnswers) {
-        const requests = Object.keys(selectedAnswers).map(questionId => {
-            const answerId = selectedAnswers[questionId];
-            const point = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.point;
-            const comment = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.comment;
+        const questionIds = Object.keys(selectedAnswers);
 
-            const payload = {
-                resultId: examResultId,
-                questionId: parseInt(questionId),
-                answerId: parseInt(answerId),
-                point: parseInt(point),
-                comment: comment
-            };
+        return questionIds.reduce((promiseChain, questionId) => {
+            return promiseChain.then(() => {
+                const answerId = selectedAnswers[questionId];
+                const point = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.point;
+                const comment = document.querySelector(`input[name='version_control_${questionId}']:checked`).dataset.comment;
 
-            console.log('전송 데이터:', payload);
+                const payload = {
+                    resultId: examResultId,
+                    questionId: parseInt(questionId),
+                    answerId: parseInt(answerId),
+                    point: parseInt(point),
+                    comment: comment
+                };
 
-            return fetch('/api/v1/exam-results/item', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
+                console.log('전송 데이터:', payload);
+
+                return fetch('/api/v1/exam-results/item', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                });
             });
-        });
-
-        Promise.all(requests)
+        }, Promise.resolve())
             .then(results => {
-                alert('시험이 완료되었습니다. 창을 닫아주세요.');
-
+                console.log('모든 데이터 전송 완료');
             })
             .catch(error => {
                 alert('추가 데이터 전송 중 오류가 발생했습니다.');
@@ -236,6 +241,7 @@
             document.getElementById('comment').value = this.dataset.comment;
         });
     });
+
 </script>
 </body>
 </html>

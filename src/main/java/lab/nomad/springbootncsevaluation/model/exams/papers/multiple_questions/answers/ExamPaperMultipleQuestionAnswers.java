@@ -34,4 +34,10 @@ public class ExamPaperMultipleQuestionAnswers {
         this.content = content;
         this.isCorrect = isCorrect;
     }
+
+
+    // 새로운 setter 메서드 추가
+    public void setExamPaperMultipleQuestion(ExamPaperMultipleQuestions examPaperMultipleQuestion) {
+        this.examPaperMultipleQuestion = examPaperMultipleQuestion;
+    }
 }
