@@ -54,8 +54,6 @@ public class ExamResultMultipleItemsController {
         model.addAttribute("AbilityUnit", abilityUnitOneResponseDTO.getAbilityUnit());
         model.addAttribute("AbilityUnitElementList", abilityUnitOneResponseDTO.getAbilityUnit());
 
-
-
         return "exams/_results/_multiple_items/detailForm";
     }
 

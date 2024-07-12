@@ -1,141 +1,317 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
-	<th:block th:replace="~{_common/header.html :: configFragment}"></th:block>
+
+	<meta charset="UTF-8">
+
+
+	<!-- BootStrap -->
+	<script type="text/javascript" nonce="521816ae8d9c4c18980f96ff602"
+	        src="//local.adguard.org?ts=1718928723136&amp;type=content-script&amp;dmn=3.34.104.226:8080&amp;url=http%3A%2F%2F3.34.104.226%3A8080%2Fability-units%2F1%2Fexam-paper%2FsaveForm&amp;app=com.naver.Whale&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script>
+	<script type="text/javascript" nonce="521816ae8d9c4c18980f96ff602"
+	        src="//local.adguard.org?ts=1718928723136&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;type=user-script"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
+
+
+	<!-- Google fonts -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat:400,700"/>
+	<link rel="stylesheet" type="text/css"
+	      href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"/>
+
+	<!-- FontAwesome -->
+	<script src="https://kit.fontawesome.com/32aa2b8683.js" crossorigin="anonymous"></script>
+
+	<link href="/css/styles.css" rel="stylesheet"/>
+
+
+	<!-- BootStrap JS  -->
+	<script>
+        window.addEventListener('DOMContentLoaded', event => {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const wrapper = document.getElementById('wrapper');
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    wrapper.classList.toggle('toggled');
+
+                    if (wrapper.classList.contains('toggled')) {
+                        sidebarToggle.textContent = '>>';
+                    } else {
+                        sidebarToggle.textContent = '<<';
+                    }
+
+                    // 저장 상태 업데이트
+                    localStorage.setItem('sb|sidebar-toggle', wrapper.classList.contains('toggled'));
+                });
+
+                // 초기 로드 시 저장된 상태 복원
+                if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+                    wrapper.classList.add('toggled');
+                    sidebarToggle.textContent = '>>';
+                } else {
+                    sidebarToggle.textContent = '<<';
+                }
+            }
+        });
+
+        function printPage() {
+            window.print();
+        }
+	</script>
+
+	<style>
+        #wrapper.toggled #sidebar-wrapper {
+            display: none;
+        }
+
+        /* Print styles */
+        @media print {
+            #sidebar-wrapper,
+            .btn,
+            .navbar,
+            .header-div {
+                display: none !important;
+            }
+        }
+	</style>
+
+
 	<link rel="stylesheet" type="text/css" href="/css/exams/_papers/saveForm.css">
 	<title>평가지 등록</title>
 </head>
 <body>
 	<!-- 사이드바 헤더 불러오기 -->
-	<th:block th:replace="~{_common/header.html :: commonSideBar}"></th:block>
 
-	<main>
-		<div class="title-container">
-			<div class="title-item1">
-				<button type="button" class="btn btn-secondary" onclick="location.href='/courses'">prev</button>
-			</div>
-			<div class="title-item2">
-				<h1>평가지 등록</h1>
+	<div class="d-flex" id="wrapper">
+		<!-- Sidebar-->
+		<div class="border-end bg-white" id="sidebar-wrapper">
+			<div class="sidebar-heading border-bottom bg-light">NCS 능력 단위 평가</div>
+			<div class="list-group list-group-flush">
+				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/ability-units">능력
+					단위</a>
+				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/courses">과정</a>
+				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/courses/1/students">학생</a>
+				<a class="list-group-item list-group-item-action list-group-item-light p-3" href="/users/list">직 원</a>
+
 			</div>
 		</div>
-
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<form id="saveForm"
-					      th:action="@{/api/v1/ability-units/{abilityUnitId}/exam-paper(abilityUnitId=${abilityUnitId})}"
-					      th:object="${ExamPaperSaveRequestDTO}" method="post">
-						<input type="hidden" th:name="abilityUnitId" th:value="${abilityUnitId}"/>
-						<table class="table table-bordered">
-							<tbody>
-								<tr>
-									<td>평가지명</td>
-									<td><input type="text" id="name" th:field="*{name}" required></td>
-								</tr>
-								<tr>
-									<td>능력단위</td>
-									<td><input type="text" id="abilityUnitName"
-									           th:value="${AbilityUnit.name}" readonly
-									           required></td>
-								</tr>
-								<tr>
-									<td>평가 방법</td>
-									<td>
-										<select id="examType" th:field="*{examType}" required>
-											<option value="" disabled selected>선택하세요</option>
-											<option value="MULTIPLE_CHOICE">선다형</option>
-											<option value="TASK">포트폴리오형</option>
-										</select>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<div id="abilityUnitsContainer" style="justify-content: center">
-							<div class="title-item3">
-								<h3>능력 단위 요소</h3>
-							</div>
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>능력 단위 요소 번호</th>
-										<th>능력 단위 요소</th>
-										<th>수행 준거</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="element : ${AbilityUnitElementList}">
-										<td th:text="${element.code}"></td>
-										<td th:text="${element.name}"></td>
-										<td>
-											<ul>
-												<li th:each="item : ${element.abilityUnitElementItemList}"
-												    th:text="${item.content}"></li>
-											</ul>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-
-						<!-- EPMQ -->
-						<div class="container">
-							<div id="EPMQContainer" style="justify-content: center">
-								<div class="title-item3">
-									<h3 class="title">선다형 시험지 문제</h3>
+		<!-- Page content wrapper-->
+		<div id="page-content-wrapper">
+			<!-- Top navigation-->
+			<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+				<div class="container-fluid">
+					<button class="btn btn-primary" id="sidebarToggle">사이드바</button>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+					        aria-expanded="false" aria-label="Toggle navigation"><span
+						class="navbar-toggler-icon"></span></button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+							<li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+								   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+									<a class="dropdown-item print" onclick="printPage()">프린트</a>
+									<a class="dropdown-item" href="#!">Another action</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/logout">로그아웃</a>
 								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<!-- 다른 페이지에서 사이드바 적용 이후에 div를 자연스럽게 이어주기 위해 끊음 -->
+
+
+			<main>
+				<div class="title-container">
+					<div class="title-item1">
+						<button type="button" class="btn btn-secondary" onclick="location.href='/courses'">prev</button>
+					</div>
+					<div class="title-item2">
+						<h1>평가지 등록</h1>
+					</div>
+				</div>
+
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<form id="saveForm"
+							      action="/api/v1/ability-units/1/exam-paper"
+							      method="post">
+								<input type="hidden" name="abilityUnitId" value="1"/>
 								<table class="table table-bordered">
-									<thead>
+									<tbody>
 										<tr>
-											<th>번호</th>
-											<th>평가 항목</th>
-											<th>점수 배점</th>
-											<th>평가 내용</th>
-											<th>정답</th>
-											<th>오답 1</th>
-											<th>오답 2</th>
-											<th>오답 3</th>
-											<th>오답 4</th>
+											<td>평가지명</td>
+											<td><input type="text" id="name" required name="name" value=""></td>
 										</tr>
-									</thead>
-									<tbody id="questionsContainer">
 										<tr>
-											<td>1</td>
-											<td><input type="text" class="question-content" required></td>
-											<td><input type="number" class="question-point" required></td>
-											<td><input type="text" class="question-comment" required></td>
-											<td><input type="text" class="answer-content correct-answer" required></td>
-											<td><input type="text" class="answer-content" required></td>
-											<td><input type="text" class="answer-content" required></td>
-											<td><input type="text" class="answer-content" required></td>
-											<td><input type="text" class="answer-content" required></td>
+											<td>능력단위</td>
+											<td><input type="text" id="abilityUnitName"
+											           value="요구사항 확인" readonly
+											           required></td>
+										</tr>
+										<tr>
+											<td>평가 방법</td>
+											<td>
+												<select id="examType" required name="examType">
+													<option value="" disabled>선택하세요</option>
+													<option value="MULTIPLE_CHOICE">선다형</option>
+													<option value="TASK">포트폴리오형</option>
+												</select>
+											</td>
 										</tr>
 									</tbody>
 								</table>
-								<button type="button" class="nav-btn" onclick="addQuestion()">문제 추가</button>
-							</div>
-						</div>
 
-						<div class="title-item3">
-							<button type="button" class="btn btn-primary" onclick="registerExam()">등록</button>
+								<div id="abilityUnitsContainer" style="justify-content: center">
+									<div class="title-item3">
+										<h3>능력 단위 요소</h3>
+									</div>
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>능력 단위 요소 번호</th>
+												<th>능력 단위 요소</th>
+												<th>수행 준거</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>test1</td>
+												<td>현행 시스템 분석하기</td>
+												<td>
+													<ul>
+														<li>개발하고자 하는 응용소프트웨어에 대한 이해를 높이기 위해, 현행 시스템의 적용 현황을 파악함으로써 개발
+															범위와 향후 개발될 시스템으로의 이행 방향성을 분석할 수 있다.
+														</li>
+														<li>개발하고자 하는 응용소프트웨어와 관련된 운영체제, 데이터베이스 관리 시스템, 미들웨어 등의 요구사항을 식별할
+															수 있다.
+														</li>
+														<li>현행 시스템을 분석하여, 개발하고자 하는 응용소프트웨어가 이후 적용될 목표시스템을 명확하고 구체적으로 기술할
+															수 있다.
+														</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>test2</td>
+												<td>요구 사항 확인하기</td>
+												<td>
+													<ul>
+														<li>소프트웨어 공학기술의 요구사항 분석 기법을 활용하여 업무 분석가가 정의한 응용소프트웨어의 요구사항을 확인할
+															수 있다.
+														</li>
+														<li>업무 분석가가 분석한 요구사항에 대해 정의된 검증 기준과 절차에 따라서 요구사항을 확인할 수 있다.</li>
+														<li>업무 분석가가 수집하고 분석한 요구사항이 개발하고자 하는 응용소프트웨어에 미칠 영향에 대해서 검토하고 확인할
+															수 있다.
+														</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>test3</td>
+												<td>분석모델 확인하기</td>
+												<td>
+													<ul>
+														<li>소프트웨어 공학기술의 요구사항 분석 기법을 활용하여 업무 분석가가 제시한 분석모델에 대해서 확인할 수
+															있다.
+														</li>
+														<li>업무 분석가가 제시한 분석모델이 개발할 응용소프트웨어에 미칠 영향을 검토하여 기술적인 타당성 조사를 할 수
+															있다.
+														</li>
+														<li>업무 분석가가 제시한 분석모델에 대해서 응용소프트웨어를 개발하기 위해 필요한 추가적인 의견을 제시할 수
+															있다.
+														</li>
+													</ul>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+								<!-- EPMQ -->
+								<div class="container">
+									<div id="EPMQContainer" style="justify-content: center">
+										<div class="title-item3">
+											<h3 class="title">선다형 시험지 문제</h3>
+										</div>
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th>번호</th>
+													<th>평가 항목</th>
+													<th>점수 배점</th>
+													<th>평가 내용</th>
+													<th>답안 1</th>
+													<th>답안 2</th>
+													<th>답안 3</th>
+													<th>답안 4</th>
+													<th>답안 5</th>
+													<th>정답 선택</th>
+												</tr>
+											</thead>
+											<tbody id="questionsContainer">
+												<tr>
+													<td>1</td>
+													<td><input type="text" class="question-content" required></td>
+													<td><input type="number" class="question-point" required></td>
+													<td><input type="text" class="question-comment" required></td>
+													<td><input type="text" class="answer-content" required></td>
+													<td><input type="text" class="answer-content" required></td>
+													<td><input type="text" class="answer-content" required></td>
+													<td><input type="text" class="answer-content" required></td>
+													<td><input type="text" class="answer-content" required></td>
+													<td>
+														<select class="correct-answer-select">
+															<option value="" disabled selected>정답</option>
+															<option value="0">답안 1</option>
+															<option value="1">답안 2</option>
+															<option value="2">답안 3</option>
+															<option value="3">답안 4</option>
+															<option value="4">답안 5</option>
+														</select>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<button type="button" class="nav-btn" onclick="addQuestion()">문제 추가</button>
+									</div>
+								</div>
+
+								<div class="title-item3">
+									<button type="button" class="btn btn-primary" onclick="registerExam()">등록</button>
+								</div>
+							</form>
 						</div>
-					</form>
+					</div>
 				</div>
-			</div>
-		</div>
-	</main>
+			</main>
 
-	<script>
-        // abilityUnitId를 JavaScript로 전달
-        const abilityUnitId = /*[[${abilityUnitId}]]*/'[[${abilityUnitId}]]';
+			<script>
+                const abilityUnitId = /*1*/'1';
 
-        function addQuestion() {
-            const questionsContainer = document.getElementById('questionsContainer');
-            const newRow = document.createElement('tr');
-            const questionCount = questionsContainer.getElementsByTagName('tr').length + 1;
+                function addQuestion() {
+                    const questionsContainer = document.getElementById('questionsContainer');
+                    const newRow = document.createElement('tr');
+                    const questionCount = questionsContainer.getElementsByTagName('tr').length;
+                    const selectName = `correctAnswer${questionCount}`;
 
-            newRow.innerHTML = `
-                <td>${questionCount}</td>
+                    newRow.innerHTML = `
+                <td>${questionCount + 1}</td>
                 <td><input type="text" class="question-content" required></td>
                 <td><input type="number" class="question-point" required></td>
                 <td><input type="text" class="question-comment" required></td>
@@ -144,177 +320,123 @@
                 <td><input type="text" class="answer-content" required></td>
                 <td><input type="text" class="answer-content" required></td>
                 <td><input type="text" class="answer-content" required></td>
+                <td>
+                    <select class="correct-answer-select" name="${selectName}">
+                        <option value="" disabled selected>정답</option>
+                        <option value="0">답안 1</option>
+                        <option value="1">답안 2</option>
+                        <option value="2">답안 3</option>
+                        <option value="3">답안 4</option>
+                        <option value="4">답안 5</option>
+                    </select>
+                </td>
             `;
-            questionsContainer.appendChild(newRow);
-        }
-
-        // 시험지 서버로 전송하여 저장
-        async function saveExamPaper() {
-            const examPaperData = {
-                name: document.getElementById('name').value,
-                examType: document.getElementById('examType').value,
-            };
-
-            const response = await fetch(`/api/v1/ability-units/${abilityUnitId}/exam-paper`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(examPaperData),
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                return responseData.response.examPaper.id; // Return examPaperId for further use
-            } else {
-                console.error('Failed to save exam paper');
-                return null; // 오류 발생 시 null 반환
-            }
-        }
-
-        // 문제를 서버로 전송하여 저장
-        async function saveQuestion(examPaperId, questionData) {
-            const response = await fetch(`/api/v1/exam-paper/${examPaperId}/question`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(questionData),
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                return responseData.response.examPaperMultipleQuestion.id; // Return questionId for further use
-            } else {
-                console.error('Failed to save question');
-            }
-        }
-
-        // 답안을 서버로 전송하여 저장
-        async function saveAnswer(questionId, answerData) {
-            const response = await fetch(`/api/v1/exam-paper/question/${questionId}/answer`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(answerData),
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                return responseData.response.examPaperMultipleQuestionAnswer.id;
-            } else {
-                console.error('Failed to save answer');
-            }
-        }
-
-        // 전체 등록 절차 수행(시험지 -> 문제 -> 답안 순서)
-        async function registerExam() {
-            // 시험지를 서버에 저장하고, 성공적으로 저장되면 시험지ID 반환
-            const examPaperId = await saveExamPaper();
-
-            if (!examPaperId) {
-                alert('시험지 저장에 실패했습니다.');
-                return;
-            }
-
-            // 문제와 답안이 포함된 컨테이너 요소를 가져옴
-            const questionsContainer = document.getElementById('questionsContainer');
-            // 각 문제 항목을 나타내는 행들을 가져옴
-            const questionRows = questionsContainer.getElementsByTagName('tr');
-
-            // 각 문제 행을 순회하며 문제 데이터를 서버에 저장
-            for (const row of questionRows) {
-                // 문제 데이터를 객체로 생성
-                const questionData = {
-                    content: row.querySelector('.question-content').value, // 문제 내용
-                    point: row.querySelector('.question-point').value, // 점수 배점
-                    comment: row.querySelector('.question-comment').value // 평가 내용
-                };
-
-                // 문제를 서버에 저장하고, 성공적으로 저장되면 문제ID 반환
-                const questionId = await saveQuestion(examPaperId, questionData);
-
-                if (!questionId) {
-                    alert('문제 저장에 실패했습니다.');
-                    return;
+                    questionsContainer.appendChild(newRow);
                 }
 
-                // 해당 문제에 대한 답안 요소들을 가져옴
-                const answerElements = row.querySelectorAll('.answer-content');
-
-                // 각 답안 요소를 순회하며 답안 데이터를 서버에 저장
-                for (const answerElement of answerElements) {
-                    // 답안 데이터를 객체로 생성
-                    const answerData = {
-                        content: answerElement.value, // 답안 내용
-                        isCorrect: answerElement.classList.contains('correct-answer') // 정답 필드 여부에 따라 설정
+                async function saveExamPaper() {
+                    const examPaperData = {
+                        name: document.getElementById('name').value,
+                        examType: document.getElementById('examType').value,
                     };
 
-                    // 답안을 서버에 저장
-                    await saveAnswer(questionId, answerData);
-                }
-            }
+                    const response = await fetch(`/api/v1/ability-units/${abilityUnitId}/exam-paper`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(examPaperData),
+                    });
 
-            // 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력
-            alert('시험지가 성공적으로 등록되었습니다.');
-        }
-
-        // 전체 등록 절차 수행(시험지 -> 문제 -> 답안 순서)
-        async function registerExam() {
-            // 시험지를 서버에 저장하고, 성공적으로 저장되면 시험지ID 반환
-            const examPaperId = await saveExamPaper();
-
-            if (!examPaperId) {
-                alert('시험지 저장에 실패했습니다.');
-                return;
-            }
-
-            // 문제와 답안이 포함된 컨테이너 요소를 가져옴
-            const questionsContainer = document.getElementById('questionsContainer');
-            // 각 문제 항목을 나타내는 행들을 가져옴
-            const questionRows = questionsContainer.getElementsByTagName('tr');
-
-            // 각 문제 행을 순회하며 문제 데이터를 서버에 저장
-            for (const row of questionRows) {
-                // 문제 데이터를 객체로 생성
-                const questionData = {
-                    content: row.querySelector('.question-content').value, // 문제 내용
-                    point: row.querySelector('.question-point').value, // 점수 배점
-                    comment: row.querySelector('.question-comment').value // 평가 내용
-                };
-
-                // 문제를 서버에 저장하고, 성공적으로 저장되면 문제ID 반환
-                const questionId = await saveQuestion(examPaperId, questionData);
-
-                if (!questionId) {
-                    alert('문제 저장에 실패했습니다.');
-                    return;
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        return responseData.response.examPaper.id;
+                    } else {
+                        console.error('Failed to save exam paper');
+                        return null;
+                    }
                 }
 
-                // 해당 문제에 대한 답안 요소들을 가져옴
-                const answerElements = row.querySelectorAll('.answer-content');
+                async function saveQuestion(examPaperId, questionData) {
+                    const response = await fetch(`/api/v1/exam-paper/${examPaperId}/question`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(questionData),
+                    });
 
-                // 각 답안 요소를 순회하며 답안 데이터를 서버에 저장
-                for (const answerElement of answerElements) {
-                    // 답안 데이터를 객체로 생성
-                    const answerData = {
-                        content: answerElement.value, // 답안 내용
-                        isCorrect: answerElement.classList.contains('correct-answer') // 정답 필드 여부에 따라 설정
-                    };
-
-                    // 답안을 서버에 저장
-                    await saveAnswer(questionId, answerData);
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        return responseData.response.examPaperMultipleQuestion.id;
+                    } else {
+                        console.error('Failed to save question');
+                    }
                 }
-            }
 
-			// 모든 절차가 성공적으로 완료된 경우 성공 메시지 출력 및 링크 제공
-			const link = `/exam/saveForm/${examPaperId}`;
-			await navigator.clipboard.writeText(link);
-			alert(`시험지가 성공적으로 등록되었습니다. 링크가 클립보드에 복사되었습니다: ${link}`);
-			window.location.href = link;
-		}
+                async function saveAnswer(questionId, answerData) {
+                    const response = await fetch(`/api/v1/exam-paper/question/${questionId}/answer`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(answerData),
+                    });
 
-	</script>
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        return responseData.response.examPaperMultipleQuestionAnswer.id;
+                    } else {
+                        console.error('Failed to save answer');
+                    }
+                }
+
+                async function registerExam() {
+                    const examPaperId = await saveExamPaper();
+
+                    if (!examPaperId) {
+                        alert('시험지 저장에 실패했습니다.');
+                        return;
+                    }
+
+                    const questionsContainer = document.getElementById('questionsContainer');
+                    const questionRows = questionsContainer.getElementsByTagName('tr');
+
+                    for (const row of questionRows) {
+                        const questionData = {
+                            content: row.querySelector('.question-content').value,
+                            point: row.querySelector('.question-point').value,
+                            comment: row.querySelector('.question-comment').value
+                        };
+
+                        const questionId = await saveQuestion(examPaperId, questionData);
+
+                        if (!questionId) {
+                            alert('문제 저장에 실패했습니다.');
+                            return;
+                        }
+
+                        const answerElements = row.querySelectorAll('.answer-content');
+                        const correctAnswerIndex = row.querySelector('.correct-answer-select').value;
+
+                        for (let i = 0; i < answerElements.length; i++) {
+                            const answerElement = answerElements[i];
+                            const isCorrect = correctAnswerIndex == i;
+
+                            const answerData = {
+                                content: answerElement.value,
+                                isCorrect: isCorrect
+                            };
+
+                            await saveAnswer(questionId, answerData);
+                        }
+                    }
+
+                    const link = `/exam/saveForm/${examPaperId}`;
+                    await navigator.clipboard.writeText(link);
+                    alert(`시험지가 성공적으로 등록되었습니다. 링크가 클립보드에 복사되었습니다: ${link}`);
+                    window.location.href = link;
+                }
+			</script>
 </body>
 </html>

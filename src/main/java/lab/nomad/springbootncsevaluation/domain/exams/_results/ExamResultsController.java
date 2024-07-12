@@ -83,7 +83,7 @@ public class ExamResultsController {
         List<ExamResultMultipleItems> examResultItems = examResultsService.getExamResultItemsByExamResultId(id);
 
 
-        // 모델에 필요한 데이터 추가
+        // 모델에 필요한 데이터 w추가
         model.addAttribute("ItemsPage", responseDTO);
         model.addAttribute("ItemList", responseDTO.getItems());
         model.addAttribute("pageable", responseDTO.getPageable());
